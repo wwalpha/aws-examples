@@ -52,3 +52,9 @@ module "devops" {
   lb_target_group_blue_name  = module.app.lb_target_group_blue_name
   lb_target_group_green_name = module.app.lb_target_group_green_name
 }
+
+module "storage" {
+  source                  = "./storage"
+  prefix                  = local.prefix
+  ecs_task_definition_arn = module.app.ecs_task_definition_arn
+}

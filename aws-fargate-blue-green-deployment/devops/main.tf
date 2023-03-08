@@ -1,11 +1,14 @@
 # ----------------------------------------------------------------------------------------------
-# CodeDeploy - ECS
+# CodeDeploy Application
 # ----------------------------------------------------------------------------------------------
 resource "aws_codedeploy_app" "this" {
   compute_platform = "ECS"
   name             = "${var.prefix}-app"
 }
 
+# ----------------------------------------------------------------------------------------------
+# CodeDeploy Deployment Group
+# ----------------------------------------------------------------------------------------------
 resource "aws_codedeploy_deployment_group" "this" {
   app_name               = aws_codedeploy_app.this.name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"

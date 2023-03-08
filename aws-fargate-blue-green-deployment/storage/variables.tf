@@ -1,13 +1,9 @@
 # ----------------------------------------------------------------------------------------------
-# CodeDeploy Application Name
+# Prefix
 # ----------------------------------------------------------------------------------------------
-output "codedeploy_application" {
-  value = aws_codedeploy_app.this.name
-}
+variable "prefix" {}
 
 # ----------------------------------------------------------------------------------------------
-# CodeDeploy Deployment Group Name
+# ECS Task Definition Arn
 # ----------------------------------------------------------------------------------------------
-output "codedeploy_deployment_group_name" {
-  value = aws_codedeploy_deployment_group.this.deployment_group_name
-}
+variable "ecs_task_definition_arn" {}

@@ -42,7 +42,7 @@ resource "aws_ecs_service" "this" {
     aws_lb.this
   ]
 
-  name                               = aws_ecs_task_definition.this.family
+  name                               = "${var.prefix}-service"
   cluster                            = aws_ecs_cluster.this.id
   launch_type                        = "FARGATE"
   task_definition                    = aws_ecs_task_definition.this.arn
