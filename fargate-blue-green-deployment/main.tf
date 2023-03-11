@@ -44,6 +44,7 @@ module "app" {
 module "devops" {
   source                     = "./devops"
   prefix                     = local.prefix
+  environment                = var.environment
   codedeploy_role_arn        = module.security.iam_role_arn_code_deploy
   ecs_cluster_name           = module.app.ecs_cluster_name
   ecs_service_name           = module.app.ecs_service_name

@@ -13,3 +13,5 @@ variable "lb_listener_arn_test" {}
 variable "lb_target_group_blue_name" {}
 
 variable "lb_target_group_green_name" {}
+
+variable "environment" {}

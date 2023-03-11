@@ -22,12 +22,13 @@ resource "aws_codedeploy_deployment_group" "this" {
 
   blue_green_deployment_config {
     deployment_ready_option {
-      action_on_timeout = "CONTINUE_DEPLOYMENT"
+      action_on_timeout    = "STOP_DEPLOYMENT"
+      wait_time_in_minutes = 5
     }
 
     terminate_blue_instances_on_deployment_success {
       action                           = "TERMINATE"
-      termination_wait_time_in_minutes = 60
+      termination_wait_time_in_minutes = 5
     }
   }
 
@@ -45,6 +46,10 @@ resource "aws_codedeploy_deployment_group" "this" {
     target_group_pair_info {
       prod_traffic_route {
         listener_arns = [var.lb_listener_arn_prod]
+      }
+
+      test_traffic_route {
+        listener_arns = var.environment == "green" ? [var.lb_listener_arn_test] : []
       }
 
       target_group {

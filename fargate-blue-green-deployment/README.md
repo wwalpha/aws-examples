@@ -1,6 +1,14 @@
 # AWS Fargate Blue Green Deployment
 
-## Create blue environment
+## What's the Goals
+
+## What's the Architecture
+
+## What's the Methodology
+
+## How to do
+
+### Create Blue Environment
 
 ```
 $ terraform init
@@ -16,9 +24,10 @@ ecs_task_definition_name = "bluegreen-task"
 
 # test
 curl http://bluegreen-alb-99999999.ap-northeast-1.elb.amazonaws.com/
+blue
 ```
 
-## Switch to green environment
+### Create Green Environment
 
 ```
 # update task definition to green version
@@ -32,14 +41,45 @@ $ aws deploy create-deployment \
     --s3-location bucket=bluegreen-configs,bundleType=yaml,key=appspec.yaml
 
 {
-    "deploymentId": "d-XXXXXXXX"
+    "deploymentId": "d-5CGUL6ETM"
 }
 
-# confirm deployment success
-$ aws deploy get-deployment --deployment-id d-2PBMOJKRM
+# confirm deployment success (replace deployment id before execute)
+$ aws deploy get-deployment --deployment-id d-0W4JBD7JA | jq .deploymentInfo.status
+
 ```
 
-## Destroy environment
+### Test Green Environment via Test Port
+
+```
+$ curl http://bluegreen-alb-1913291611.ap-northeast-1.elb.amazonaws.com:8080/
+green
+```
+
+### Switch Blue Environment to Green Environment
+
+```
+$ aws deploy continue-deployment \
+    --deployment-id "d-0W4JBD7JA" \
+    --deployment-wait-type "READY_WAIT"
+```
+
+### Test Green Environment via Production Port
+
+```
+$ curl http://bluegreen-alb-99999999.ap-northeast-1.elb.amazonaws.com/
+green
+```
+
+### Terminate Original Instances
+
+```
+aws deploy continue-deployment \
+    --deployment-id "d-0W4JBD7JA" \
+    --deployment-wait-type "TERMINATION_WAIT"
+```
+
+### Destroy Environment
 
 ```
 $ terraform apply -destroy -auto-approve
