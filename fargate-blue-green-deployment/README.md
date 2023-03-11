@@ -19,7 +19,7 @@
 
 ### Create Blue Environment
 
-```
+```bash
 $ terraform init
 $ terraform apply -auto-approve
 
@@ -38,7 +38,7 @@ blue
 
 ### Create Green Environment
 
-```
+```bash
 # update task definition to green version
 $ terraform apply -var environment="green" -auto-approve
 
@@ -60,14 +60,14 @@ ready
 
 ### Test Green Environment via Test Port
 
-```
+```bash
 $ curl http://bluegreen-alb-[99999999].ap-northeast-1.elb.amazonaws.com:8080/
 green
 ```
 
 ### Switch Blue Environment to Green Environment
 
-```
+```bash
 $ aws deploy continue-deployment \
     --deployment-id "[d-0W4JBD7JA]" \
     --deployment-wait-type "READY_WAIT"
@@ -75,14 +75,14 @@ $ aws deploy continue-deployment \
 
 ### Test Green Environment via Production Port
 
-```
+```bash
 $ curl http://bluegreen-alb-[99999999].ap-northeast-1.elb.amazonaws.com/
 green
 ```
 
 ### Terminate Original Instances
 
-```
+```bash
 aws deploy continue-deployment \
     --deployment-id "[d-0W4JBD7JA]" \
     --deployment-wait-type "TERMINATION_WAIT"
@@ -90,6 +90,6 @@ aws deploy continue-deployment \
 
 ### Destroy Environment
 
-```
+```bash
 $ terraform apply -destroy -auto-approve
 ```

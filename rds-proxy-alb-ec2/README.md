@@ -1,14 +1,12 @@
 # Application Load Balancer + EC2 + RDS Proxy + PostgreSQL
 
-## Architecture
+## What's the Goals
+
+## What's the Architecture
 
 ![image](./docs/ec2+proxy.png)
 
-## Prerequisite
-
-- Terraform
-
-## Demonstrate
+## How to do
 
 ```bash
 $ terraform apply -auto-approve
