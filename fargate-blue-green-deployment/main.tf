@@ -19,18 +19,6 @@ module "security" {
   prefix = local.prefix
 }
 
-# module "database" {
-#   source                    = "./database"
-#   prefix                    = local.prefix
-#   vpc_id                    = module.networking.vpc_id
-#   private_subnet_cidr_block = module.networking.private_subnets_cidr_blocks
-#   private_subnet_ids        = module.networking.private_subnet_ids
-#   database_subnet_ids       = module.networking.database_subnet_ids
-#   database_username         = var.database_username
-#   database_password         = var.database_password
-#   iam_role_arn_rds_proxy    = module.security.iam_role_arn_rds_proxy
-# }
-
 module "app" {
   source                 = "./app"
   prefix                 = local.prefix

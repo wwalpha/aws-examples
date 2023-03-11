@@ -1,0 +1,11 @@
+{
+  "name": "aws-network-firewall-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/wwalpha/aws-network-firewall-demo.git",
+  "author": "wwalpha <wwalpha@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "terraform apply -auto-approve"
+  }
+}

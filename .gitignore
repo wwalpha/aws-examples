@@ -1,0 +1,6 @@
+secrets.auto.tfvars
+.terraform
+.terraform.lock*
+node_modules
+*.tfstate*
+yarn.lock

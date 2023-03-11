@@ -23,7 +23,7 @@
 $ terraform init
 $ terraform apply -auto-approve
 
-app_url = "http://bluegreen-alb-99999999.ap-northeast-1.elb.amazonaws.com/"
+app_url = "http://bluegreen-alb-[99999999].ap-northeast-1.elb.amazonaws.com/"
 appspec_s3_location = "bucket=bluegreen-configs,bundleType=yaml,eTag=525211c1fddb460e77a69541760fb74c,key=appspec.yaml"
 codedeploy_application = "bluegreen-app"
 codedeploy_deployment_group_name = "bluegreen"
@@ -32,7 +32,7 @@ ecs_service_name = "bluegreen-service"
 ecs_task_definition_name = "bluegreen-task"
 
 # test
-curl http://bluegreen-alb-99999999.ap-northeast-1.elb.amazonaws.com/
+curl http://bluegreen-alb-[99999999].ap-northeast-1.elb.amazonaws.com/
 blue
 ```
 
@@ -50,18 +50,18 @@ $ aws deploy create-deployment \
     --s3-location bucket=bluegreen-configs,bundleType=yaml,key=appspec.yaml
 
 {
-    "deploymentId": "d-5CGUL6ETM"
+    "deploymentId": "d-0W4JBD7JA"
 }
 
 # confirm deployment success (replace deployment id before execute)
-$ aws deploy get-deployment --deployment-id d-0W4JBD7JA | jq .deploymentInfo.status
-
+$ aws deploy get-deployment --deployment-id [d-0W4JBD7JA] | jq .deploymentInfo.status
+ready
 ```
 
 ### Test Green Environment via Test Port
 
 ```
-$ curl http://bluegreen-alb-1913291611.ap-northeast-1.elb.amazonaws.com:8080/
+$ curl http://bluegreen-alb-[99999999].ap-northeast-1.elb.amazonaws.com:8080/
 green
 ```
 
@@ -69,14 +69,14 @@ green
 
 ```
 $ aws deploy continue-deployment \
-    --deployment-id "d-0W4JBD7JA" \
+    --deployment-id "[d-0W4JBD7JA]" \
     --deployment-wait-type "READY_WAIT"
 ```
 
 ### Test Green Environment via Production Port
 
 ```
-$ curl http://bluegreen-alb-99999999.ap-northeast-1.elb.amazonaws.com/
+$ curl http://bluegreen-alb-[99999999].ap-northeast-1.elb.amazonaws.com/
 green
 ```
 
@@ -84,7 +84,7 @@ green
 
 ```
 aws deploy continue-deployment \
-    --deployment-id "d-0W4JBD7JA" \
+    --deployment-id "[d-0W4JBD7JA]" \
     --deployment-wait-type "TERMINATION_WAIT"
 ```
 
