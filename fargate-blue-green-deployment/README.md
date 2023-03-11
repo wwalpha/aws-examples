@@ -2,9 +2,18 @@
 
 ## What's the Goals
 
+- Create ECS cluster and deploy application as blue environment
+- Deploy new version of application as green environment
+- Test green version via test port
+- Reroute traffic to green environment for release application
+
 ## What's the Architecture
 
+![img](./docs/architecture.png)
+
 ## What's the Methodology
+
+![img](./docs/methodology.png)
 
 ## How to do
 
