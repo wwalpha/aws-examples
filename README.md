@@ -1,15 +1,13 @@
 # AWS Solution Architectures
 
-# [Fargate Blue Green Deployment](./fargate-blue-green-deployment/README.md)
+## [Fargate Blue Green Deployment](./fargate-blue-green-deployment/README.md)
 
 ![img](./fargate-blue-green-deployment/docs/methodology.png)
 
-# [Fargate Blue Green Deployment](./fargate-blue-green-deployment/README.md)
+## [RDS Proxy(PostgreSQL) & ALB + EC2](./rds-proxy-alb-ec2/README.md)
 
-## [ALB + EC2 + RDS Proxy + PostgreSQL](./alb-ec2-proxy/README.md)
+![image](./rds-proxy-alb-ec2/docs/ec2%2Bproxy.png)
 
-![image](./docs/ec2%2Bproxy.png)
+## [RDS Proxy(PostgreSQL) & API Gateway + Lambda](./rds-proxy-apigw-lambda/README.md)
 
-## [API Gateway + Lambda + RDS Proxy + PostgreSQL](./alb-ec2-proxy/README.md)
-
-![image](./docs/apigw%2Bproxy.png)
+![image](./rds-proxy-apigw-lambda/docs/apigw%2Bproxy.png)
