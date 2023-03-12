@@ -19,12 +19,12 @@ export PGHOST=${var.database_proxy_endpoint}
 curl -O https://www.postgresqltutorial.com/wp-content/uploads/2019/05/dvdrental.zip
 unzip dvdrental.zip
 
-# create sample database
+echo "Create sample database"
 psql -d postgres -c "create database dvdrental;"
 pg_restore -d dvdrental dvdrental.tar
 psql -d dvdrental -c "\dt"
 
-# install sample source
+echo "Install sample source"
 git clone https://github.com/wwalpha/nodejs-postgresql-samples.git
 cd nodejs-postgresql-samples
 yarn install
@@ -43,19 +43,19 @@ forever start -c "yarn start" ./
 EOT
 }
 
-resource "time_sleep" "wait_120_seconds" {
-  create_duration = "120s"
+resource "aws_key_pair" "this" {
+  key_name   = "${var.prefix}_dummy_key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQz1x2cEikKDEY0aIj41qgxMCP/iteneqXSIFZBp5vizPvaoIR3Um9xK7PGoW8giupGn+EPuxIA4cDM4vzOqOkiMPhz5XK0whEjkVzTo4+S0puvDZuwIsdiW9mxhJc7tgBNL0cYlWSYVkz4G/fslNfRPW5mYAM49f4fhtxPb5ok4Q2Lg9dPKVHO/Bgeu5woMc7RY0p1ej6D4CKFE6lymSDJpW0YHX/wqE9+cfEauh7xZcG0q9t2ta6F6fmX0agvpFyZo8aFbXeUBr7osSCJNgvavWbM/06niWrOvYX2xwWdhXmXSrbX8ZbabVohBK41 email@example.com"
 }
 
 module "ec2_instance" {
-  depends_on = [time_sleep.wait_120_seconds]
-  source     = "terraform-aws-modules/ec2-instance/aws"
-  version    = "~> 3.0"
-
+  depends_on             = [var.database_proxy_target]
+  source                 = "terraform-aws-modules/ec2-instance/aws"
+  version                = "~> 3.0"
   name                   = "${var.prefix}-instance"
   ami                    = "ami-0404778e217f54308"
   instance_type          = "t3a.medium"
-  key_name               = "onecloud"
+  key_name               = aws_key_pair.this.key_name
   monitoring             = false
   vpc_security_group_ids = [module.app_sg.security_group_id]
   subnet_id              = var.private_subnets[0]

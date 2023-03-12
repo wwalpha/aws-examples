@@ -6,6 +6,7 @@
   "author": "wwalpha <wwalpha@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "terraform apply -auto-approve"
+    "start": "terraform apply -auto-approve",
+    "destroy": "terraform apply -destroy -auto-approve"
   }
 }

@@ -14,6 +14,8 @@ variable "database_proxy_sg_id" {}
 
 variable "database_proxy_endpoint" {}
 
+variable "database_proxy_target" {}
+
 variable "database_username" {}
 
 variable "database_password" {}

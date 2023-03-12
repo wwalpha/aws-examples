@@ -41,6 +41,7 @@ module "app" {
   iam_role_profile_ec2_ssm  = module.security.iam_role_profile_ec2_ssm
   database_proxy_sg_id      = module.database.aws_rds_proxy_sg.id
   database_proxy_endpoint   = module.database.aws_rds_proxy.endpoint
+  database_proxy_target     = module.database.aws_rds_proxy_target
   database_username         = var.database_username
   database_password         = var.database_password
 }

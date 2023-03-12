@@ -20,7 +20,7 @@ resource "aws_db_proxy_default_target_group" "this" {
 
   connection_pool_config {
     connection_borrow_timeout    = 120
-    max_connections_percent      = 100
+    max_connections_percent      = 50
     max_idle_connections_percent = 50
     session_pinning_filters      = ["EXCLUDE_VARIABLE_SETS"]
   }
@@ -30,4 +30,11 @@ resource "aws_db_proxy_target" "this" {
   db_instance_identifier = aws_db_instance.this.id
   db_proxy_name          = aws_db_proxy.this.name
   target_group_name      = aws_db_proxy_default_target_group.this.name
+}
+
+resource "time_sleep" "wait_for_db_proxy_creating" {
+  depends_on = [
+    aws_db_proxy_target.this
+  ]
+  create_duration = "180s"
 }
