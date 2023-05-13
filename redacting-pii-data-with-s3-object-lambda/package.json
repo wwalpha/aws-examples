@@ -1,0 +1,12 @@
+{
+  "name": "redacting-pii-data-with-s3-object-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "terraform apply -auto-approve",
+    "destroy": "terraform destroy -auto-approve"
+  },
+  "author": "",
+  "license": "ISC"
+}
