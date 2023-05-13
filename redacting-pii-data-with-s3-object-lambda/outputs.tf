@@ -18,3 +18,10 @@ output "s3_ascess_point_arn" {
 # output "object_lambda_access_point" {
 #   value = module.app.object_lambda_access_point
 # }
+
+# ----------------------------------------------------------------------------------------------
+# CloudFront Domain Name
+# ----------------------------------------------------------------------------------------------
+output "cloudfront_domain_name" {
+  value = module.app.cloudfront_domain_name
+}

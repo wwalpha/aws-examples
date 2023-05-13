@@ -24,6 +24,7 @@ module "app" {
   prefix              = local.prefix
   iam_role_arn_lambda = module.security.iam_role_arn_lambda
   s3_access_point_arn = module.storage.s3_ascess_point_arn
+  s3_bucket_name      = module.storage.s3_bucket_name
 }
 
 
