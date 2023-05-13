@@ -26,6 +26,3 @@ module "app" {
   s3_access_point_arn = module.storage.s3_ascess_point_arn
   s3_bucket_name      = module.storage.s3_bucket_name
 }
-
-
-#terraform import aws_s3control_object_lambda_access_point.this 334678299258:aokadoapii
