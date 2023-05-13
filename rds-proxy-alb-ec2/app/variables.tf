@@ -20,3 +20,10 @@ variable "database_username" {}
 
 variable "database_password" {}
 
+variable "lambda_module_bucket_name" {}
+
+variable "lambda_module_bucket_key" {}
+
+variable "lambda_module_version_id" {}
+
+variable "iam_role_arn_lambda_app" {}

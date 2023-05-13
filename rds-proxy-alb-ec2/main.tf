@@ -19,6 +19,10 @@ module "security" {
   prefix = local.prefix
 }
 
+module "storage" {
+  source = "./storage"
+}
+
 module "database" {
   source                    = "./database"
   prefix                    = local.prefix
@@ -38,10 +42,14 @@ module "app" {
   public_subnets            = module.networking.public_subnet_ids
   private_subnets           = module.networking.private_subnet_ids
   private_subnet_cidr_block = module.networking.private_subnets_cidr_blocks
+  iam_role_arn_lambda_app   = module.security.iam_role_arn_lambda_app
   iam_role_profile_ec2_ssm  = module.security.iam_role_profile_ec2_ssm
   database_proxy_sg_id      = module.database.aws_rds_proxy_sg.id
   database_proxy_endpoint   = module.database.aws_rds_proxy.endpoint
   database_proxy_target     = module.database.aws_rds_proxy_target
   database_username         = var.database_username
   database_password         = var.database_password
+  lambda_module_bucket_name = module.storage.bucket_name
+  lambda_module_bucket_key  = module.storage.lambda_module_key
+  lambda_module_version_id  = module.storage.lambda_module_version_id
 }
