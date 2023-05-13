@@ -1,3 +1,6 @@
+# ----------------------------------------------------------------------------------------------
+# Cloudfront Origin Access Control
+# ----------------------------------------------------------------------------------------------
 resource "aws_cloudfront_origin_access_control" "this" {
   name                              = "${var.prefix}-oac"
   origin_access_control_origin_type = "s3"
@@ -5,6 +8,9 @@ resource "aws_cloudfront_origin_access_control" "this" {
   signing_protocol                  = "sigv4"
 }
 
+# ----------------------------------------------------------------------------------------------
+# Cloudfront Distribution
+# ----------------------------------------------------------------------------------------------
 resource "aws_cloudfront_distribution" "this" {
   origin {
     domain_name              = data.aws_s3_bucket.this.bucket_regional_domain_name
@@ -13,11 +19,11 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   enabled             = true
-  comment             = "Some comment"
+  comment             = "redacting-pii-data-with-s3-object-lambda"
   default_root_object = "index.html"
 
   default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    allowed_methods  = ["GET", "HEAD", ]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = aws_s3control_object_lambda_access_point.this.id
 
