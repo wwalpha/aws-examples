@@ -44,40 +44,40 @@ module "company_a_server" {
 # ----------------------------------------------------------------------------------------------
 # Company B Router Instance
 # ----------------------------------------------------------------------------------------------
-module "company_b_router" {
-  source                      = "terraform-aws-modules/ec2-instance/aws"
-  version                     = "~> 3.0"
-  name                        = "${var.prefix}-CompanyB-Router"
-  ami                         = "ami-0a15fc610e3955298"
-  instance_type               = "t3a.small"
-  key_name                    = var.keypair_name
-  monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_company_b.security_group_id]
-  subnet_id                   = var.subnet_id_company_b
-  associate_public_ip_address = true
-  source_dest_check           = false
-  iam_instance_profile        = var.ssm_role_profile
-}
+# module "company_b_router" {
+#   source                      = "terraform-aws-modules/ec2-instance/aws"
+#   version                     = "~> 3.0"
+#   name                        = "${var.prefix}-CompanyB-Router"
+#   ami                         = "ami-0a15fc610e3955298"
+#   instance_type               = "t3a.small"
+#   key_name                    = var.keypair_name
+#   monitoring                  = false
+#   vpc_security_group_ids      = [module.router_sg_company_b.security_group_id]
+#   subnet_id                   = var.subnet_id_company_b
+#   associate_public_ip_address = true
+#   source_dest_check           = false
+#   iam_instance_profile        = var.ssm_role_profile
+# }
 
 # ----------------------------------------------------------------------------------------------
 # Company B Server Instance
 # ----------------------------------------------------------------------------------------------
-module "company_b_server" {
-  source                      = "terraform-aws-modules/ec2-instance/aws"
-  version                     = "~> 3.0"
-  name                        = "${var.prefix}-CompanyB-Server"
-  ami                         = "ami-0404778e217f54308"
-  instance_type               = "t3a.small"
-  key_name                    = var.keypair_name
-  monitoring                  = false
-  vpc_security_group_ids      = [module.server_sg_company_b.security_group_id]
-  subnet_id                   = var.subnet_id_company_b
-  associate_public_ip_address = true
-  iam_instance_profile        = var.ssm_role_profile
-}
+# module "company_b_server" {
+#   source                      = "terraform-aws-modules/ec2-instance/aws"
+#   version                     = "~> 3.0"
+#   name                        = "${var.prefix}-CompanyB-Server"
+#   ami                         = "ami-0404778e217f54308"
+#   instance_type               = "t3a.small"
+#   key_name                    = var.keypair_name
+#   monitoring                  = false
+#   vpc_security_group_ids      = [module.server_sg_company_b.security_group_id]
+#   subnet_id                   = var.subnet_id_company_b
+#   associate_public_ip_address = true
+#   iam_instance_profile        = var.ssm_role_profile
+# }
 
 # ----------------------------------------------------------------------------------------------
-# Company A Server Instance
+# AWS Side Server Instance
 # ----------------------------------------------------------------------------------------------
 module "aws_nginx" {
   source                      = "terraform-aws-modules/ec2-instance/aws"

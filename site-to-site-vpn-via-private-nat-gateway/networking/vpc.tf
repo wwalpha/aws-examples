@@ -15,16 +15,16 @@ module "company_a" {
 # ----------------------------------------------------------------------------------------------
 # Company B VPC
 # ----------------------------------------------------------------------------------------------
-module "company_b" {
-  source = "terraform-aws-modules/vpc/aws"
+# module "company_b" {
+#   source = "terraform-aws-modules/vpc/aws"
 
-  name                 = "${var.prefix}-CompanyB"
-  cidr                 = "172.16.0.0/16"
-  azs                  = local.availability_zones
-  public_subnets       = ["172.16.0.0/24", "172.16.1.0/24"]
-  enable_dns_hostnames = true
-  enable_nat_gateway   = false
-}
+#   name                 = "${var.prefix}-CompanyB"
+#   cidr                 = "172.16.0.0/16"
+#   azs                  = local.availability_zones
+#   public_subnets       = ["172.16.0.0/24", "172.16.1.0/24"]
+#   enable_dns_hostnames = true
+#   enable_nat_gateway   = false
+# }
 
 # ----------------------------------------------------------------------------------------------
 # AWS VPC
