@@ -19,8 +19,8 @@ output "company_b_tunnel1_ip" {
   value = module.site_to_site_vpn.company_b_tunnel1_ip
 }
 
-output "company_b_tunnel2_preshared_key" {
-  value     = module.site_to_site_vpn.company_a_tunnel1_preshared_key
+output "company_b_tunnel1_preshared_key" {
+  value     = module.site_to_site_vpn.company_b_tunnel1_preshared_key
   sensitive = true
 }
 

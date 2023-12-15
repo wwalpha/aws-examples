@@ -33,3 +33,7 @@ output "ip_cidr_company_a" {
 output "ip_cidr_company_b" {
   value = module.company_b.vpc_cidr_block
 }
+
+output "ip_cidr_aws_site" {
+  value = module.aws_site.vpc_cidr_block
+}

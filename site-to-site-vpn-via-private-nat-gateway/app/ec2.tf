@@ -15,14 +15,13 @@ module "company_a_router" {
   name                        = "${var.prefix}-CompanyA-Router"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
-  key_name                    = aws_key_pair.this.key_name
+  key_name                    = var.keypair_name
   monitoring                  = false
   vpc_security_group_ids      = [module.router_sg_company_a.security_group_id]
   subnet_id                   = var.subnet_id_company_a
   associate_public_ip_address = true
   source_dest_check           = false
-  # user_data_base64       = base64encode(local.user_data)
-  # iam_instance_profile   = var.iam_role_profile_ec2_ssm
+  iam_instance_profile        = var.ssm_role_profile
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -34,14 +33,12 @@ module "company_a_server" {
   name                        = "${var.prefix}-CompanyA-Server"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
-  key_name                    = aws_key_pair.this.key_name
+  key_name                    = var.keypair_name
   monitoring                  = false
   vpc_security_group_ids      = [module.server_sg_company_a.security_group_id]
   subnet_id                   = var.subnet_id_company_a
   associate_public_ip_address = true
-  source_dest_check           = false
-  # user_data_base64       = base64encode(local.user_data)
-  # iam_instance_profile   = var.iam_role_profile_ec2_ssm
+  iam_instance_profile        = var.ssm_role_profile
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -53,12 +50,45 @@ module "company_b_router" {
   name                        = "${var.prefix}-CompanyB-Router"
   ami                         = "ami-0a15fc610e3955298"
   instance_type               = "t3a.small"
-  key_name                    = aws_key_pair.this.key_name
+  key_name                    = var.keypair_name
   monitoring                  = false
   vpc_security_group_ids      = [module.router_sg_company_b.security_group_id]
   subnet_id                   = var.subnet_id_company_b
   associate_public_ip_address = true
   source_dest_check           = false
-  # user_data_base64       = base64encode(local.user_data)
-  # iam_instance_profile   = var.iam_role_profile_ec2_ssm
+  iam_instance_profile        = var.ssm_role_profile
+}
+
+# ----------------------------------------------------------------------------------------------
+# Company B Server Instance
+# ----------------------------------------------------------------------------------------------
+module "company_b_server" {
+  source                      = "terraform-aws-modules/ec2-instance/aws"
+  version                     = "~> 3.0"
+  name                        = "${var.prefix}-CompanyB-Server"
+  ami                         = "ami-0404778e217f54308"
+  instance_type               = "t3a.small"
+  key_name                    = var.keypair_name
+  monitoring                  = false
+  vpc_security_group_ids      = [module.server_sg_company_b.security_group_id]
+  subnet_id                   = var.subnet_id_company_b
+  associate_public_ip_address = true
+  iam_instance_profile        = var.ssm_role_profile
+}
+
+# ----------------------------------------------------------------------------------------------
+# Company A Server Instance
+# ----------------------------------------------------------------------------------------------
+module "aws_nginx" {
+  source                      = "terraform-aws-modules/ec2-instance/aws"
+  version                     = "~> 3.0"
+  name                        = "${var.prefix}-AWS-NGINX"
+  ami                         = "ami-0404778e217f54308"
+  instance_type               = "t3a.small"
+  key_name                    = var.keypair_name
+  monitoring                  = false
+  vpc_security_group_ids      = [module.aws_sg_nginx.security_group_id]
+  subnet_id                   = var.subnet_id_aws_site
+  associate_public_ip_address = true
+  iam_instance_profile        = var.ssm_role_profile
 }

@@ -29,13 +29,17 @@ module "app" {
   vpc_id_company_a    = module.networking.vpc_id_company_a
   vpc_id_company_b    = module.networking.vpc_id_company_b
   vpc_id_aws_site     = module.networking.vpc_id_aws_site
+  ssm_role_profile    = module.security.iam_role_profile_ec2_ssm
+  keypair_name        = "onecloud"
 }
 
 module "site_to_site_vpn" {
+  depends_on              = [module.app]
   source                  = "./vpn"
   prefix                  = local.prefix
-  company_a_cidr          = module.networking.ip_cidr_company_a
-  company_b_cidr          = module.networking.ip_cidr_company_b
+  ip_cidr_company_a       = module.networking.ip_cidr_company_a
+  ip_cidr_company_b       = module.networking.ip_cidr_company_b
+  ip_cidr_aws_site        = module.networking.ip_cidr_aws_site
   company_a_public_ip     = module.app.linux_router_public_ip
   company_b_public_ip     = module.app.windows_router_public_ip
   vpc_id_aws_site         = module.networking.vpc_id_aws_site
