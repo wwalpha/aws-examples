@@ -1,0 +1,10 @@
+{
+  "name": "site-to-site-vpn-via-private-nat-gateway",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "terraform apply -auto-approve",
+    "destroy": "terraform apply -destroy -auto-approve"
+  }
+}
