@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "terraform apply -auto-approve",
+    "init": "terraform init",
+    "start": "npm run init && terraform apply -auto-approve",
+    "plan": "npm run init && terraform plan",
     "destroy": "terraform apply -destroy -auto-approve"
   }
 }

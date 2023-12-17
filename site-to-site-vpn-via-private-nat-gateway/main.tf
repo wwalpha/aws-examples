@@ -9,39 +9,46 @@ terraform {
   }
 }
 
-module "security" {
-  source = "./security"
+module "step1-networking" {
+  source = "./step1-networking"
   prefix = local.prefix
 }
 
-
-module "networking" {
-  source = "./networking"
-  prefix = local.prefix
+module "step2-security" {
+  depends_on = [module.step1-networking]
+  source     = "./step2-security"
+  prefix     = local.prefix
 }
 
-module "app" {
-  source              = "./app"
-  prefix              = local.prefix
-  subnet_id_company_a = module.networking.subnet_id_company_a
-  # subnet_id_company_b = module.networking.subnet_id_company_b
-  subnet_id_aws_site = module.networking.subnet_id_aws_site
-  vpc_id_company_a   = module.networking.vpc_id_company_a
-  # vpc_id_company_b    = module.networking.vpc_id_company_b
-  vpc_id_aws_site  = module.networking.vpc_id_aws_site
-  ssm_role_profile = module.security.iam_role_profile_ec2_ssm
-  keypair_name     = "onecloud"
+module "step3-components" {
+  depends_on            = [module.step2-security]
+  source                = "./step3-components"
+  prefix                = local.prefix
+  subnet_id_onpremise_a = module.step1-networking.subnet_id_onpremise_a
+  subnet_id_onpremise_b = module.step1-networking.subnet_id_onpremise_b
+  subnet_id_aws_relay_a = module.step1-networking.subnet_id_aws_relay_a
+  subnet_id_aws_relay_b = module.step1-networking.subnet_id_aws_relay_b
+  subnet_id_aws_app     = module.step1-networking.subnet_id_aws_app
+  vpc_id_onpremise_a    = module.step1-networking.vpc_id_onpremise_a
+  vpc_id_onpremise_b    = module.step1-networking.vpc_id_onpremise_b
+  vpc_id_aws_relay_a    = module.step1-networking.vpc_id_aws_relay_a
+  vpc_id_aws_relay_b    = module.step1-networking.vpc_id_aws_relay_b
+  vpc_id_aws_app        = module.step1-networking.vpc_id_aws_app
+  ssm_role_profile      = module.step2-security.iam_role_profile_ec2_ssm
+  keypair_name          = "onecloud"
 }
 
-module "site_to_site_vpn" {
-  depends_on              = [module.app]
-  source                  = "./vpn"
-  prefix                  = local.prefix
-  ip_cidr_company_a       = module.networking.ip_cidr_company_a
-  ip_cidr_aws_site        = module.networking.ip_cidr_aws_site
-  company_a_public_ip     = module.app.linux_router_public_ip
-  vpc_id_aws_site         = module.networking.vpc_id_aws_site
-  route_table_id_aws_site = module.networking.route_table_id_aws_site
-  # ip_cidr_company_b   = module.networking.ip_cidr_company_b
-  # company_b_public_ip     = module.app.windows_router_public_ip
+module "step4-site2site-vpn" {
+  depends_on                    = [module.step3-components]
+  source                        = "./step4-site2site-vpn"
+  prefix                        = local.prefix
+  ip_cidr_onpremise_eu          = module.step1-networking.ip_cidr_onpremise_a
+  ip_cidr_onpremise_us          = module.step1-networking.ip_cidr_onpremise_b
+  ip_cidr_relay_eu              = module.step1-networking.ip_cidr_aws_relay_a
+  ip_cidr_relay_us              = module.step1-networking.ip_cidr_aws_relay_b
+  router_public_ip_onpremise_eu = module.step1-networking.router_public_ip_onpremise_eu
+  router_public_ip_onpremise_us = module.step1-networking.router_public_ip_onpremise_us
+  vpc_id_relay_eu               = module.step1-networking.vpc_id_aws_relay_a
+  vpc_id_relay_us               = module.step1-networking.vpc_id_aws_relay_b
+
 }
