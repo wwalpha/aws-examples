@@ -49,4 +49,10 @@ module "step4-site2site-vpn" {
   router_public_ip_onpremise_us = module.step3-components.router_public_ip_onpremise_us
   vpc_id_relay_eu               = module.step1-networking.vpc_id_aws_relay_eu
   vpc_id_relay_us               = module.step1-networking.vpc_id_aws_relay_us
+  route_table_id_relay_eu       = module.step1-networking.route_table_id_relay_eu
+  route_table_id_relay_us       = module.step1-networking.route_table_id_relay_us
+  route_table_id_onpremise_eu   = module.step1-networking.route_table_id_onpremise_eu
+  route_table_id_onpremise_us   = module.step1-networking.route_table_id_onpremise_us
+  router_eni_id_onpremise_eu    = module.step3-components.router_eni_id_onpremise_eu
+  router_eni_id_onpremise_us    = module.step3-components.router_eni_id_onpremise_us
 }

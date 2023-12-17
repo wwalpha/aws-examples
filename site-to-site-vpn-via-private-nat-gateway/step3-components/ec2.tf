@@ -40,7 +40,7 @@ module "server_for_onpremise_eu" {
 module "router_for_onpremise_us" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Router-for-OnPremiseEU"
+  name                        = "${var.prefix}-Router-for-OnPremiseUS"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
@@ -71,12 +71,12 @@ module "server_for_onpremise_us" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Proxy Instance for Relay A
+# Proxy Instance for Relay EU
 # ----------------------------------------------------------------------------------------------
 module "proxy_for_relay_eu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Proxy-for-RelayA"
+  name                        = "${var.prefix}-Proxy-for-RelayEU"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
@@ -89,12 +89,12 @@ module "proxy_for_relay_eu" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Proxy Instance for Relay A
+# Proxy Instance for Relay US
 # ----------------------------------------------------------------------------------------------
 module "proxy_for_relay_us" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Proxy-for-RelayB"
+  name                        = "${var.prefix}-Proxy-for-RelayUS"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name

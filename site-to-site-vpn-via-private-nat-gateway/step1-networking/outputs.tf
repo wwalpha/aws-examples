@@ -43,3 +43,23 @@ output "ip_cidr_relay_eu" {
 output "ip_cidr_relay_us" {
   value = module.relay_vpc_for_us.vpc_cidr_block
 }
+output "ip_cidr_aws_app" {
+  value = module.aws_app_vpc.vpc_cidr_block
+}
+
+output "route_table_id_onpremise_eu" {
+  value = module.onpremise_eu_vpc.public_route_table_ids[0]
+}
+output "route_table_id_onpremise_us" {
+  value = module.onpremise_us_vpc.public_route_table_ids[0]
+}
+output "route_table_id_relay_eu" {
+  value = module.relay_vpc_for_eu.public_route_table_ids[0]
+}
+output "route_table_id_relay_us" {
+  value = module.relay_vpc_for_us.public_route_table_ids[0]
+}
+
+output "test" {
+  value = module.relay_vpc_for_us
+}

@@ -18,14 +18,6 @@ resource "aws_vpn_gateway_attachment" "onpremise_relay_eu" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS VPN Gateway Route Propagation for OnPremiseEU
-# ----------------------------------------------------------------------------------------------
-# resource "aws_vpn_gateway_route_propagation" "onpremise_relay_eu" {
-#   vpn_gateway_id = aws_vpn_gateway.onpremise_relay_eu.id
-#   route_table_id = var.route_table_id_aws_site
-# }
-
-# ----------------------------------------------------------------------------------------------
 # AWS Virtual Private Gateway for OnPremise US
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpn_gateway" "onpremise_relay_us" {

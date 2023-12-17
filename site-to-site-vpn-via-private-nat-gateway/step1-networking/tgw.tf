@@ -2,7 +2,9 @@
 # AWS Transit Gateway
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway" "this" {
-  description = "example"
+  description                     = "example"
+  default_route_table_propagation = "disable"
+  default_route_table_association = "disable"
   tags = {
     Name = "${var.prefix}-tgw"
   }

@@ -32,7 +32,7 @@ module "onpremise_us_vpc" {
 module "relay_vpc_for_eu" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name                 = "${var.prefix}-AWS-Relay-OnPremiseEU"
+  name                 = "${var.prefix}-RelayEU"
   cidr                 = "10.0.0.0/16"
   azs                  = local.availability_zones
   public_subnets       = ["10.0.0.0/24", "10.0.1.0/24"]
@@ -46,7 +46,7 @@ module "relay_vpc_for_eu" {
 module "relay_vpc_for_us" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name                 = "${var.prefix}-AWS-Relay-OnPremiseUS"
+  name                 = "${var.prefix}-RelayUS"
   cidr                 = "10.1.0.0/16"
   azs                  = local.availability_zones
   public_subnets       = ["10.1.0.0/24", "10.1.1.0/24"]

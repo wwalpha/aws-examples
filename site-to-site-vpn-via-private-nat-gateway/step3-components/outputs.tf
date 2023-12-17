@@ -18,3 +18,15 @@ output "proxy_private_ip_relay_us" {
 output "nginx_private_ip_app" {
   value = module.aws_nginx.private_ip
 }
+
+output "router_eni_id_onpremise_eu" {
+  value = module.router_for_onpremise_eu.primary_network_interface_id
+}
+output "router_eni_id_onpremise_us" {
+  value = module.router_for_onpremise_us.primary_network_interface_id
+}
+
+
+output "test" {
+  value = module.router_for_onpremise_us
+}

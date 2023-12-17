@@ -11,25 +11,25 @@ resource "aws_vpn_connection" "onpremise_relay_eu" {
   remote_ipv4_network_cidr = var.ip_cidr_relay_eu
 
   tags = {
-    Name = "${var.prefix}-onpremise-relay-eu"
+    Name = "${var.prefix}-onpremise-RelayEU"
   }
 }
 
-# # ----------------------------------------------------------------------------------------------
-# # OnPremise EU Side Route
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_vpn_connection_route" "relay_to_onpremise_eu" {
-#   destination_cidr_block = var.ip_cidr_onpremise_eu
-#   vpn_connection_id      = aws_vpn_connection.onpremise_relay_eu.id
-# }
+# ----------------------------------------------------------------------------------------------
+# OnPremise EU Side Route
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpn_connection_route" "relay_to_onpremise_eu" {
+  destination_cidr_block = var.ip_cidr_onpremise_eu
+  vpn_connection_id      = aws_vpn_connection.onpremise_relay_eu.id
+}
 
-# # ----------------------------------------------------------------------------------------------
-# # Relay Side Route
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_vpn_connection_route" "onpremise_to_relay_eu" {
-#   destination_cidr_block = var.ip_cidr_relay_eu
-#   vpn_connection_id      = aws_vpn_connection.onpremise_relay_eu.id
-# }
+# ----------------------------------------------------------------------------------------------
+# Relay Side Route
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpn_connection_route" "onpremise_to_relay_eu" {
+  destination_cidr_block = var.ip_cidr_relay_eu
+  vpn_connection_id      = aws_vpn_connection.onpremise_relay_eu.id
+}
 
 # ----------------------------------------------------------------------------------------------
 # OnPremise US and AWS Site to Site VPN
@@ -44,22 +44,22 @@ resource "aws_vpn_connection" "onpremise_relay_us" {
   remote_ipv4_network_cidr = var.ip_cidr_relay_us
 
   tags = {
-    Name = "${var.prefix}-onpremise-relay-b"
+    Name = "${var.prefix}-onpremise-RelayUS"
   }
 }
 
-# # ----------------------------------------------------------------------------------------------
-# # OnPremise US Side Route
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_vpn_connection_route" "relay_to_onpremise_us" {
-#   destination_cidr_block = var.ip_cidr_onpremise_us
-#   vpn_connection_id      = aws_vpn_connection.onpremise_relay_us.id
-# }
+# ----------------------------------------------------------------------------------------------
+# OnPremise US Side Route
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpn_connection_route" "relay_to_onpremise_us" {
+  destination_cidr_block = var.ip_cidr_onpremise_us
+  vpn_connection_id      = aws_vpn_connection.onpremise_relay_us.id
+}
 
-# # ----------------------------------------------------------------------------------------------
-# # Relay Side Route
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_vpn_connection_route" "onpremise_to_relay_us" {
-#   destination_cidr_block = var.ip_cidr_relay_us
-#   vpn_connection_id      = aws_vpn_connection.onpremise_relay_us.id
-# }
+# ----------------------------------------------------------------------------------------------
+# Relay Side Route
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpn_connection_route" "onpremise_to_relay_us" {
+  destination_cidr_block = var.ip_cidr_relay_us
+  vpn_connection_id      = aws_vpn_connection.onpremise_relay_us.id
+}
