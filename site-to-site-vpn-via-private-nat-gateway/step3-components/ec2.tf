@@ -1,16 +1,16 @@
 # ----------------------------------------------------------------------------------------------
-# Router Instance for OnPremise A
+# Router Instance for OnPremise EU
 # ----------------------------------------------------------------------------------------------
-module "router_for_onpremise_a" {
+module "router_for_onpremise_eu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Router-for-OnPremiseA"
+  name                        = "${var.prefix}-Router-for-OnPremiseEU"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_onpremise_a.security_group_id]
-  subnet_id                   = var.subnet_id_onpremise_a
+  vpc_security_group_ids      = [module.router_sg_onpremise_eu.security_group_id]
+  subnet_id                   = var.subnet_id_onpremise_eu
   associate_public_ip_address = true
   source_dest_check           = false
   user_data_base64            = base64encode(local.openswan_user_data)
@@ -18,35 +18,35 @@ module "router_for_onpremise_a" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Server Instance for OnPremise A
+# Server Instance for OnPremise EU
 # ----------------------------------------------------------------------------------------------
-module "server_for_onpremise_a" {
+module "server_for_onpremise_eu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Server-for-OnPremiseA"
+  name                        = "${var.prefix}-Server-for-OnPremiseEU"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_onpremise_a.security_group_id]
-  subnet_id                   = var.subnet_id_onpremise_a
+  vpc_security_group_ids      = [module.router_sg_onpremise_eu.security_group_id]
+  subnet_id                   = var.subnet_id_onpremise_eu
   associate_public_ip_address = true
   iam_instance_profile        = var.ssm_role_profile
 }
 
 # ----------------------------------------------------------------------------------------------
-# Router Instance for OnPremise B
+# Router Instance for OnPremise US
 # ----------------------------------------------------------------------------------------------
-module "router_for_onpremise_b" {
+module "router_for_onpremise_us" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Router-for-OnPremiseA"
+  name                        = "${var.prefix}-Router-for-OnPremiseEU"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_onpremise_b.security_group_id]
-  subnet_id                   = var.subnet_id_onpremise_b
+  vpc_security_group_ids      = [module.router_sg_onpremise_us.security_group_id]
+  subnet_id                   = var.subnet_id_onpremise_us
   associate_public_ip_address = true
   source_dest_check           = false
   user_data_base64            = base64encode(local.openswan_user_data)
@@ -54,18 +54,18 @@ module "router_for_onpremise_b" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Server Instance for OnPremise B
+# Server Instance for OnPremise US
 # ----------------------------------------------------------------------------------------------
-module "server_for_onpremise_b" {
+module "server_for_onpremise_us" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-Server-for-OnPremiseB"
+  name                        = "${var.prefix}-Server-for-OnPremiseUS"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_onpremise_b.security_group_id]
-  subnet_id                   = var.subnet_id_onpremise_b
+  vpc_security_group_ids      = [module.router_sg_onpremise_us.security_group_id]
+  subnet_id                   = var.subnet_id_onpremise_us
   associate_public_ip_address = true
   iam_instance_profile        = var.ssm_role_profile
 }
@@ -73,7 +73,7 @@ module "server_for_onpremise_b" {
 # ----------------------------------------------------------------------------------------------
 # Proxy Instance for Relay A
 # ----------------------------------------------------------------------------------------------
-module "proxy_for_relay_a" {
+module "proxy_for_relay_eu" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
   name                        = "${var.prefix}-Proxy-for-RelayA"
@@ -81,8 +81,8 @@ module "proxy_for_relay_a" {
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.proxy_sg_relay_a.security_group_id]
-  subnet_id                   = var.subnet_id_aws_relay_a
+  vpc_security_group_ids      = [module.proxy_sg_relay_eu.security_group_id]
+  subnet_id                   = var.subnet_id_aws_relay_eu
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.proxy_user_data)
   iam_instance_profile        = var.ssm_role_profile
@@ -91,7 +91,7 @@ module "proxy_for_relay_a" {
 # ----------------------------------------------------------------------------------------------
 # Proxy Instance for Relay A
 # ----------------------------------------------------------------------------------------------
-module "proxy_for_relay_b" {
+module "proxy_for_relay_us" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
   name                        = "${var.prefix}-Proxy-for-RelayB"
@@ -99,8 +99,8 @@ module "proxy_for_relay_b" {
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.proxy_sg_relay_b.security_group_id]
-  subnet_id                   = var.subnet_id_aws_relay_b
+  vpc_security_group_ids      = [module.proxy_sg_relay_us.security_group_id]
+  subnet_id                   = var.subnet_id_aws_relay_us
   associate_public_ip_address = true
   user_data_base64            = base64encode(local.proxy_user_data)
   iam_instance_profile        = var.ssm_role_profile

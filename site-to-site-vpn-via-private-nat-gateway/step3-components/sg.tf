@@ -1,11 +1,11 @@
 # ----------------------------------------------------------------------------------------------
-# Router Instance Security Group for OnPremiseA
+# Router Instance Security Group for OnPremiseEU
 # ----------------------------------------------------------------------------------------------
-module "router_sg_onpremise_a" {
+module "router_sg_onpremise_eu" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_router_sg_onpremise_a"
-  vpc_id = var.vpc_id_onpremise_a
+  name   = "${var.prefix}_router_sg_onpremise_eu"
+  vpc_id = var.vpc_id_onpremise_eu
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
@@ -24,13 +24,13 @@ module "router_sg_onpremise_a" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Router Instance Security Group for OnPremiseA
+# Router Instance Security Group for OnPremiseEU
 # ----------------------------------------------------------------------------------------------
-module "router_sg_onpremise_b" {
+module "router_sg_onpremise_us" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_router_sg_onpremise_b"
-  vpc_id = var.vpc_id_onpremise_b
+  name   = "${var.prefix}_router_sg_onpremise_us"
+  vpc_id = var.vpc_id_onpremise_us
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
@@ -51,11 +51,11 @@ module "router_sg_onpremise_b" {
 # ----------------------------------------------------------------------------------------------
 # NLB Security Group for Relay A
 # ----------------------------------------------------------------------------------------------
-module "nlb_sg_relay_a" {
+module "nlb_sg_relay_eu" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_nlb_sg_relay_a"
-  vpc_id = var.vpc_id_aws_relay_a
+  name   = "${var.prefix}_nlb_sg_relay_eu"
+  vpc_id = var.vpc_id_aws_relay_eu
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
@@ -76,11 +76,11 @@ module "nlb_sg_relay_a" {
 # ----------------------------------------------------------------------------------------------
 # Proxy Security Group for Relay A
 # ----------------------------------------------------------------------------------------------
-module "proxy_sg_relay_a" {
+module "proxy_sg_relay_eu" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_proxy_sg_relay_a"
-  vpc_id = var.vpc_id_aws_relay_a
+  name   = "${var.prefix}_proxy_sg_relay_eu"
+  vpc_id = var.vpc_id_aws_relay_eu
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
@@ -101,11 +101,11 @@ module "proxy_sg_relay_a" {
 # ----------------------------------------------------------------------------------------------
 # NLB Security Group for Relay B
 # ----------------------------------------------------------------------------------------------
-module "nlb_sg_relay_b" {
+module "nlb_sg_relay_us" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_nlb_sg_relay_b"
-  vpc_id = var.vpc_id_aws_relay_b
+  name   = "${var.prefix}_nlb_sg_relay_us"
+  vpc_id = var.vpc_id_aws_relay_us
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
@@ -126,11 +126,11 @@ module "nlb_sg_relay_b" {
 # ----------------------------------------------------------------------------------------------
 # Proxy Security Group for Relay B
 # ----------------------------------------------------------------------------------------------
-module "proxy_sg_relay_b" {
+module "proxy_sg_relay_us" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_proxy_sg_relay_b"
-  vpc_id = var.vpc_id_aws_relay_b
+  name   = "${var.prefix}_proxy_sg_relay_us"
+  vpc_id = var.vpc_id_aws_relay_us
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
