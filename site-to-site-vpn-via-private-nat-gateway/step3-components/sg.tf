@@ -49,7 +49,7 @@ module "router_sg_onpremise_us" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# NLB Security Group for Relay A
+# NLB Security Group for Relay EU
 # ----------------------------------------------------------------------------------------------
 module "nlb_sg_relay_eu" {
   source = "terraform-aws-modules/security-group/aws"
@@ -74,7 +74,7 @@ module "nlb_sg_relay_eu" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Proxy Security Group for Relay A
+# Proxy Security Group for Relay EU
 # ----------------------------------------------------------------------------------------------
 module "proxy_sg_relay_eu" {
   source = "terraform-aws-modules/security-group/aws"
@@ -99,7 +99,7 @@ module "proxy_sg_relay_eu" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# NLB Security Group for Relay B
+# NLB Security Group for Relay US
 # ----------------------------------------------------------------------------------------------
 module "nlb_sg_relay_us" {
   source = "terraform-aws-modules/security-group/aws"
@@ -124,7 +124,7 @@ module "nlb_sg_relay_us" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Proxy Security Group for Relay B
+# Proxy Security Group for Relay US
 # ----------------------------------------------------------------------------------------------
 module "proxy_sg_relay_us" {
   source = "terraform-aws-modules/security-group/aws"
@@ -147,6 +147,32 @@ module "proxy_sg_relay_us" {
       cidr_blocks = "0.0.0.0/0"
   }]
 }
+
+# ----------------------------------------------------------------------------------------------
+# Proxy Security Group for Relay JP
+# ----------------------------------------------------------------------------------------------
+module "proxy_sg_relay_jp" {
+  source = "terraform-aws-modules/security-group/aws"
+
+  name   = "${var.prefix}_proxy_sg_relay_jp"
+  vpc_id = var.vpc_id_aws_relay_jp
+  ingress_with_cidr_blocks = [
+    {
+      rule        = "all-icmp"
+      cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      rule        = "all-all"
+      cidr_blocks = "0.0.0.0/0"
+    }
+  ]
+  egress_with_cidr_blocks = [
+    {
+      rule        = "all-all"
+      cidr_blocks = "0.0.0.0/0"
+  }]
+}
+
 
 # ----------------------------------------------------------------------------------------------
 # AWS NGINX Security Group

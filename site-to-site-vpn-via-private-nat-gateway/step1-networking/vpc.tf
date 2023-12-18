@@ -27,6 +27,20 @@ module "onpremise_us_vpc" {
 }
 
 # ----------------------------------------------------------------------------------------------
+# OnPremise JP VPC
+# ----------------------------------------------------------------------------------------------
+module "onpremise_jp_vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name                 = "${var.prefix}-OnPremiseJP"
+  cidr                 = "172.16.0.0/16"
+  azs                  = local.availability_zones
+  public_subnets       = ["172.16.0.0/24", "172.16.1.0/24"]
+  enable_dns_hostnames = true
+  enable_nat_gateway   = false
+}
+
+# ----------------------------------------------------------------------------------------------
 # AWS Relay VPC for OnPremise EU
 # ----------------------------------------------------------------------------------------------
 module "relay_vpc_for_eu" {
@@ -55,6 +69,20 @@ module "relay_vpc_for_us" {
 }
 
 # ----------------------------------------------------------------------------------------------
+# AWS Relay VPC for OnPremise JP
+# ----------------------------------------------------------------------------------------------
+module "relay_vpc_for_jp" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name                 = "${var.prefix}-RelayJP"
+  cidr                 = "10.2.0.0/16"
+  azs                  = local.availability_zones
+  public_subnets       = ["10.2.0.0/24", "10.2.1.0/24"]
+  enable_dns_hostnames = true
+  enable_nat_gateway   = false
+}
+
+# ----------------------------------------------------------------------------------------------
 # AWS Application VPC
 # ----------------------------------------------------------------------------------------------
 module "aws_app_vpc" {
@@ -66,4 +94,48 @@ module "aws_app_vpc" {
   public_subnets       = ["10.10.0.0/24", "10.10.1.0/24"]
   enable_dns_hostnames = true
   enable_nat_gateway   = false
+}
+
+# ----------------------------------------------------------------------------------------------
+# Relay EU Peering with Relay JP
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpc_peering_connection" "relay_eu_peering_relay_jp" {
+  peer_owner_id = local.aws_account_id
+  peer_vpc_id   = module.relay_vpc_for_jp.vpc_id
+  vpc_id        = module.relay_vpc_for_eu.vpc_id
+  auto_accept   = true
+
+  accepter {
+    allow_remote_vpc_dns_resolution = true
+  }
+
+  requester {
+    allow_remote_vpc_dns_resolution = true
+  }
+
+  tags = {
+    Name = "${var.prefix}-RelayEU-Peering-RelayJP"
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# Relay US Peering with Relay JP
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpc_peering_connection" "relay_us_peering_relay_jp" {
+  peer_owner_id = local.aws_account_id
+  peer_vpc_id   = module.relay_vpc_for_jp.vpc_id
+  vpc_id        = module.relay_vpc_for_us.vpc_id
+  auto_accept   = true
+
+  accepter {
+    allow_remote_vpc_dns_resolution = true
+  }
+
+  requester {
+    allow_remote_vpc_dns_resolution = true
+  }
+
+  tags = {
+    Name = "${var.prefix}-RelayUS-Peering-RelayJP"
+  }
 }

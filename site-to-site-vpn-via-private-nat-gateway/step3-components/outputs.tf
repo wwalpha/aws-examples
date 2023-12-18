@@ -2,15 +2,16 @@
 output "router_public_ip_onpremise_eu" {
   value = module.router_for_onpremise_eu.public_ip
 }
-
 output "router_public_ip_onpremise_us" {
   value = module.router_for_onpremise_us.public_ip
+}
+output "router_public_ip_onpremise_jp" {
+  value = module.router_for_onpremise_jp.public_ip
 }
 
 output "proxy_private_ip_relay_eu" {
   value = module.proxy_for_relay_eu.private_ip
 }
-
 output "proxy_private_ip_relay_us" {
   value = module.proxy_for_relay_us.private_ip
 }
@@ -25,8 +26,7 @@ output "router_eni_id_onpremise_eu" {
 output "router_eni_id_onpremise_us" {
   value = module.router_for_onpremise_us.primary_network_interface_id
 }
-
-
-output "test" {
-  value = module.router_for_onpremise_us
+output "router_eni_id_onpremise_jp" {
+  value = module.router_for_onpremise_jp.primary_network_interface_id
 }
+

@@ -11,7 +11,7 @@ resource "aws_ec2_transit_gateway" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Transit Gateway VPC Attachment for Relay VPC A
+# AWS Transit Gateway VPC Attachment for Relay EU VPC
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_vpc_attachment" "relay_eu" {
   subnet_ids         = [module.relay_vpc_for_eu.public_subnets[0]]
@@ -20,12 +20,21 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "relay_eu" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Transit Gateway VPC Attachment for Relay VPC B
+# AWS Transit Gateway VPC Attachment for Relay US VPC
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_vpc_attachment" "relay_us" {
   subnet_ids         = [module.relay_vpc_for_us.public_subnets[0]]
   transit_gateway_id = aws_ec2_transit_gateway.this.id
   vpc_id             = module.relay_vpc_for_us.vpc_id
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Transit Gateway VPC Attachment for Relay JP VPC
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_vpc_attachment" "relay_jp" {
+  subnet_ids         = [module.relay_vpc_for_jp.public_subnets[0]]
+  transit_gateway_id = aws_ec2_transit_gateway.this.id
+  vpc_id             = module.relay_vpc_for_jp.vpc_id
 }
 
 # ----------------------------------------------------------------------------------------------

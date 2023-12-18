@@ -15,3 +15,13 @@ resource "aws_customer_gateway" "onpremise_us" {
   ip_address = var.router_public_ip_onpremise_us
   type       = "ipsec.1"
 }
+
+# ----------------------------------------------------------------------------------------------
+# Customer Gateway for OnPremise JP
+# ----------------------------------------------------------------------------------------------
+resource "aws_customer_gateway" "onpremise_jp" {
+  bgp_asn    = 65000
+  ip_address = var.router_public_ip_onpremise_jp
+  type       = "ipsec.1"
+}
+
