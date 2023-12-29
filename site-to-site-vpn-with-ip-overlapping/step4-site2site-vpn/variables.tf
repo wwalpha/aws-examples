@@ -23,6 +23,6 @@ variable "route_table_id_relay_eu" {}
 variable "route_table_id_relay_us" {}
 variable "route_table_id_relay_jp" {}
 
-variable "router_eni_id_onpremise_eu" {}
-variable "router_eni_id_onpremise_us" {}
-variable "router_eni_id_onpremise_jp" {}
+variable "router_eni_id_eu" {}
+variable "router_eni_id_us" {}
+variable "router_eni_id_jp" {}

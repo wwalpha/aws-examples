@@ -20,7 +20,7 @@ resource "aws_vpn_gateway_route_propagation" "onpremise_relay_us" {
 resource "aws_route" "onpremise_eu" {
   route_table_id         = var.route_table_id_onpremise_eu
   destination_cidr_block = var.ip_cidr_relay_eu
-  network_interface_id   = var.router_eni_id_onpremise_eu
+  network_interface_id   = var.router_eni_id_eu
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ resource "aws_route" "onpremise_eu" {
 resource "aws_route" "onpremise_us" {
   route_table_id         = var.route_table_id_onpremise_us
   destination_cidr_block = var.ip_cidr_relay_us
-  network_interface_id   = var.router_eni_id_onpremise_us
+  network_interface_id   = var.router_eni_id_us
 }
 
 # ----------------------------------------------------------------------------------------------

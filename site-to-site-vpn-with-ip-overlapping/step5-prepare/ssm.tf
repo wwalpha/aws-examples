@@ -55,6 +55,9 @@ mainSteps:
 DOC
 }
 
+# ----------------------------------------------------------------------------------------------
+# Configure VPN Router for OnPremise JP
+# ----------------------------------------------------------------------------------------------
 resource "null_resource" "configure_vpn_jp" {
   depends_on = [aws_ssm_document.router]
   provisioner "local-exec" {
@@ -63,6 +66,38 @@ aws ssm send-command \
     --document-name ${aws_ssm_document.router.name} \
     --instance-ids ${var.instance_id_router_jp} \
     --parameters customerGatewayAddress=${local.customer_gateway_address_jp},customerGatewaySubnet=${var.ipv4_cidr_onpremise_jp},vpnTunnelAddress=${var.tunnel_address_jp},vpnSubnet=${var.ipv4_cidr_aws_jp},pskKey=${var.s2s_psk_key_jp} \
+    --output text
+EOF
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# Configure VPN Router for OnPremise EU
+# ----------------------------------------------------------------------------------------------
+resource "null_resource" "configure_vpn_eu" {
+  depends_on = [aws_ssm_document.router]
+  provisioner "local-exec" {
+    command = <<EOF
+aws ssm send-command \
+    --document-name ${aws_ssm_document.router.name} \
+    --instance-ids ${var.instance_id_router_eu} \
+    --parameters customerGatewayAddress=${local.customer_gateway_address_eu},customerGatewaySubnet=${var.ipv4_cidr_onpremise_eu},vpnTunnelAddress=${var.tunnel_address_eu},vpnSubnet=${var.ipv4_cidr_aws_eu},pskKey=${var.s2s_psk_key_eu} \
+    --output text
+EOF
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# Configure VPN Router for OnPremise US
+# ----------------------------------------------------------------------------------------------
+resource "null_resource" "configure_vpn_us" {
+  depends_on = [aws_ssm_document.router]
+  provisioner "local-exec" {
+    command = <<EOF
+aws ssm send-command \
+    --document-name ${aws_ssm_document.router.name} \
+    --instance-ids ${var.instance_id_router_us} \
+    --parameters customerGatewayAddress=${local.customer_gateway_address_us},customerGatewaySubnet=${var.ipv4_cidr_onpremise_us},vpnTunnelAddress=${var.tunnel_address_us},vpnSubnet=${var.ipv4_cidr_aws_us},pskKey=${var.s2s_psk_key_us} \
     --output text
 EOF
   }

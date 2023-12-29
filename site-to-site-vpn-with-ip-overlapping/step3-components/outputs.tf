@@ -20,22 +20,22 @@ output "nginx_private_ip_app" {
   value = module.aws_nginx.private_ip
 }
 
-output "router_eni_id_onpremise_eu" {
+output "router_eni_id_eu" {
   value = module.router_for_onpremise_eu.primary_network_interface_id
 }
-output "router_eni_id_onpremise_us" {
+output "router_eni_id_us" {
   value = module.router_for_onpremise_us.primary_network_interface_id
 }
-output "router_eni_id_onpremise_jp" {
+output "router_eni_id_jp" {
   value = module.router_for_onpremise_jp.primary_network_interface_id
 }
 
-output "instance_id_router_onpremise_eu" {
+output "instance_id_router_eu" {
   value = module.router_for_onpremise_eu.id
 }
-output "instance_id_router_onpremise_us" {
+output "instance_id_router_us" {
   value = module.router_for_onpremise_us.id
 }
-output "instance_id_router_onpremise_jp" {
+output "instance_id_router_jp" {
   value = module.router_for_onpremise_jp.id
 }
