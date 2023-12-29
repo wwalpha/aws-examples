@@ -15,4 +15,14 @@ yum install -y amazon-ssm-agent openswan
 systemctl enable ipsec
 systemctl start ipsec
 EOF
+
+  application_user_data = <<EOF
+#!/bin/bash
+yum update -y
+yum install -y amazon-ssm-agent
+amazon-linux-extras install -y nginx1
+systemctl start nginx
+systemctl enable nginx
+echo "Application host on AWS" > /usr/share/nginx/html/index.html
+EOF
 }

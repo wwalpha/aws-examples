@@ -167,7 +167,7 @@ module "proxy_for_relay_jp" {
 module "aws_nginx" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
-  name                        = "${var.prefix}-AWS-NGINX"
+  name                        = "${var.prefix}-AWS-Application"
   ami                         = "ami-0404778e217f54308"
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
@@ -175,6 +175,6 @@ module "aws_nginx" {
   vpc_security_group_ids      = [module.nginx_sg.security_group_id]
   subnet_id                   = var.subnet_id_aws_app
   associate_public_ip_address = true
-  user_data_base64            = base64encode(local.proxy_user_data)
+  user_data_base64            = base64encode(local.application_user_data)
   iam_instance_profile        = var.ssm_role_profile
 }
