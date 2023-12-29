@@ -4,7 +4,7 @@
 - Terraform
 - Yarn
 
-## Create
+## Provision
 ```
 $ yarn start
 
@@ -31,5 +31,9 @@ $ curl http://10.0.0.10
 Application host on AWS
 ```
 
+## Destroy
+```
+$ yarn destroy
+```
 
 ![img](./docs/site-to-site-vpn.png)
