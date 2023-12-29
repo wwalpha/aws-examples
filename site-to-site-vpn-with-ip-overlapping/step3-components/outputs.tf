@@ -27,7 +27,7 @@ output "proxy_private_ip_relay_us" {
 }
 
 output "nginx_private_ip_app" {
-  value = module.aws_nginx.private_ip
+  value = module.aws_application.private_ip
 }
 
 output "router_eni_id_eu" {
@@ -51,11 +51,11 @@ output "instance_id_router_jp" {
 }
 
 output "relay_nlb_private_ip_eu" {
-  value = aws_lb.relay_eu.subnet_mapping
+  value = one(aws_lb.relay_eu.subnet_mapping[*].private_ipv4_address)
 }
 output "relay_nlb_private_ip_us" {
-  value = aws_lb.relay_us.subnet_mapping
+  value = one(aws_lb.relay_us.subnet_mapping[*].private_ipv4_address)
 }
 output "relay_nlb_private_ip_jp" {
-  value = aws_lb.relay_jp.subnet_mapping
+  value = one(aws_lb.relay_jp.subnet_mapping[*].private_ipv4_address)
 }

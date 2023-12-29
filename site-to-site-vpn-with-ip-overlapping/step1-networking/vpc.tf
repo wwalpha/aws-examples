@@ -99,43 +99,43 @@ module "aws_app_vpc" {
 # ----------------------------------------------------------------------------------------------
 # Relay EU Peering with Relay JP
 # ----------------------------------------------------------------------------------------------
-resource "aws_vpc_peering_connection" "relay_eu_peering_relay_jp" {
-  peer_owner_id = local.aws_account_id
-  peer_vpc_id   = module.relay_vpc_for_jp.vpc_id
-  vpc_id        = module.relay_vpc_for_eu.vpc_id
-  auto_accept   = true
+# resource "aws_vpc_peering_connection" "relay_eu_peering_relay_jp" {
+#   peer_owner_id = local.aws_account_id
+#   peer_vpc_id   = module.relay_vpc_for_jp.vpc_id
+#   vpc_id        = module.relay_vpc_for_eu.vpc_id
+#   auto_accept   = true
 
-  accepter {
-    allow_remote_vpc_dns_resolution = true
-  }
+#   accepter {
+#     allow_remote_vpc_dns_resolution = true
+#   }
 
-  requester {
-    allow_remote_vpc_dns_resolution = true
-  }
+#   requester {
+#     allow_remote_vpc_dns_resolution = true
+#   }
 
-  tags = {
-    Name = "${var.prefix}-RelayEU-Peering-RelayJP"
-  }
-}
+#   tags = {
+#     Name = "${var.prefix}-RelayEU-Peering-RelayJP"
+#   }
+# }
 
 # ----------------------------------------------------------------------------------------------
 # Relay US Peering with Relay JP
 # ----------------------------------------------------------------------------------------------
-resource "aws_vpc_peering_connection" "relay_us_peering_relay_jp" {
-  peer_owner_id = local.aws_account_id
-  peer_vpc_id   = module.relay_vpc_for_jp.vpc_id
-  vpc_id        = module.relay_vpc_for_us.vpc_id
-  auto_accept   = true
+# resource "aws_vpc_peering_connection" "relay_us_peering_relay_jp" {
+#   peer_owner_id = local.aws_account_id
+#   peer_vpc_id   = module.relay_vpc_for_jp.vpc_id
+#   vpc_id        = module.relay_vpc_for_us.vpc_id
+#   auto_accept   = true
 
-  accepter {
-    allow_remote_vpc_dns_resolution = true
-  }
+#   accepter {
+#     allow_remote_vpc_dns_resolution = true
+#   }
 
-  requester {
-    allow_remote_vpc_dns_resolution = true
-  }
+#   requester {
+#     allow_remote_vpc_dns_resolution = true
+#   }
 
-  tags = {
-    Name = "${var.prefix}-RelayUS-Peering-RelayJP"
-  }
-}
+#   tags = {
+#     Name = "${var.prefix}-RelayUS-Peering-RelayJP"
+#   }
+# }

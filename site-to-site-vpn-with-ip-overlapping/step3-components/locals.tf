@@ -4,6 +4,7 @@ locals {
 yum update -y
 yum install -y amazon-ssm-agent
 amazon-linux-extras install -y nginx1
+server { location / { proxy_pass http://${module.aws_application.private_ip}/; }}
 systemctl start nginx
 systemctl enable nginx
 EOF

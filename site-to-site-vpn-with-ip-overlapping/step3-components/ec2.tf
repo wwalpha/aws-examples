@@ -111,6 +111,7 @@ module "server_for_onpremise_jp" {
 # Proxy Instance for Relay EU
 # ----------------------------------------------------------------------------------------------
 module "proxy_for_relay_eu" {
+  depends_on                  = [module.aws_application]
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
   name                        = "${var.prefix}-Proxy-for-RelayEU"
@@ -129,6 +130,7 @@ module "proxy_for_relay_eu" {
 # Proxy Instance for Relay US
 # ----------------------------------------------------------------------------------------------
 module "proxy_for_relay_us" {
+  depends_on                  = [module.aws_application]
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
   name                        = "${var.prefix}-Proxy-for-RelayUS"
@@ -147,6 +149,7 @@ module "proxy_for_relay_us" {
 # Proxy Instance for Relay JP
 # ----------------------------------------------------------------------------------------------
 module "proxy_for_relay_jp" {
+  depends_on                  = [module.aws_application]
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
   name                        = "${var.prefix}-Proxy-for-RelayJP"
@@ -164,7 +167,7 @@ module "proxy_for_relay_jp" {
 # ----------------------------------------------------------------------------------------------
 # AWS Side Server Instance
 # ----------------------------------------------------------------------------------------------
-module "aws_nginx" {
+module "aws_application" {
   source                      = "terraform-aws-modules/ec2-instance/aws"
   version                     = "~> 3.0"
   name                        = "${var.prefix}-AWS-Application"
