@@ -20,11 +20,92 @@ resource "aws_ecs_cluster" "this" {
 # AWS ECS Task Definition
 # ----------------------------------------------------------------------------------------------
 resource "aws_ecs_task_definition" "example" {
-  container_definitions    = "[{\"command\":[],\"cpu\":0,\"dnsSearchDomains\":[],\"dnsServers\":[],\"dockerLabels\":{},\"dockerSecurityOptions\":[],\"entryPoint\":[],\"environment\":[{\"name\":\"AWS_REGION\",\"value\":\"ap-northeast-1\"},{\"name\":\"DYNAMODB_CHARGE_POINT_TABLE\",\"value\":\"AwsOcppGatewayStack-ChargePointTable0F8300CB-1XCIDGMIAHS16\"},{\"name\":\"IOT_ENDPOINT\",\"value\":\"a13869jpvvkeq-ats.iot.ap-northeast-1.amazonaws.com\"},{\"name\":\"IOT_PORT\",\"value\":\"8883\"},{\"name\":\"OCPP_GATEWAY_PORT\",\"value\":\"80\"},{\"name\":\"OCPP_PROTOCOLS\",\"value\":\"ocpp1.6,ocpp2.0,ocpp2.0.1\"}],\"environmentFiles\":[],\"essential\":true,\"extraHosts\":[],\"image\":\"334678299258.dkr.ecr.ap-northeast-1.amazonaws.com/cdk-hnb659fds-container-assets-334678299258-ap-northeast-1:54bb477662008be37c1b2a4c3944d11a0801c00cee45255db5c0347539857764\",\"links\":[],\"logConfiguration\":{\"logDriver\":\"awslogs\",\"options\":{\"awslogs-group\":\"AwsOcppGatewayStack-LogGroupF5B46931-prkaDaQrM9Js\",\"awslogs-region\":\"ap-northeast-1\",\"awslogs-stream-prefix\":\"Gateway\"},\"secretOptions\":[]},\"mountPoints\":[{\"containerPath\":\"/etc/iot-certificates/\",\"readOnly\":false,\"sourceVolume\":\"iot-certificate-volume\"}],\"name\":\"Container\",\"portMappings\":[{\"containerPort\":80,\"hostPort\":80,\"protocol\":\"tcp\"}],\"secrets\":[{\"name\":\"IOT_AMAZON_ROOT_CA\",\"valueFrom\":\"arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTAmazonRootCAStorage2C3D4-hqP9jEMX0CTV-jfDYdb\"},{\"name\":\"IOT_GATEWAY_CERTIFICATE\",\"valueFrom\":\"arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPemCertificate43539AB1-ukXv1Sxd8Gby-1gg0u0\"},{\"name\":\"IOT_GATEWAY_PUBLIC_KEY\",\"valueFrom\":\"arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPublicCertificate41596AD-AaaBXTRnkjj9-7UchKQ\"},{\"name\":\"IOT_GATEWAY_PRIVATE_KEY\",\"valueFrom\":\"arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPrivateCertificateCD8C5E-dC1LKHE8JOnE-TN5ayM\"}],\"systemControls\":[],\"ulimits\":[{\"hardLimit\":65536,\"name\":\"nofile\",\"softLimit\":65536}],\"volumesFrom\":[]}]"
+  family = "${var.prefix}-Gateway"
+  container_definitions = jsonencode([
+    {
+      command               = [],
+      cpu                   = 0,
+      dnsSearchDomains      = [],
+      dnsServers            = [],
+      dockerLabels          = {},
+      dockerSecurityOptions = [],
+      entryPoint            = [],
+      environment = [
+        {
+          name  = "AWS_REGION",
+          value = "${local.region}"
+        },
+        {
+          name  = "DYNAMODB_CHARGE_POINT_TABLE",
+          value = "${var.dynamodb_table_charge_point}"
+        },
+        {
+          name  = "IOT_ENDPOINT",
+          value = "a13869jpvvkeq-ats.iot.ap-northeast-1.amazonaws.com"
+        },
+        {
+          name  = "IOT_PORT",
+          value = "8883"
+        },
+        {
+          name  = "OCPP_GATEWAY_PORT",
+          value = "80"
+        },
+        {
+          name  = "OCPP_PROTOCOLS",
+          value = "ocpp1.6,ocpp2.0,ocpp2.0.1"
+        }
+      ],
+      environmentFiles = [],
+      essential        = true,
+      image            = "${aws_ecr_repository.this.repository_url}:latest",
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = "${var.prefix}-Gateway",
+          awslogs-region        = "${local.region}",
+          awslogs-stream-prefix = "Gateway"
+        },
+        secretOptions = []
+      },
+      mountPoints = [
+        {
+          containerPath = "/etc/iot-certificates/",
+          readOnly      = false,
+          sourceVolume  = "iot-certificate-volume"
+        }
+      ],
+      name = "Container",
+      portMappings = [
+        {
+          containerPort = 80,
+          hostPort      = 80,
+          protocol      = "tcp"
+        }
+      ],
+      secrets = [
+        {
+          name      = "IOT_AMAZON_ROOT_CA",
+          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTAmazonRootCAStorage2C3D4-hqP9jEMX0CTV-jfDYdb"
+        },
+        {
+          name      = "IOT_GATEWAY_CERTIFICATE",
+          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPemCertificate43539AB1-ukXv1Sxd8Gby-1gg0u0"
+        },
+        {
+          name      = "IOT_GATEWAY_PUBLIC_KEY",
+          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPublicCertificate41596AD-AaaBXTRnkjj9-7UchKQ"
+        },
+        {
+          name      = "IOT_GATEWAY_PRIVATE_KEY",
+          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPrivateCertificateCD8C5E-dC1LKHE8JOnE-TN5ayM"
+        }
+      ]
+    }
+  ])
   cpu                      = "512"
   memory                   = "1024"
   execution_role_arn       = var.ecs_execution_role_arn
-  family                   = "AwsOcppGatewayStackTaskC4A181FA"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   task_role_arn            = var.ecs_task_role_arn

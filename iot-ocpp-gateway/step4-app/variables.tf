@@ -8,3 +8,5 @@ variable "vpc_id" {}
 variable "vpc_public_subnet_ids" {
   type = list(string)
 }
+
+variable "dynamodb_table_charge_point" {}
