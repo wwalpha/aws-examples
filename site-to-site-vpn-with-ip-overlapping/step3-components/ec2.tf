@@ -70,7 +70,6 @@ module "server_for_onpremise_us" {
   iam_instance_profile        = var.ssm_role_profile
 }
 
-
 # ----------------------------------------------------------------------------------------------
 # Router Instance for OnPremise JP
 # ----------------------------------------------------------------------------------------------
@@ -101,8 +100,8 @@ module "server_for_onpremise_jp" {
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_onpremise_us.security_group_id]
-  subnet_id                   = var.subnet_id_onpremise_us
+  vpc_security_group_ids      = [module.router_sg_onpremise_jp.security_group_id]
+  subnet_id                   = var.subnet_id_onpremise_jp
   associate_public_ip_address = true
   iam_instance_profile        = var.ssm_role_profile
 }

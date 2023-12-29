@@ -15,6 +15,14 @@ resource "aws_vpn_gateway_route_propagation" "onpremise_relay_us" {
 }
 
 # ----------------------------------------------------------------------------------------------
+# AWS VPN Gateway Route Propagation for OnPremiseJP
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpn_gateway_route_propagation" "onpremise_relay_jp" {
+  vpn_gateway_id = aws_vpn_gateway.onpremise_relay_jp.id
+  route_table_id = var.route_table_id_relay_jp
+}
+
+# ----------------------------------------------------------------------------------------------
 # OnPremiseEU Route Table
 # ----------------------------------------------------------------------------------------------
 resource "aws_route" "onpremise_eu" {
@@ -30,6 +38,15 @@ resource "aws_route" "onpremise_us" {
   route_table_id         = var.route_table_id_onpremise_us
   destination_cidr_block = var.ip_cidr_relay_us
   network_interface_id   = var.router_eni_id_us
+}
+
+# ----------------------------------------------------------------------------------------------
+# OnPremiseJP Route Table
+# ----------------------------------------------------------------------------------------------
+resource "aws_route" "onpremise_jp" {
+  route_table_id         = var.route_table_id_onpremise_jp
+  destination_cidr_block = var.ip_cidr_relay_jp
+  network_interface_id   = var.router_eni_id_jp
 }
 
 # ----------------------------------------------------------------------------------------------

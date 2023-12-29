@@ -37,10 +37,10 @@ resource "aws_lb_target_group" "relay_eu" {
 # Network Load Balancer Target Group Register Instance for Relay EU
 # ----------------------------------------------------------------------------------------------
 resource "aws_lb_target_group_attachment" "relay_eu" {
-  target_group_arn  = aws_lb_target_group.relay_eu.arn
-  target_id         = module.proxy_for_relay_jp.private_ip
-  port              = 80
-  availability_zone = "all"
+  target_group_arn = aws_lb_target_group.relay_eu.arn
+  target_id        = module.proxy_for_relay_eu.private_ip
+  port             = 80
+  # availability_zone = "all"
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -96,10 +96,10 @@ resource "aws_lb_target_group" "relay_us" {
 # Network Load Balancer Target Group Register Instance for Relay US
 # ----------------------------------------------------------------------------------------------
 resource "aws_lb_target_group_attachment" "relay_us" {
-  target_group_arn  = aws_lb_target_group.relay_us.arn
-  target_id         = module.proxy_for_relay_jp.private_ip
-  port              = 80
-  availability_zone = "all"
+  target_group_arn = aws_lb_target_group.relay_us.arn
+  target_id        = module.proxy_for_relay_us.private_ip
+  port             = 80
+  # availability_zone = "all"
 }
 
 # ----------------------------------------------------------------------------------------------
