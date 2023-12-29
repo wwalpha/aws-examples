@@ -1,15 +1,42 @@
-output "onpremise_eu_tunnel1_ip" {
-  value = module.step4-site2site-vpn.onpremise_eu_tunnel1_ip
+# ----------------------------------------------------------------------------------------------
+# VPN Address for OnPremise EU
+# ----------------------------------------------------------------------------------------------
+output "tunnel_address_for_onpremise_eu" {
+  value = module.step4-site2site-vpn.tunnel_address_for_onpremise_eu
 }
 
-output "onpremise_us_tunnel1_ip" {
-  value = module.step4-site2site-vpn.onpremise_us_tunnel1_ip
+# ----------------------------------------------------------------------------------------------
+# VPN Address for OnPremise US
+# ----------------------------------------------------------------------------------------------
+output "tunnel_address_for_onpremise_us" {
+  value = module.step4-site2site-vpn.tunnel_address_for_onpremise_us
 }
 
-# output "test" {
-#   value = module.step1-networking.test
-# }
+# ----------------------------------------------------------------------------------------------
+# VPN Address for OnPremise JP 
+# ----------------------------------------------------------------------------------------------
+output "tunnel_address_for_onpremise_jp" {
+  value = module.step4-site2site-vpn.tunnel_address_for_onpremise_jp
+}
 
-# output "test2" {
-#   value = module.step3-components.test
-# }
+# ----------------------------------------------------------------------------------------------
+# Customer Gateway Address for OnPremise EU
+# ----------------------------------------------------------------------------------------------
+output "customer_gateway_address_for_eu" {
+  value = module.step3-components.router_public_ip_onpremise_eu
+}
+
+# ----------------------------------------------------------------------------------------------
+# Customer Gateway Address for OnPremise US
+# ----------------------------------------------------------------------------------------------
+output "customer_gateway_address_for_us" {
+  value = module.step3-components.router_public_ip_onpremise_us
+}
+
+# ----------------------------------------------------------------------------------------------
+# Customer Gateway Address for OnPremise JP
+# ----------------------------------------------------------------------------------------------
+output "customer_gateway_address_for_jp" {
+  value = module.step3-components.router_public_ip_onpremise_jp
+}
+

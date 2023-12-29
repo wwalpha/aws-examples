@@ -49,6 +49,31 @@ module "router_sg_onpremise_us" {
 }
 
 # ----------------------------------------------------------------------------------------------
+# Router Instance Security Group for OnPremiseJP
+# ----------------------------------------------------------------------------------------------
+module "router_sg_onpremise_jp" {
+  source = "terraform-aws-modules/security-group/aws"
+
+  name   = "${var.prefix}_router_sg_onpremise_jp"
+  vpc_id = var.vpc_id_onpremise_jp
+  ingress_with_cidr_blocks = [
+    {
+      rule        = "all-icmp"
+      cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      rule        = "all-all"
+      cidr_blocks = "0.0.0.0/0"
+    }
+  ]
+  egress_with_cidr_blocks = [
+    {
+      rule        = "all-all"
+      cidr_blocks = "0.0.0.0/0"
+  }]
+}
+
+# ----------------------------------------------------------------------------------------------
 # NLB Security Group for Relay EU
 # ----------------------------------------------------------------------------------------------
 module "nlb_sg_relay_eu" {

@@ -61,7 +61,6 @@ output "ip_cidr_relay_us" {
 }
 output "ip_cidr_relay_jp" {
   value = module.relay_vpc_for_jp.vpc_cidr_block
-
 }
 output "ip_cidr_aws_app" {
   value = module.aws_app_vpc.vpc_cidr_block

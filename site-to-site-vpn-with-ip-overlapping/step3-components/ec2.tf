@@ -82,8 +82,8 @@ module "router_for_onpremise_jp" {
   instance_type               = "t3a.small"
   key_name                    = var.keypair_name
   monitoring                  = false
-  vpc_security_group_ids      = [module.router_sg_onpremise_us.security_group_id]
-  subnet_id                   = var.subnet_id_onpremise_us
+  vpc_security_group_ids      = [module.router_sg_onpremise_jp.security_group_id]
+  subnet_id                   = var.subnet_id_onpremise_jp
   associate_public_ip_address = true
   source_dest_check           = false
   user_data_base64            = base64encode(local.openswan_user_data)

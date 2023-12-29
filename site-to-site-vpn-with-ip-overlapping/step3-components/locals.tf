@@ -11,9 +11,8 @@ EOF
   openswan_user_data = <<EOF
 #!/bin/bash
 yum update -y
-yum install -y amazon-ssm-agent
-yum install -y openswan
-systemctl start ipsec
+yum install -y amazon-ssm-agent openswan
 systemctl enable ipsec
+systemctl start ipsec
 EOF
 }

@@ -30,3 +30,12 @@ output "router_eni_id_onpremise_jp" {
   value = module.router_for_onpremise_jp.primary_network_interface_id
 }
 
+output "instance_id_router_onpremise_eu" {
+  value = module.router_for_onpremise_eu.id
+}
+output "instance_id_router_onpremise_us" {
+  value = module.router_for_onpremise_us.id
+}
+output "instance_id_router_onpremise_jp" {
+  value = module.router_for_onpremise_jp.id
+}
