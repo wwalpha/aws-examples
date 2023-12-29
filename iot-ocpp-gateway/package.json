@@ -7,7 +7,12 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "init": "terraform init",
+    "start": "npm run init && terraform apply -auto-approve",
+    "plan": "npm run init && terraform plan",
+    "generate": "terraform plan -generate-config-out=generated.tf",
+    "destroy": "terraform apply -destroy -auto-approve"
   },
   "devDependencies": {
     "@aws-cdk/aws-iot-actions-alpha": "2.76.0-alpha.0",

@@ -1,15 +1,15 @@
-FROM amazonlinux:2022
+FROM amazonlinux:2023
 
-RUN yum update -y
-RUN yum groupinstall "Development Tools" -y
-RUN yum install openssl-libs -y
-RUN yum install python3.10 python3.10-devel -y
+RUN dnf update -y
+RUN dnf groupinstall "Development Tools" -y
+RUN dnf install openssl-libs -y
+RUN dnf install python3.11 python3.11-devel -y
 
 
 RUN mkdir -p /opt/ocpp-gateway
 COPY ./ /opt/ocpp-gateway/
 
-RUN python3.10 -m venv /opt/ocpp-gateway/
+RUN python3.11 -m venv /opt/ocpp-gateway/
 RUN . /opt/ocpp-gateway/bin/activate && pip install -r /opt/ocpp-gateway/requirements.txt
 
 EXPOSE 80
