@@ -5,6 +5,8 @@ echo "$IOT_GATEWAY_PRIVATE_KEY" > /etc/iot-certificates/iot.key
 echo "$IOT_GATEWAY_CERTIFICATE" > /etc/iot-certificates/iot.pem
 echo "Successfully set IOT certificates"
 
+ls /etc/iot-certificates
+
 echo "Starting the gateway server"
 cd /opt/ocpp-gateway
 source bin/activate
