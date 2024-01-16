@@ -86,19 +86,19 @@ resource "aws_ecs_task_definition" "this" {
       secrets = [
         {
           name      = "IOT_AMAZON_ROOT_CA",
-          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTAmazonRootCAStorage2C3D4-hqP9jEMX0CTV-jfDYdb"
+          valueFrom = var.iot_amazon_root_ca_arn
         },
         {
           name      = "IOT_GATEWAY_CERTIFICATE",
-          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPemCertificate43539AB1-ukXv1Sxd8Gby-1gg0u0"
+          valueFrom = var.iot_pem_certificate_arn
         },
         {
           name      = "IOT_GATEWAY_PUBLIC_KEY",
-          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPublicCertificate41596AD-AaaBXTRnkjj9-7UchKQ"
+          valueFrom = var.iot_public_key_arn
         },
         {
           name      = "IOT_GATEWAY_PRIVATE_KEY",
-          valueFrom = "arn:aws:secretsmanager:ap-northeast-1:334678299258:secret:IOTPrivateCertificateCD8C5E-dC1LKHE8JOnE-TN5ayM"
+          valueFrom = var.iot_private_key_arn
         }
       ]
     }

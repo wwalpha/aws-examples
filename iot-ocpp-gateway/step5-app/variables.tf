@@ -12,3 +12,8 @@ variable "vpc_public_subnet_ids" {
   type = list(string)
 }
 variable "dynamodb_table_charge_point" {}
+
+variable "iot_amazon_root_ca_arn" {}
+variable "iot_pem_certificate_arn" {}
+variable "iot_public_key_arn" {}
+variable "iot_private_key_arn" {}

@@ -8,3 +8,5 @@ cd src/ocpp-gateway-container
 
 docker build -t $REPO_URL:latest .
 docker push $REPO_URL:latest
+
+echo "Successfully pushed image to ECR"
