@@ -11,3 +11,17 @@ output "ecs_task_role_arn" {
 output "ecs_task_execution_role_arn" {
   value = aws_iam_role.ecs_task_execution.arn
 }
+
+# ----------------------------------------------------------------------------------------------
+# ECS Task Execution Role Arn
+# ----------------------------------------------------------------------------------------------
+output "iot_rule_delete_thing_role_arn" {
+  value = aws_iam_role.delete_thing_rule_action.arn
+}
+
+# ----------------------------------------------------------------------------------------------
+# ECS Task Execution Role Arn
+# ----------------------------------------------------------------------------------------------
+output "iot_rule_create_thing_role_arn" {
+  value = aws_iam_role.create_thing_rule_action.arn
+}

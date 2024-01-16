@@ -1,6 +1,7 @@
 locals {
-  account_id = data.aws_caller_identity.this.account_id
-  region     = data.aws_region.this.name
+  account_id   = data.aws_caller_identity.this.account_id
+  region       = data.aws_region.this.name
+  iot_endpoint = data.aws_iot_endpoint.this.endpoint_address
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -12,3 +13,8 @@ data "aws_region" "this" {}
 # AWS Account
 # ----------------------------------------------------------------------------------------------
 data "aws_caller_identity" "this" {}
+
+# ----------------------------------------------------------------------------------------------
+# AWS IoT Device Endpoint
+# ----------------------------------------------------------------------------------------------
+data "aws_iot_endpoint" "this" {}

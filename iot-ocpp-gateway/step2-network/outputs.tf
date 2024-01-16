@@ -11,3 +11,10 @@ output "vpc_id" {
 output "vpc_public_subnet_ids" {
   value = module.vpc.public_subnets
 }
+
+# ----------------------------------------------------------------------------------------------
+# VPC CIDR Block
+# ----------------------------------------------------------------------------------------------
+output "vpc_cidr_block" {
+  value = module.vpc.vpc_cidr_block
+}

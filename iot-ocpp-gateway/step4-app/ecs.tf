@@ -19,7 +19,7 @@ resource "aws_ecs_cluster" "this" {
 # ----------------------------------------------------------------------------------------------
 # AWS ECS Task Definition
 # ----------------------------------------------------------------------------------------------
-resource "aws_ecs_task_definition" "example" {
+resource "aws_ecs_task_definition" "this" {
   family = "${var.prefix}-Gateway"
   container_definitions = jsonencode([
     {
@@ -41,7 +41,7 @@ resource "aws_ecs_task_definition" "example" {
         },
         {
           name  = "IOT_ENDPOINT",
-          value = "a13869jpvvkeq-ats.iot.ap-northeast-1.amazonaws.com"
+          value = "${local.iot_endpoint}"
         },
         {
           name  = "IOT_PORT",
@@ -137,7 +137,7 @@ resource "aws_ecs_service" "gateway" {
   platform_version                   = "LATEST"
   propagate_tags                     = "NONE"
   scheduling_strategy                = "REPLICA"
-  task_definition                    = "AwsOcppGatewayStackTaskC4A181FA:1"
+  task_definition                    = data.aws_ecs_task_definition.latest.arn
 
   deployment_circuit_breaker {
     enable   = false
@@ -152,12 +152,16 @@ resource "aws_ecs_service" "gateway" {
     container_name   = "Container"
     container_port   = 80
     elb_name         = null
-    target_group_arn = "arn:aws:elasticloadbalancing:ap-northeast-1:334678299258:targetgroup/AwsOcp-LoadB-1PTLILT2BIW6/b0bdf6de5fac67f2"
+    target_group_arn = aws_lb_target_group.this.arn
   }
 
   network_configuration {
     assign_public_ip = false
-    security_groups  = ["sg-0f5b2486df3932a13"]
-    subnets          = ["subnet-0aee12b6dd175d25a", "subnet-0b180c56fe4e4b482", "subnet-0db9b426831166979"]
+    security_groups  = [module.ocpp_gw_sg.security_group_id]
+    subnets          = var.vpc_public_subnet_ids
   }
+}
+
+data "aws_ecs_task_definition" "latest" {
+  task_definition = aws_ecs_task_definition.this.family
 }

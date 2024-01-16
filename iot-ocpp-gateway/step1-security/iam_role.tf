@@ -1,20 +1,19 @@
 # ----------------------------------------------------------------------------------------------
-# AWS Role - Create Thing Rule Topic Rule Action Role
+# AWS Role - Create Thing Rule Action Role
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "create_thing_rule_topic_rule_action" {
+resource "aws_iam_role" "create_thing_rule_action" {
   assume_role_policy = data.aws_iam_policy_document.ec2.json
-  name               = "${var.prefix}-CreateThingRuleTopicRuleActionRole"
+  name               = "${var.prefix}-CreateThingRuleActionRole"
 
   inline_policy {
-    name = "CreateThingRuleTopicRuleActionRoleDefaultPolicy"
+    name = "CreateThingRuleActionRoleDefaultPolicy"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
         {
-          Action = ["dynamodb:PutItem"]
-          Effect = "Allow"
-          # Resource = aws_dynamodb_table.charge_point.arn
-          Resource = "arn:aws:dynamodb:ap-northeast-1:334678299258:table/AwsOcppGatewayStack-ChargePointTable0F8300CB-1XCIDGMIAHS16"
+          Action   = ["dynamodb:PutItem"]
+          Effect   = "Allow"
+          Resource = "*"
         },
       ]
     })
@@ -22,21 +21,21 @@ resource "aws_iam_role" "create_thing_rule_topic_rule_action" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Role - Create Thing Rule Topic Rule Action Role
+# AWS Role - Delete Thing Rule Action Role
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "delete_thing_rule_topic_rule_action" {
+resource "aws_iam_role" "delete_thing_rule_action" {
   assume_role_policy = data.aws_iam_policy_document.ec2.json
-  name               = "${var.prefix}-DeleteThingRuleTopicRuleActionRole"
+  name               = "${var.prefix}-DeleteThingRuleActionRole"
 
   inline_policy {
-    name = "CreateThingRuleTopicRuleActionRoleDefaultPolicy"
+    name = "DeleteThingRuleActionRoleDefaultPolicy"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
         {
           Action   = ["sqs:SendMessage"]
           Effect   = "Allow"
-          Resource = "arn:aws:sqs:ap-northeast-1:334678299258:AwsOcppGatewayStack-DeletedThingsA7DD5BBA-lI6PQtOofXv6"
+          Resource = "*"
         },
       ]
     })
@@ -111,7 +110,7 @@ resource "aws_iam_role" "AWS679f53fac002430cb0da5b7982bd" {
 # AWS Role - Messages From Charge Points Rule Top 
 # ----------------------------------------------------------------------------------------------
 resource "aws_iam_role" "message_from_charge_points_rule_top" {
-  name               = "${var.prefix}-MessagesFromChargePointsRuleTopRole"
+  name               = "${var.prefix}_MessagesFromChargePointsRuleTopRole"
   assume_role_policy = data.aws_iam_policy_document.iot.json
 
   inline_policy {
