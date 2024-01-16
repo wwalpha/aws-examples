@@ -25,3 +25,10 @@ output "iot_rule_delete_thing_role_arn" {
 output "iot_rule_create_thing_role_arn" {
   value = aws_iam_role.create_thing_rule_action.arn
 }
+
+# ----------------------------------------------------------------------------------------------
+# ECS Task Execution Role Arn
+# ----------------------------------------------------------------------------------------------
+output "iot_rule_message_from_charge_points_role_arn" {
+  value = aws_iam_role.message_from_charge_points_rule_top.arn
+}

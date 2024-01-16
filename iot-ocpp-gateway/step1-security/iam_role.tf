@@ -2,7 +2,7 @@
 # AWS Role - Create Thing Rule Action Role
 # ----------------------------------------------------------------------------------------------
 resource "aws_iam_role" "create_thing_rule_action" {
-  assume_role_policy = data.aws_iam_policy_document.ec2.json
+  assume_role_policy = data.aws_iam_policy_document.iot.json
   name               = "${var.prefix}-CreateThingRuleActionRole"
 
   inline_policy {
@@ -24,7 +24,7 @@ resource "aws_iam_role" "create_thing_rule_action" {
 # AWS Role - Delete Thing Rule Action Role
 # ----------------------------------------------------------------------------------------------
 resource "aws_iam_role" "delete_thing_rule_action" {
-  assume_role_policy = data.aws_iam_policy_document.ec2.json
+  assume_role_policy = data.aws_iam_policy_document.iot.json
   name               = "${var.prefix}-DeleteThingRuleActionRole"
 
   inline_policy {
@@ -177,6 +177,7 @@ resource "aws_iam_role" "ecs_task_execution" {
         },
         {
           "Action" : [
+            "logs:CreateLogGroup",
             "logs:CreateLogStream",
             "logs:PutLogEvents"
           ],
@@ -273,6 +274,7 @@ resource "aws_iam_role" "ecs_task" {
         {
           Effect = "Allow"
           Action = [
+            "logs:CreateLogGroup",
             "logs:CreateLogStream",
             "logs:PutLogEvents"
           ]

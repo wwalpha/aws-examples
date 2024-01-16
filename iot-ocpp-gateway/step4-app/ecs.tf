@@ -158,7 +158,7 @@ resource "aws_ecs_service" "gateway" {
   network_configuration {
     assign_public_ip = false
     security_groups  = [module.ocpp_gw_sg.security_group_id]
-    subnets          = var.vpc_public_subnet_ids
+    subnets          = var.vpc_private_subnet_ids
   }
 }
 
