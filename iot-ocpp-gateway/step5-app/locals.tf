@@ -17,4 +17,6 @@ data "aws_caller_identity" "this" {}
 # ----------------------------------------------------------------------------------------------
 # AWS IoT Device Endpoint
 # ----------------------------------------------------------------------------------------------
-data "aws_iot_endpoint" "this" {}
+data "aws_iot_endpoint" "this" {
+  endpoint_type = "iot:Data-ATS"
+}

@@ -25,3 +25,10 @@ output "iot_public_key_arn" {
 output "iot_private_key_arn" {
   value = aws_secretsmanager_secret.private_key.arn
 }
+
+# ----------------------------------------------------------------------------------------------
+# Amazon Certificate ARN
+# ----------------------------------------------------------------------------------------------
+output "iot_certificate_arn" {
+  value = aws_iot_certificate.this.arn
+}

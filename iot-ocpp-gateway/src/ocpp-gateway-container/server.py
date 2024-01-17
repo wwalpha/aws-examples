@@ -1,11 +1,13 @@
-import logging
-import os
-
-import asyncio
-import asyncio_mqtt
-import websockets
-
 import gateway
+import websockets
+import asyncio_mqtt
+import asyncio
+import os
+import logging
+
+# from dotenv import load_dotenv
+# load_dotenv()
+
 
 logging.basicConfig(format="%(message)s", level=logging.ERROR)
 
@@ -15,7 +17,8 @@ OCPP_GATEWAY_PORT = int(os.environ["OCPP_GATEWAY_PORT"])
 
 async def handler(websocket, path):
     if "Sec-WebSocket-Protocol" not in websocket.request_headers:
-        logging.info("Client hasn't requested any Subprotocol. " "Closing Connection")
+        logging.info(
+            "Client hasn't requested any Subprotocol. " "Closing Connection")
         return await websocket.close()
 
     requested_protocols = websocket.request_headers["Sec-WebSocket-Protocol"]

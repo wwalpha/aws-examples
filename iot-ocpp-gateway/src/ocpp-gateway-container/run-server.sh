@@ -5,7 +5,12 @@ echo "$IOT_GATEWAY_PRIVATE_KEY" > /etc/iot-certificates/iot.key
 echo "$IOT_GATEWAY_CERTIFICATE" > /etc/iot-certificates/iot.pem
 echo "Successfully set IOT certificates"
 
-ls /etc/iot-certificates
+# ls /etc/iot-certificates
+
+# cat /etc/iot-certificates/AmazonRootCA1.pem
+# cat /etc/iot-certificates/iot.pub
+# cat /etc/iot-certificates/iot.key
+# cat /etc/iot-certificates/iot.pem
 
 echo "Starting the gateway server"
 cd /opt/ocpp-gateway
