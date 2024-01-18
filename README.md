@@ -14,3 +14,6 @@
 
 ## [Site to Site VPN with OnPremise IP Overlapping](./site-to-site-vpn-with-ip-overlapping/README.md)
 ![image](./site-to-site-vpn-with-ip-overlapping/docs/site-to-site-vpn.png)
+
+## [Building an OCPP-Compliant electric vehicle charge point operator solution using AWS IoT Core](./iot-ocpp-gateway/README.md)
+![image](./iot-ocpp-gateway/assets/diagrams/image_006.png)
