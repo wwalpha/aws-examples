@@ -32,3 +32,24 @@ output "iot_rule_create_thing_role_arn" {
 output "iot_rule_message_from_charge_points_role_arn" {
   value = aws_iam_role.message_from_charge_points_rule_top.arn
 }
+
+# ----------------------------------------------------------------------------------------------
+# Lambda Role Arn - Create Thing
+# ----------------------------------------------------------------------------------------------
+output "lambda_role_arn_create_thing" {
+  value = aws_iam_role.lambda_create_thing.arn
+}
+
+# ----------------------------------------------------------------------------------------------
+# Lambda Role Arn - Delete Thing
+# ----------------------------------------------------------------------------------------------
+output "lambda_role_arn_delete_thing" {
+  value = aws_iam_role.lambda_delete_thing.arn
+}
+
+# ----------------------------------------------------------------------------------------------
+# Lambda Role Arn - Message Processor
+# ----------------------------------------------------------------------------------------------
+output "lambda_role_arn_message_processor" {
+  value = aws_iam_role.message_processor.arn
+}

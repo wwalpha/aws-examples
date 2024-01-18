@@ -32,3 +32,17 @@ output "iot_private_key_arn" {
 output "iot_certificate_arn" {
   value = aws_iot_certificate.this.arn
 }
+
+# ----------------------------------------------------------------------------------------------
+# SQS Arn - Incoming Message
+# ----------------------------------------------------------------------------------------------
+output "sqs_arn_incoming_message" {
+  value = aws_sqs_queue.incoming_messages.arn
+}
+
+# ----------------------------------------------------------------------------------------------
+# SQS Arn - Delete Thing
+# ----------------------------------------------------------------------------------------------
+output "sqs_arn_delete_thing" {
+  value = aws_sqs_queue.deleted_things.arn
+}

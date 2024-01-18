@@ -28,7 +28,7 @@ resource "aws_iot_topic_rule" "delete_thing" {
 
   sqs {
     queue_url  = aws_sqs_queue.deleted_things.url
-    role_arn   = "arn:aws:iam::334678299258:role/AwsOcppGatewayStack-DeleteThingRuleTopicRuleActionR-kenC1HfAxP12"
+    role_arn   = var.iot_rule_delete_thing_role_arn
     use_base64 = false
   }
 }

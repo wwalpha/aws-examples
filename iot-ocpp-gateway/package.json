@@ -1,6 +1,7 @@
 {
   "name": "aws-ocpp-gateway",
   "version": "1.0.0",
+  "license": "MIT",
   "scripts": {
     "init": "terraform init",
     "start": "npm run init && terraform apply -auto-approve",

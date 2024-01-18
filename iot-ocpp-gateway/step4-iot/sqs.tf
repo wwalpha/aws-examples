@@ -59,3 +59,11 @@ resource "aws_sqs_queue" "dead_queue_for_deleted_things" {
   sqs_managed_sse_enabled           = true
   visibility_timeout_seconds        = 30
 }
+
+# ----------------------------------------------------------------------------------------------
+# AWS SQS Queue Policy - DeadLetter Queue For Deleted Things
+# ----------------------------------------------------------------------------------------------
+resource "aws_sqs_queue_policy" "dead_queue_for_deleted_things" {
+  policy    = "{\"Statement\":[{\"Action\":\"sqs:*\",\"Condition\":{\"Bool\":{\"aws:SecureTransport\":\"false\"}},\"Effect\":\"Deny\",\"Principal\":{\"AWS\":\"*\"},\"Resource\":\"arn:aws:sqs:ap-northeast-1:334678299258:AwsOcppGatewayStack-DeadLetterQueueForDeletedThings5875D721-kOhGAmRbogkV\"}],\"Version\":\"2012-10-17\"}"
+  queue_url = aws_sqs_queue.dead_queue_for_deleted_things.url
+}

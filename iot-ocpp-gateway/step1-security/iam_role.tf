@@ -45,7 +45,7 @@ resource "aws_iam_role" "delete_thing_rule_action" {
 # ----------------------------------------------------------------------------------------------
 # AWS Role - 
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "AWS679f53fac002430cb0da5b7982bd" {
+resource "aws_iam_role" "lambda_create_thing" {
   name                = "${var.prefix}-AWS679f53fac002430cb0da5b7982bd"
   assume_role_policy  = data.aws_iam_policy_document.lambda.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
@@ -63,6 +63,7 @@ resource "aws_iam_role" "AWS679f53fac002430cb0da5b7982bd" {
       ]
     })
   }
+
   inline_policy {
     name = "IOTDescribeEndpointCustomResourcePolicy"
     policy = jsonencode({
@@ -103,6 +104,10 @@ resource "aws_iam_role" "AWS679f53fac002430cb0da5b7982bd" {
         },
       ]
     })
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -198,10 +203,10 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Role - Delete Thing Service Role
+# AWS Role - Delete Thing Role
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "delete_thing_service_role" {
-  name                = "${var.prefix}-DeleteThingServiceRole"
+resource "aws_iam_role" "lambda_delete_thing" {
+  name                = "${var.prefix}-DeleteThingRole"
   assume_role_policy  = data.aws_iam_policy_document.lambda.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 
@@ -286,12 +291,14 @@ resource "aws_iam_role" "ecs_task" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Role - ECS Task Execution Role
+# AWS Role - Lambda Message Processor
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "message_processor_service_role" {
-  name                = "${var.prefix}-OCPPMessageProcessorServiceRole"
-  assume_role_policy  = data.aws_iam_policy_document.lambda.json
-  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+resource "aws_iam_role" "message_processor" {
+  name               = "${var.prefix}-OCPPMessageProcessorRole"
+  assume_role_policy = data.aws_iam_policy_document.lambda.json
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  ]
 
   inline_policy {
     name = "OCPPMessageProcessorServiceRoleDefaultPolicy"
@@ -299,20 +306,29 @@ resource "aws_iam_role" "message_processor_service_role" {
       Version = "2012-10-17"
       Statement = [
         {
-          Action   = ["sqs:ChangeMessageVisibility", "sqs:DeleteMessage", "sqs:GetQueueAttributes", "sqs:GetQueueUrl", "sqs:ReceiveMessage"]
+          Action = [
+            "sqs:ChangeMessageVisibility",
+            "sqs:DeleteMessage",
+            "sqs:GetQueueAttributes",
+            "sqs:GetQueueUrl",
+            "sqs:ReceiveMessage"
+          ]
           Effect   = "Allow"
           Resource = "*"
         }
       ]
     })
   }
+
   inline_policy {
     name = "PublishToOutTopicPolicy"
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
         {
-          Action   = ["iot:Publish"]
+          Action = [
+            "iot:Publish"
+          ]
           Effect   = "Allow"
           Resource = "*"
         }
