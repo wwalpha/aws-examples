@@ -1,0 +1,15 @@
+{
+  "name": "network-firewall",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/wwalpha/aws-examples.git",
+  "author": "wwalpha <wwalpha@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "init": "terraform init",
+    "start": "npm run init && terraform apply -auto-approve",
+    "plan": "npm run init && terraform plan",
+    "generate": "terraform plan -generate-config-out=generated.tf",
+    "destroy": "terraform apply -destroy -auto-approve"
+  }
+}
