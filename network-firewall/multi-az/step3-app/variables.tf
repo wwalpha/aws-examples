@@ -1,7 +1,11 @@
-variable "vpc_id" {}
+variable "prefix" {}
 
-variable "public_subnets" {}
+variable "vpc_id_dmz" {}
 
-variable "private_subnets" {}
+variable "vpc_id_app" {}
 
-variable "ec2_ssm_role_profile" {}
+variable "private_subnets_dmz" {}
+
+variable "private_subnets_app" {}
+
+variable "ec2_ssm_role_name" {}
