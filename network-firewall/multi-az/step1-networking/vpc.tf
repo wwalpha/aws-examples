@@ -1,28 +1,24 @@
 # ----------------------------------------------------------------------------------------------
-# AWS VPC
+# VPC - DMZ
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpc" "dmz" {
-  cidr_block           = "10.10.0.0/16"
+  cidr_block = local.vpc_cidr_block_dmz
+
+  tags = {
+    Name = "${var.prefix}-dmz-vpc"
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# VPC - App
+# ----------------------------------------------------------------------------------------------
+module "app_vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+
+  name                 = "${var.prefix}-app-vpc"
+  cidr                 = local.vpc_cidr_block_app
+  azs                  = local.availability_zones
+  private_subnets      = local.cidr_block_app_subnets_private
   enable_dns_hostnames = true
-
-  tags = {
-    Name = "${var.prefix}_dmz_vpc"
-  }
-}
-
-# ----------------------------------------------------------------------------------------------
-# AWS Internet Gateway
-# ----------------------------------------------------------------------------------------------
-resource "aws_internet_gateway" "this" {
-  tags = {
-    Name = "${var.prefix}_igw"
-  }
-}
-
-# ----------------------------------------------------------------------------------------------
-# AWS Internet Gateway Attachment
-# ----------------------------------------------------------------------------------------------
-resource "aws_internet_gateway_attachment" "this" {
-  internet_gateway_id = aws_internet_gateway.igw.id
-  vpc_id              = aws_vpc.this.id
+  enable_nat_gateway   = false
 }
