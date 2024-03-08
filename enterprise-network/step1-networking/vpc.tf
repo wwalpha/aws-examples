@@ -62,22 +62,44 @@ resource "aws_vpc_ipv4_cidr_block_association" "inspection" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC - Workload
+# VPC - Workload A
 # ----------------------------------------------------------------------------------------------
-resource "aws_vpc" "workload" {
-  cidr_block           = local.vpc_cidr_block_workload
+resource "aws_vpc" "workload_a" {
+  cidr_block           = local.vpc_cidr_block_workload_a
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
-    Name = "${var.prefix}-workload-vpc"
+    Name = "${var.prefix}-workload-b-vpc"
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC IPV4 CIDR Block Association - Workload
+# VPC IPV4 CIDR Block Association - Workload A
 # ----------------------------------------------------------------------------------------------
-resource "aws_vpc_ipv4_cidr_block_association" "workload" {
-  vpc_id     = aws_vpc.workload.id
-  cidr_block = local.vpc_cidr_block_tgw_for_workload
+resource "aws_vpc_ipv4_cidr_block_association" "workload_a" {
+  vpc_id     = aws_vpc.workload_a.id
+  cidr_block = local.vpc_cidr_block_tgw_for_workload_a
+}
+
+
+# ----------------------------------------------------------------------------------------------
+# VPC - Workload B
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpc" "workload_b" {
+  cidr_block           = local.vpc_cidr_block_workload_b
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  tags = {
+    Name = "${var.prefix}-workload-b-vpc"
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# VPC IPV4 CIDR Block Association - Workload B
+# ----------------------------------------------------------------------------------------------
+resource "aws_vpc_ipv4_cidr_block_association" "workload_b" {
+  vpc_id     = aws_vpc.workload_b.id
+  cidr_block = local.vpc_cidr_block_tgw_for_workload_b
 }

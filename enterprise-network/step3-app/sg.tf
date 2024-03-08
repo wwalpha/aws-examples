@@ -2,7 +2,7 @@ module "workload_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
   name   = "${var.prefix}_workload_sg"
-  vpc_id = var.vpc_id_workload
+  vpc_id = var.vpc_id_workload_a
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"

@@ -4,7 +4,7 @@
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls"
   description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.workload.id
+  vpc_id      = aws_vpc.workload_a.id
 
   ingress {
     description = "TLS from VPC"
@@ -31,10 +31,10 @@ resource "aws_security_group" "allow_tls" {
 # AWS VPC Endpoint - SSM
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpc_endpoint" "ssm" {
-  vpc_id              = aws_vpc.workload.id
+  vpc_id              = aws_vpc.workload_a.id
   service_name        = "com.amazonaws.ap-northeast-1.ssm"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.workload_private[*].id
+  subnet_ids          = aws_subnet.workload_a_private[*].id
   private_dns_enabled = true
   security_group_ids  = [aws_security_group.allow_tls.id]
   tags = {
@@ -64,10 +64,10 @@ resource "aws_vpc_endpoint_policy" "ssm" {
 # AWS VPC Endpoint - EC2Messages
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpc_endpoint" "ec2messages" {
-  vpc_id              = aws_vpc.workload.id
+  vpc_id              = aws_vpc.workload_a.id
   service_name        = "com.amazonaws.ap-northeast-1.ec2messages"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.workload_private[*].id
+  subnet_ids          = aws_subnet.workload_a_private[*].id
   private_dns_enabled = true
   security_group_ids  = [aws_security_group.allow_tls.id]
   tags = {
@@ -97,10 +97,10 @@ resource "aws_vpc_endpoint_policy" "ec2messages" {
 # AWS VPC Endpoint - SSMMessages
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpc_endpoint" "ssmmessages" {
-  vpc_id              = aws_vpc.workload.id
+  vpc_id              = aws_vpc.workload_a.id
   service_name        = "com.amazonaws.ap-northeast-1.ssmmessages"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.workload_private[*].id
+  subnet_ids          = aws_subnet.workload_a_private[*].id
   private_dns_enabled = true
   security_group_ids  = [aws_security_group.allow_tls.id]
   tags = {

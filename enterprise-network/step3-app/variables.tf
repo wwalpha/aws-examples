@@ -2,7 +2,7 @@ variable "prefix" {}
 
 variable "vpc_id_ingress" {}
 
-variable "vpc_id_workload" {}
+variable "vpc_id_workload_a" {}
 
 variable "vpc_subnets_workload_private" {}
 

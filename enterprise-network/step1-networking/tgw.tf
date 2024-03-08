@@ -43,17 +43,17 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "egress" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway VPC Attachment - Workload
+# Transit Gateway VPC Attachment - Workload A
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_vpc_attachment" "workload" {
+resource "aws_ec2_transit_gateway_vpc_attachment" "workload_a" {
   transit_gateway_id                              = aws_ec2_transit_gateway.this.id
-  vpc_id                                          = aws_vpc.workload.id
-  subnet_ids                                      = aws_subnet.workload_tgw[*].id
+  vpc_id                                          = aws_vpc.workload_a.id
+  subnet_ids                                      = aws_subnet.workload_a_tgw[*].id
   dns_support                                     = "enable"
   appliance_mode_support                          = "enable"
   transit_gateway_default_route_table_association = false
   transit_gateway_default_route_table_propagation = false
-  tags                                            = { Name = format("%s-workload-tgw-attachment", var.prefix) }
+  tags                                            = { Name = format("%s-workload-a-tgw-attachment", var.prefix) }
 }
 
 # ----------------------------------------------------------------------------------------------

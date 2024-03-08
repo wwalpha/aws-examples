@@ -23,7 +23,7 @@ module "app" {
   source                       = "./step3-app"
   prefix                       = local.prefix
   ec2_ssm_role_name            = module.security.ec2_ssm_role.name
-  vpc_id_workload              = module.networking.vpc_id_workload
+  vpc_id_workload_a            = module.networking.vpc_id_workload_a
   vpc_id_ingress               = module.networking.vpc_id_ingress
   vpc_subnets_workload_private = module.networking.vpc_subnets_workload_private
   vpc_subnets_ingress_public   = module.networking.vpc_subnets_ingress_public

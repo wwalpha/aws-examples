@@ -22,15 +22,15 @@ output "vpc_id_inspection" {
 # ----------------------------------------------------------------------------------------------
 # AWS VPC ID - Workload VPC
 # ----------------------------------------------------------------------------------------------
-output "vpc_id_workload" {
-  value = aws_vpc.workload.id
+output "vpc_id_workload_a" {
+  value = aws_vpc.workload_a.id
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS VPC Subnets - Workload Private Subnets
 # ----------------------------------------------------------------------------------------------
 output "vpc_subnets_workload_private" {
-  value = aws_subnet.workload_private[*].id
+  value = aws_subnet.workload_a_private[*].id
 }
 
 # ----------------------------------------------------------------------------------------------

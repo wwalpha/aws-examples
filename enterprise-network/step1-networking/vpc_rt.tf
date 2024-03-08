@@ -1,8 +1,8 @@
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table - Worload Private Subnets
+# AWS Route Table - Workload A Private Subnets
 # ----------------------------------------------------------------------------------------------
-resource "aws_route_table" "workload_private" {
-  vpc_id = aws_vpc.workload.id
+resource "aws_route_table" "workload_a_private" {
+  vpc_id = aws_vpc.workload_a.id
 
   # 0.0.0.0/0 > Transit Gateway
   route {
@@ -11,17 +11,17 @@ resource "aws_route_table" "workload_private" {
   }
 
   tags = {
-    Name = "${aws_vpc.workload.tags.Name}-private-rt"
+    Name = "${aws_vpc.workload_a.tags.Name}-private-rt"
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table Association - Worload Private Subnets
+# AWS Route Table Association - Workload A Private Subnets
 # ----------------------------------------------------------------------------------------------
-resource "aws_route_table_association" "workload_private" {
-  count          = length(local.subnets_cidr_block_workload_private)
-  subnet_id      = element(aws_subnet.workload_private[*].id, count.index)
-  route_table_id = aws_route_table.workload_private.id
+resource "aws_route_table_association" "workload_a_private" {
+  count          = length(aws_subnet.workload_a_private[*].id)
+  subnet_id      = element(aws_subnet.workload_a_private[*].id, count.index)
+  route_table_id = aws_route_table.workload_a_private.id
 }
 
 # ----------------------------------------------------------------------------------------------

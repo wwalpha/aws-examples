@@ -17,24 +17,6 @@ resource "aws_subnet" "ingress_public" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC Subnets - Ingress Private
-# ----------------------------------------------------------------------------------------------
-resource "aws_subnet" "ingress_private" {
-  count = length(local.subnets_cidr_block_ingress_private)
-
-  vpc_id            = aws_vpc.ingress.id
-  cidr_block        = element(local.subnets_cidr_block_ingress_private, count.index)
-  availability_zone = element(local.availability_zones, count.index)
-
-  tags = {
-    Name = format(
-      "${aws_vpc.ingress.tags.Name}-private-subnets-%s",
-      local.az_suffix[count.index],
-    )
-  }
-}
-
-# ----------------------------------------------------------------------------------------------
 # VPC Subnets - Ingress TGW
 # ----------------------------------------------------------------------------------------------
 resource "aws_subnet" "ingress_tgw" {
@@ -145,33 +127,33 @@ resource "aws_subnet" "inspection_tgw" {
 # ----------------------------------------------------------------------------------------------
 # VPC Subnets - Workload Private
 # ----------------------------------------------------------------------------------------------
-resource "aws_subnet" "workload_private" {
-  count = length(local.subnets_cidr_block_workload_private)
+resource "aws_subnet" "workload_a_private" {
+  count = length(local.subnets_cidr_block_workload_a_private)
 
-  vpc_id            = aws_vpc.workload.id
-  cidr_block        = element(local.subnets_cidr_block_workload_private, count.index)
+  vpc_id            = aws_vpc.workload_a.id
+  cidr_block        = element(local.subnets_cidr_block_workload_a_private, count.index)
   availability_zone = element(local.availability_zones, count.index)
 
   tags = {
     Name = format(
-      "${aws_vpc.workload.tags.Name}-private-subnets-%s",
+      "${aws_vpc.workload_a.tags.Name}-private-subnets-%s",
       local.az_suffix[count.index],
     )
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC Subnets - Workload TGW
+# VPC Subnets - Workload A TGW
 # ----------------------------------------------------------------------------------------------
-resource "aws_subnet" "workload_tgw" {
-  count             = length(local.subnets_cidr_block_workload_tgw)
-  vpc_id            = aws_vpc.workload.id
-  cidr_block        = element(local.subnets_cidr_block_workload_tgw, count.index)
+resource "aws_subnet" "workload_a_tgw" {
+  count             = length(local.subnets_cidr_block_workload_a_tgw)
+  vpc_id            = aws_vpc.workload_a.id
+  cidr_block        = element(local.subnets_cidr_block_workload_a_tgw, count.index)
   availability_zone = element(local.availability_zones, count.index)
 
   tags = {
     Name = format(
-      "${aws_vpc.workload.tags.Name}-tgw-subnets-%s",
+      "${aws_vpc.workload_a.tags.Name}-tgw-subnets-%s",
       local.az_suffix[count.index],
     )
   }
