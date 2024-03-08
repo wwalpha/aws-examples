@@ -14,16 +14,17 @@ module "networking" {
   prefix = local.prefix
 }
 
-# module "security" {
-#   source = "./step2-security"
-#   prefix = local.prefix
-# }
+module "security" {
+  source = "./step2-security"
+  prefix = local.prefix
+}
 
-# module "app" {
-#   depends_on           = [module.networking]
-#   source               = "./app"
-#   vpc_id               = module.networking.vpc_id
-#   public_subnets       = module.networking.public_subnets[*].id
-#   private_subnets      = module.networking.private_subnets[*].id
-#   ec2_ssm_role_profile = module.security.ec2_ssm_role_profile.name
-# }
+module "app" {
+  source                  = "./step3-app"
+  prefix                  = local.prefix
+  vpc_id_dmz              = module.networking.vpc_id_dmz
+  vpc_id_app              = module.networking.vpc_id_app
+  vpc_subnets_app_private = module.networking.vpc_subnets_app_private
+  vpc_subnets_dmz_intra   = module.networking.vpc_subnets_dmz_intra
+  ec2_ssm_role_name       = module.security.ec2_ssm_role.name
+}

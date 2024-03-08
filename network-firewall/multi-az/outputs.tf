@@ -17,6 +17,6 @@
 #   value = module.networking.firewall
 # }
 
-output "private_subnets_cidr_block" {
-  value = module.networking.private_subnets[*].cidr_block
-}
+# output "private_subnets_cidr_block" {
+#   value = module.networking.private_subnets[*].cidr_block
+# }
