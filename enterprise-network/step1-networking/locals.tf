@@ -1,7 +1,8 @@
 locals {
-  # firewall_endpoints = flatten(aws_networkfirewall_firewall.this.firewall_status[*].sync_states[*].*.attachment[*])[*].endpoint_id
-  availability_zones = ["ap-northeast-1a", "ap-northeast-1d"]
-  az_suffix          = [for az in local.availability_zones : split("-", az)[2]]
+  firewall_endpoints_inspection = flatten(aws_networkfirewall_firewall.inspection.firewall_status[*].sync_states[*].*.attachment[*])[*].endpoint_id
+  firewall_endpoints_egress     = flatten(aws_networkfirewall_firewall.egress.firewall_status[*].sync_states[*].*.attachment[*])[*].endpoint_id
+  availability_zones            = ["ap-northeast-1a", "ap-northeast-1d"]
+  az_suffix                     = [for az in local.availability_zones : split("-", az)[2]]
 
   vpc_cidr_block_ingress            = "10.10.0.0/16"
   vpc_cidr_block_egress             = "10.20.0.0/16"
@@ -11,7 +12,10 @@ locals {
   vpc_cidr_block_tgw_for_egress     = "10.100.0.32/27"
   vpc_cidr_block_tgw_for_inspection = "10.100.0.64/27"
   vpc_cidr_block_tgw_for_workload   = "10.100.0.96/27"
-  tgw_cidr_block                    = "10.99.0.0/16"
+  cidr_block_tgw                    = "10.99.0.0/16"
+  cidr_block_internet               = "0.0.0.0/0"
+  cidr_block_awscloud               = "10.0.0.0/8"
+  cidr_block_datacenter             = "192.168.0.0/16"
 
   subnets_cidr_block_ingress_public      = ["10.10.0.0/24", "10.10.1.0/24"]
   subnets_cidr_block_ingress_private     = ["10.10.2.0/24", "10.10.3.0/24"]

@@ -1,9 +1,38 @@
-# # ----------------------------------------------------------------------------------------------
-# # AWS Network Firewall Rule Group - Stateless
-# # ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# AWS Network Firewall Rule Group - Stateless
+# ----------------------------------------------------------------------------------------------
+resource "aws_networkfirewall_rule_group" "stateless" {
+  capacity = 1000
+  name     = "nfw-ips-rules"
+  type     = "STATELESS"
+
+  rule_group {
+    rules_source {
+      rules_string = null
+      stateless_rules_and_custom_actions {
+        stateless_rule {
+          priority = 1
+          rule_definition {
+            actions = ["aws:pass"]
+            match_attributes {
+              protocols = []
+              destination {
+                address_definition = "0.0.0.0/0"
+              }
+              source {
+                address_definition = "0.0.0.0/0"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 # resource "aws_networkfirewall_rule_group" "stateless" {
-#   capacity = 100
-#   name     = "nfw-stateless"
+#   capacity = 1000
+#   name     = "${var.prefix}-ips-rules"
 #   type     = "STATELESS"
 
 #   rule_group {
@@ -18,7 +47,7 @@
 #               protocols = [6]
 
 #               source {
-#                 address_definition = local.vpc_cidr_block_app
+#                 address_definition = "0.0.0.0/0"
 #               }
 #               source_port {
 #                 from_port = 0
@@ -42,7 +71,7 @@
 #             match_attributes {
 #               protocols = [6]
 #               source {
-#                 address_definition = local.vpc_cidr_block_app
+#                 address_definition = "0.0.0.0/0"
 #               }
 #               source_port {
 #                 from_port = 0

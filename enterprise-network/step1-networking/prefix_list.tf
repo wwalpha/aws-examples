@@ -17,23 +17,6 @@ resource "aws_ec2_managed_prefix_list" "egress" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS EC2 Managed Prefix List - Internet
-# ----------------------------------------------------------------------------------------------
-resource "aws_ec2_managed_prefix_list" "internet" {
-  name           = "Internet VPC CIDRs"
-  address_family = "IPv4"
-  max_entries    = 5
-
-  entry {
-    cidr = "0.0.0.0/0"
-  }
-
-  tags = {
-    Name = "${var.prefix}-internet-pl"
-  }
-}
-
-# ----------------------------------------------------------------------------------------------
 # AWS EC2 Managed Prefix List - Ingress VPC
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_managed_prefix_list" "ingress" {

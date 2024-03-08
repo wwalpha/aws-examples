@@ -37,10 +37,10 @@ resource "aws_route_table" "egress_public" {
     gateway_id = aws_internet_gateway.egress.id
   }
 
-  # 10.40.0.0/16 > Transit Gateway
+  # 10.0.0.0/8 > Network Firewall
   route {
-    cidr_block         = local.vpc_cidr_block_workload
-    transit_gateway_id = aws_ec2_transit_gateway.this.id
+    cidr_block      = local.cidr_block_awscloud
+    vpc_endpoint_id = local.firewall_endpoints_egress[count.index]
   }
 
   tags = {
@@ -61,16 +61,58 @@ resource "aws_route_table_association" "egress_public" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table - Egress TGW Subnets
+# AWS Route Table - Egress Firewall Subnets
 # ----------------------------------------------------------------------------------------------
-resource "aws_route_table" "egress_tgw" {
-  count  = length(local.subnets_cidr_block_egress_tgw)
+resource "aws_route_table" "egress_firewall" {
+  count  = length(aws_subnet.egress_firewall[*].id)
   vpc_id = aws_vpc.egress.id
 
   # 0.0.0.0/0 > NAT Gateway
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = element(aws_nat_gateway.egress_nat[*].id, count.index)
+  }
+
+  # 10.0.0.0/8 > Transit Gateway
+  route {
+    cidr_block         = local.cidr_block_awscloud
+    transit_gateway_id = aws_ec2_transit_gateway.this.id
+  }
+
+  tags = {
+    Name = format(
+      "${aws_vpc.egress.tags.Name}-firewall-rt-%s",
+      local.az_suffix[count.index],
+    )
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table Association - Egress Firewall Subnets
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table_association" "egress_firewall" {
+  count          = length(aws_subnet.egress_firewall[*].id)
+  subnet_id      = element(aws_subnet.egress_firewall[*].id, count.index)
+  route_table_id = element(aws_route_table.egress_firewall[*].id, count.index)
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table - Egress TGW Subnets
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table" "egress_tgw" {
+  count  = length(local.subnets_cidr_block_egress_tgw)
+  vpc_id = aws_vpc.egress.id
+
+  # 0.0.0.0/0 > Network Firewall
+  route {
+    cidr_block      = local.cidr_block_internet
+    vpc_endpoint_id = local.firewall_endpoints_egress[count.index]
+  }
+
+  # 10.0.0.0/8 > Transit Gateway
+  route {
+    cidr_block         = local.cidr_block_awscloud
+    transit_gateway_id = aws_ec2_transit_gateway.this.id
   }
 
   tags = {
@@ -148,14 +190,65 @@ resource "aws_route_table_association" "ingress_tgw" {
   route_table_id = aws_route_table.ingress_tgw.id
 }
 
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route Table - DMZ Firewall Subnets
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route_table" "dmz_firewall" {
-#   depends_on = [aws_nat_gateway.this, module.dmz_vpc_attachment]
-#   count      = length(local.cidr_block_dmz_subnets_firewall)
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table - Inspection Firewall Subnets
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table" "inspection_firewall" {
+  vpc_id = aws_vpc.inspection.id
 
-#   vpc_id = aws_vpc.dmz.id
+  # 0.0.0.0/0 > Transit Gateway
+  route {
+    cidr_block         = "0.0.0.0/0"
+    transit_gateway_id = aws_ec2_transit_gateway.this.id
+  }
+
+  tags = {
+    Name = "${aws_vpc.inspection.tags.Name}-firewall-rt"
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table Association - Inspection Firewall Subnets
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table_association" "inspection_firewall" {
+  count          = length(aws_subnet.inspection_firewall[*].id)
+  subnet_id      = element(aws_subnet.inspection_firewall[*].id, count.index)
+  route_table_id = aws_route_table.inspection_firewall.id
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table - Inspection TGW Subnets
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table" "inspection_tgw" {
+  count  = length(aws_subnet.inspection_tgw[*].id)
+  vpc_id = aws_vpc.inspection.id
+
+  # 0.0.0.0/0 > Transit Gateway
+  route {
+    cidr_block      = "0.0.0.0/0"
+    vpc_endpoint_id = local.firewall_endpoints_inspection[count.index]
+  }
+
+  tags = {
+    Name = format(
+      "${aws_vpc.inspection.tags.Name}-tgw-rt-%s",
+      local.az_suffix[count.index],
+    )
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table Association - Inspection TGW Subnets
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table_association" "inspection_tgw" {
+  count          = length(aws_subnet.inspection_tgw[*].id)
+  subnet_id      = element(aws_subnet.inspection_tgw[*].id, count.index)
+  route_table_id = element(aws_route_table.inspection_tgw[*].id, count.index)
+}
+
+# resource "aws_route_table" "inspection_firewall" {
+#   count  = length(aws_subnet.inspection_firewall[*].id)
+#   vpc_id = aws_vpc.inspection.id
 
 #   # 10.0.0.0/8 > Transit Gateway
 #   route {
