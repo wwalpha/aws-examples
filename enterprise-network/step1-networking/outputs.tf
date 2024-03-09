@@ -20,17 +20,38 @@ output "vpc_id_inspection" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS VPC ID - Workload VPC
+# AWS VPC ID - Workload Intra VPC
 # ----------------------------------------------------------------------------------------------
-output "vpc_id_workload_a" {
-  value = aws_vpc.workload_a.id
+output "vpc_id_workload_intra" {
+  value = aws_vpc.workload_intra.id
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS VPC Subnets - Workload Private Subnets
+# AWS VPC ID - Workload Web VPC
 # ----------------------------------------------------------------------------------------------
-output "vpc_subnets_workload_private" {
-  value = aws_subnet.workload_a_private[*].id
+output "vpc_id_workload_web" {
+  value = aws_vpc.workload_web.id
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS VPC Subnets - Workload Intra Private Subnets
+# ----------------------------------------------------------------------------------------------
+output "vpc_subnets_workload_intra_private" {
+  value = aws_subnet.workload_intra_private[*].id
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS VPC Subnets - Workload Web Public Subnets
+# ----------------------------------------------------------------------------------------------
+output "vpc_subnets_workload_web_public" {
+  value = aws_subnet.workload_web_public[*].id
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS VPC Subnets - Workload Web Private Subnets
+# ----------------------------------------------------------------------------------------------
+output "vpc_subnets_workload_web_private" {
+  value = aws_subnet.workload_web_private[*].id
 }
 
 # ----------------------------------------------------------------------------------------------

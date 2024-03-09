@@ -1,19 +1,19 @@
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route Table - Workload A
+# Transit Gateway Route Table - Workload Intra
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route_table" "workload_a" {
+resource "aws_ec2_transit_gateway_route_table" "workload_intra" {
   transit_gateway_id = aws_ec2_transit_gateway.this.id
 
   tags = {
-    Name = format("%s-workload-tgw-rt", var.prefix)
+    Name = format("%s-workload-intra-tgw-rt", var.prefix)
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route - Workload to Workload
+# Transit Gateway Route - Workload Intra to Workload Web
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route" "workload_to_workload" {
-  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_a.id
+resource "aws_ec2_transit_gateway_route" "workload_intra_to_workload_web" {
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_intra.id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.inspection.id
   destination_cidr_block         = local.cidr_block_awscloud
   blackhole                      = false
@@ -22,38 +22,59 @@ resource "aws_ec2_transit_gateway_route" "workload_to_workload" {
 # ----------------------------------------------------------------------------------------------
 # Transit Gateway Route - Workload to DataCenter
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route" "workload_to_datacenter" {
-  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_a.id
+resource "aws_ec2_transit_gateway_route" "workload_intra_to_datacenter" {
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_intra.id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.inspection.id
   destination_cidr_block         = local.cidr_block_datacenter
   blackhole                      = false
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route - Workload to Internet
+# Transit Gateway Route - Workload Intra to Internet
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route" "workload_to_internet" {
-  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_a.id
+resource "aws_ec2_transit_gateway_route" "workload_intra_to_internet" {
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_intra.id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.egress.id
   destination_cidr_block         = local.cidr_block_internet
   blackhole                      = false
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Prefix List - Workload A to Ingress
+# Transit Gateway Prefix List - Workload Intra to Ingress
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_prefix_list_reference" "workload_a_to_ingress" {
+resource "aws_ec2_transit_gateway_prefix_list_reference" "workload_intra_to_ingress" {
   prefix_list_id                 = aws_ec2_managed_prefix_list.ingress.id
   transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.ingress.id
-  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_a.id
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_intra.id
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route Table Association - Workload A
+# Transit Gateway Route Table - Workload Web
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route_table_association" "workload_a" {
-  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_a.id
-  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_a.id
+resource "aws_ec2_transit_gateway_route_table" "workload_web" {
+  transit_gateway_id = aws_ec2_transit_gateway.this.id
+
+  tags = {
+    Name = format("%s-workload-web-tgw-rt", var.prefix)
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway Route - Workload Intra to Internet
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_route" "workload_web_to_internet" {
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_web.id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.egress.id
+  destination_cidr_block         = local.cidr_block_internet
+  blackhole                      = false
+}
+
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway Route Table Association - Workload Intra
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_route_table_association" "workload_intra" {
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_intra.id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_intra.id
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -68,12 +89,12 @@ resource "aws_ec2_transit_gateway_route_table" "egress" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route - Egress to Workload A
+# Transit Gateway Route - Egress to Workload Intra
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route" "egress_to_workload_a" {
+resource "aws_ec2_transit_gateway_route" "egress_to_workload_intra" {
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.egress.id
-  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_a.id
-  destination_cidr_block         = local.vpc_cidr_block_workload_a
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_intra.id
+  destination_cidr_block         = local.vpc_cidr_block_workload_intra
   blackhole                      = false
 }
 
@@ -97,12 +118,12 @@ resource "aws_ec2_transit_gateway_route_table" "ingress" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route - Ingress to Workload A
+# Transit Gateway Route - Ingress to Workload Intra
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route" "ingress_to_workload_a" {
+resource "aws_ec2_transit_gateway_route" "ingress_to_workload_intra" {
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.ingress.id
-  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_a.id
-  destination_cidr_block         = local.vpc_cidr_block_workload_a
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_intra.id
+  destination_cidr_block         = local.vpc_cidr_block_workload_intra
   blackhole                      = false
 }
 
@@ -126,12 +147,22 @@ resource "aws_ec2_transit_gateway_route_table" "inspection" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway Route - Inspection to Workload A
+# Transit Gateway Route - Inspection to Workload Intra
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_route" "inspection_to_workload_a" {
+resource "aws_ec2_transit_gateway_route" "inspection_to_workload_intra" {
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.inspection.id
-  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_a.id
-  destination_cidr_block         = local.vpc_cidr_block_workload_a
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_intra.id
+  destination_cidr_block         = local.vpc_cidr_block_workload_intra
+  blackhole                      = false
+}
+
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway Route - Inspection to Workload Web
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_route" "inspection_to_workload_web" {
+  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.inspection.id
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.workload_web.id
+  destination_cidr_block         = local.vpc_cidr_block_workload_web
   blackhole                      = false
 }
 

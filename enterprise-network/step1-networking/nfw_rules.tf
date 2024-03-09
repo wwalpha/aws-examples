@@ -17,10 +17,10 @@ resource "aws_networkfirewall_rule_group" "stateless" {
             match_attributes {
               protocols = []
               destination {
-                address_definition = "0.0.0.0/0"
+                address_definition = local.cidr_block_internet
               }
               source {
-                address_definition = "0.0.0.0/0"
+                address_definition = local.cidr_block_internet
               }
             }
           }
@@ -47,14 +47,14 @@ resource "aws_networkfirewall_rule_group" "stateless" {
 #               protocols = [6]
 
 #               source {
-#                 address_definition = "0.0.0.0/0"
+#                 address_definition = local.cidr_block_internet
 #               }
 #               source_port {
 #                 from_port = 0
 #                 to_port   = 65535
 #               }
 #               destination {
-#                 address_definition = "0.0.0.0/0"
+#                 address_definition = local.cidr_block_internet
 #               }
 #               destination_port {
 #                 from_port = 443
@@ -71,14 +71,14 @@ resource "aws_networkfirewall_rule_group" "stateless" {
 #             match_attributes {
 #               protocols = [6]
 #               source {
-#                 address_definition = "0.0.0.0/0"
+#                 address_definition = local.cidr_block_internet
 #               }
 #               source_port {
 #                 from_port = 0
 #                 to_port   = 65535
 #               }
 #               destination {
-#                 address_definition = "0.0.0.0/0"
+#                 address_definition = local.cidr_block_internet
 #               }
 #               destination_port {
 #                 from_port = 0

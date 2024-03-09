@@ -43,17 +43,31 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "egress" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Transit Gateway VPC Attachment - Workload A
+# Transit Gateway VPC Attachment - Workload Intra
 # ----------------------------------------------------------------------------------------------
-resource "aws_ec2_transit_gateway_vpc_attachment" "workload_a" {
+resource "aws_ec2_transit_gateway_vpc_attachment" "workload_intra" {
   transit_gateway_id                              = aws_ec2_transit_gateway.this.id
-  vpc_id                                          = aws_vpc.workload_a.id
-  subnet_ids                                      = aws_subnet.workload_a_tgw[*].id
+  vpc_id                                          = aws_vpc.workload_intra.id
+  subnet_ids                                      = aws_subnet.workload_intra_tgw[*].id
   dns_support                                     = "enable"
   appliance_mode_support                          = "enable"
   transit_gateway_default_route_table_association = false
   transit_gateway_default_route_table_propagation = false
-  tags                                            = { Name = format("%s-workload-a-tgw-attachment", var.prefix) }
+  tags                                            = { Name = format("%s-workload-intra-tgw-attachment", var.prefix) }
+}
+
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway VPC Attachment - Workload Web
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_vpc_attachment" "workload_web" {
+  transit_gateway_id                              = aws_ec2_transit_gateway.this.id
+  vpc_id                                          = aws_vpc.workload_web.id
+  subnet_ids                                      = aws_subnet.workload_web_tgw[*].id
+  dns_support                                     = "enable"
+  appliance_mode_support                          = "enable"
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+  tags                                            = { Name = format("%s-workload-web-tgw-attachment", var.prefix) }
 }
 
 # ----------------------------------------------------------------------------------------------

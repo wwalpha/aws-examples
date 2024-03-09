@@ -19,3 +19,14 @@ resource "aws_internet_gateway" "egress" {
     Name = "${var.prefix}-egress-igw"
   }
 }
+
+# ----------------------------------------------------------------------------------------------
+# AWS Internet Gateway - Workload Web
+# ----------------------------------------------------------------------------------------------
+resource "aws_internet_gateway" "workload_web" {
+  vpc_id = aws_vpc.workload_web.id
+
+  tags = {
+    Name = "${var.prefix}-workload-web-igw"
+  }
+}
