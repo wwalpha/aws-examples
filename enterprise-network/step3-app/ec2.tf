@@ -21,9 +21,9 @@ module "nginx" {
   monitoring             = false
   vpc_security_group_ids = [module.workload_sg.security_group_id]
   subnet_id              = var.vpc_subnets_workload_intra_private[0]
-  # user_data_base64       = base64encode(local.user_data)
-  iam_instance_profile = aws_iam_instance_profile.this.name
-  source_dest_check    = false
+  iam_instance_profile   = aws_iam_instance_profile.this.name
+  source_dest_check      = false
+  user_data_base64       = base64encode(local.user_data_nginx)
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -43,6 +43,7 @@ module "apache" {
   subnet_id              = var.vpc_subnets_workload_web_private[0]
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
+  user_data_base64       = base64encode(local.user_data_apache)
 }
 
 # ----------------------------------------------------------------------------------------------

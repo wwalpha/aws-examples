@@ -20,6 +20,7 @@ module "security" {
 }
 
 module "app" {
+  depends_on                         = [module.networking]
   source                             = "./step3-app"
   prefix                             = local.prefix
   ec2_ssm_role_name                  = module.security.ec2_ssm_role.name
