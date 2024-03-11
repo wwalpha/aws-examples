@@ -1,6 +1,6 @@
 locals {
-  firewall_endpoints_inspection = flatten(aws_networkfirewall_firewall.inspection.firewall_status[*].sync_states[*].*.attachment[*])[*].endpoint_id
-  firewall_endpoints_egress     = flatten(aws_networkfirewall_firewall.egress.firewall_status[*].sync_states[*].*.attachment[*])[*].endpoint_id
+  firewall_endpoints_egress     = tolist(aws_networkfirewall_firewall.egress.firewall_status[0].sync_states)
+  firewall_endpoints_inspection = tolist(aws_networkfirewall_firewall.inspection.firewall_status[0].sync_states)
   availability_zones            = ["ap-northeast-1a", "ap-northeast-1c"]
   az_suffix                     = [for az in local.availability_zones : split("-", az)[2]]
 

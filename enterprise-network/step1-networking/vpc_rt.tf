@@ -84,7 +84,7 @@ resource "aws_route_table_association" "workload_web_private" {
 # ----------------------------------------------------------------------------------------------
 resource "aws_route_table" "egress_public" {
   depends_on = [aws_ec2_transit_gateway.this]
-  count      = length(local.subnets_cidr_block_egress_public)
+  count      = length(aws_subnet.egress_public[*].id)
   vpc_id     = aws_vpc.egress.id
 
   # 0.0.0.0/0 > Internet Gateway
@@ -96,7 +96,7 @@ resource "aws_route_table" "egress_public" {
   # 10.0.0.0/8 > Network Firewall
   route {
     cidr_block      = local.cidr_block_awscloud
-    vpc_endpoint_id = local.firewall_endpoints_egress[count.index]
+    vpc_endpoint_id = element([for ss in local.firewall_endpoints_egress : ss.attachment[0].endpoint_id if ss.availability_zone == aws_subnet.egress_public[count.index].availability_zone], 0)
   }
 
   tags = {
@@ -111,7 +111,7 @@ resource "aws_route_table" "egress_public" {
 # AWS Route Table Association - Egress Public Subnets
 # ----------------------------------------------------------------------------------------------
 resource "aws_route_table_association" "egress_public" {
-  count          = length(local.subnets_cidr_block_egress_tgw)
+  count          = length(aws_subnet.egress_public[*].id)
   subnet_id      = element(aws_subnet.egress_public[*].id, count.index)
   route_table_id = element(aws_route_table.egress_public[*].id, count.index)
 }
@@ -158,13 +158,13 @@ resource "aws_route_table_association" "egress_firewall" {
 # ----------------------------------------------------------------------------------------------
 resource "aws_route_table" "egress_tgw" {
   depends_on = [aws_ec2_transit_gateway.this]
-  count      = length(local.subnets_cidr_block_egress_tgw)
+  count      = length(aws_subnet.egress_tgw[*].id)
   vpc_id     = aws_vpc.egress.id
 
   # 0.0.0.0/0 > Network Firewall
   route {
     cidr_block      = local.cidr_block_internet
-    vpc_endpoint_id = local.firewall_endpoints_egress[count.index]
+    vpc_endpoint_id = element([for ss in local.firewall_endpoints_egress : ss.attachment[0].endpoint_id if ss.availability_zone == aws_subnet.egress_tgw[count.index].availability_zone], 0)
   }
 
   # 10.0.0.0/8 > Transit Gateway
@@ -185,7 +185,7 @@ resource "aws_route_table" "egress_tgw" {
 # AWS Route Table Association - Egress TGW Subnets
 # ----------------------------------------------------------------------------------------------
 resource "aws_route_table_association" "egress_tgw" {
-  count          = length(local.subnets_cidr_block_egress_tgw)
+  count          = length(aws_subnet.egress_tgw[*].id)
   subnet_id      = element(aws_subnet.egress_tgw[*].id, count.index)
   route_table_id = element(aws_route_table.egress_tgw[*].id, count.index)
 }
@@ -288,7 +288,7 @@ resource "aws_route_table" "inspection_tgw" {
   # 0.0.0.0/0 > Transit Gateway
   route {
     cidr_block      = local.cidr_block_internet
-    vpc_endpoint_id = local.firewall_endpoints_inspection[count.index]
+    vpc_endpoint_id = element([for ss in local.firewall_endpoints_inspection : ss.attachment[0].endpoint_id if ss.availability_zone == aws_subnet.inspection_tgw[count.index].availability_zone], 0)
   }
 
   tags = {
