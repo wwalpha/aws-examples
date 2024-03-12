@@ -1,5 +1,8 @@
 # AWS Solution Architectures
 
+## [Inspection VPC only for East-West traffic and egress VPC with inspection for internet](./enterprise-network/README.md)
+![img](./enterprise-network/docs/architecture.png)
+
 ## [Fargate Blue Green Deployment](./fargate-blue-green-deployment/README.md)
 
 ![img](./fargate-blue-green-deployment/docs/methodology.png)
