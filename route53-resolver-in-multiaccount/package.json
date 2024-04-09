@@ -9,5 +9,8 @@
     "plan": "npm run init && terraform plan",
     "generate": "terraform plan -generate-config-out=generated.tf",
     "destroy": "terraform apply -destroy -auto-approve"
+  },
+  "dependencies": {
+    "yarn": "^1.22.22"
   }
 }

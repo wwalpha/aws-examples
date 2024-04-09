@@ -1,3 +1,3 @@
 locals {
-  prefix = "route53resolver"
+  prefix = "resolver"
 }

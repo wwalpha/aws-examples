@@ -17,36 +17,36 @@ resource "aws_subnet" "central_dns_private" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC Subnets - Workload1
+# VPC Subnets - Workload
 # ----------------------------------------------------------------------------------------------
-resource "aws_subnet" "workload1" {
-  count = length(local.subnets_cidr_block_workload1_private)
+resource "aws_subnet" "workload" {
+  count = length(local.subnets_cidr_block_workload_private)
 
-  vpc_id            = aws_vpc.workload1.id
-  cidr_block        = element(local.subnets_cidr_block_workload1_private, count.index)
+  vpc_id            = aws_vpc.workload.id
+  cidr_block        = element(local.subnets_cidr_block_workload_private, count.index)
   availability_zone = element(local.availability_zones, count.index)
 
   tags = {
     Name = format(
-      "${aws_vpc.workload1.tags.Name}-private-subnets-%s",
+      "${aws_vpc.workload.tags.Name}-private-subnets-%s",
       local.az_suffix[count.index],
     )
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC Subnets - Workload2
+# VPC Subnets - Onpremise
 # ----------------------------------------------------------------------------------------------
-resource "aws_subnet" "workload2" {
-  count = length(local.subnets_cidr_block_workload2_private)
+resource "aws_subnet" "onpremise" {
+  count = length(local.subnets_cidr_block_onpremise)
 
-  vpc_id            = aws_vpc.workload2.id
-  cidr_block        = element(local.subnets_cidr_block_workload2_private, count.index)
+  vpc_id            = aws_vpc.onpremise.id
+  cidr_block        = element(local.subnets_cidr_block_onpremise, count.index)
   availability_zone = element(local.availability_zones, count.index)
 
   tags = {
     Name = format(
-      "${aws_vpc.workload2.tags.Name}-private-subnets-%s",
+      "${aws_vpc.onpremise.tags.Name}-private-subnets-%s",
       local.az_suffix[count.index],
     )
   }

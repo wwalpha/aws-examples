@@ -12,27 +12,27 @@ resource "aws_vpc" "central_dns" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC - Workload1
+# VPC - Workload
 # ----------------------------------------------------------------------------------------------
-resource "aws_vpc" "workload1" {
-  cidr_block           = local.vpc_cidr_block_workload1
+resource "aws_vpc" "workload" {
+  cidr_block           = local.vpc_cidr_block_workload
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
-    Name = "${var.prefix}-workload1-vpc"
+    Name = "${var.prefix}-workload-vpc"
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC - Workload2
+# VPC - Onpremise
 # ----------------------------------------------------------------------------------------------
-resource "aws_vpc" "workload2" {
-  cidr_block           = local.vpc_cidr_block_workload2
+resource "aws_vpc" "onpremise" {
+  cidr_block           = local.vpc_cidr_block_onpremise
   enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
-    Name = "${var.prefix}-workload2-vpc"
+    Name = "${var.prefix}-onpremise-vpc"
   }
 }
