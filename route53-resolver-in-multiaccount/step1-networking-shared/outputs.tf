@@ -8,16 +8,23 @@ output "vpc_id_onpremise" {
 # ----------------------------------------------------------------------------------------------
 # AWS VPC Subnets - Onpremise Private Subnets
 # ----------------------------------------------------------------------------------------------
-output "vpc_subnets_onpremise_private" {
+output "vpc_subnets_onpremise" {
   value = aws_subnet.onpremise[*].id
 }
 
-# # ----------------------------------------------------------------------------------------------
-# # AWS VPC ID - Egress VPC
-# # ----------------------------------------------------------------------------------------------
-# output "vpc_id_egress" {
-#   value = aws_vpc.egress.id
-# }
+# ----------------------------------------------------------------------------------------------
+# AWS Route53 Resolver Inbound Endpoints
+# ----------------------------------------------------------------------------------------------
+output "route53_resolver_inbound_endpoints" {
+  value = aws_route53_resolver_endpoint.inbound.ip_address[*].ip
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route53 Resolver Outbound Endpoints
+# ----------------------------------------------------------------------------------------------
+output "route53_resolver_outbound_endpoints" {
+  value = aws_route53_resolver_endpoint.outbound.ip_address[*].ip
+}
 
 # # ----------------------------------------------------------------------------------------------
 # # AWS VPC ID - Inspection VPC
