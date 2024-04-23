@@ -6,4 +6,10 @@ locals {
   vpc_cidr_block_onpremise               = "10.10.0.0/16"
   subnets_cidr_block_central_dns_private = ["10.1.0.0/24", "10.1.1.0/24"]
   subnets_cidr_block_onpremise           = ["10.10.0.0/24", "10.10.1.0/24"]
+
+  route53_resolver_inbound_endpoint_address1 = "10.1.0.10"
+  route53_resolver_inbound_endpoint_address2 = "10.1.1.10"
+
+  route53_resolver_outbound_endpoint_address1 = "10.1.0.20"
+  route53_resolver_outbound_endpoint_address2 = "10.1.1.20"
 }

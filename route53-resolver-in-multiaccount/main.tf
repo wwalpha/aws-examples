@@ -16,7 +16,6 @@ terraform {
   }
 }
 
-
 module "networking_shared" {
   providers = {
     aws = aws.SharedService
