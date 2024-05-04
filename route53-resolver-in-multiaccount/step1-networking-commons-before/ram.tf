@@ -33,15 +33,15 @@ resource "aws_ram_principal_association" "onpremise" {
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Principal Association - Workload Public
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_principal_association" "workload_public" {
-  principal          = var.aws_account_id_workload_public
+resource "aws_ram_principal_association" "workload_app1" {
+  principal          = var.aws_account_id_workload_app1
   resource_share_arn = aws_ram_resource_share.this.arn
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Principal Association - Workload Private
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_principal_association" "workload_private" {
-  principal          = var.aws_account_id_workload_private
+resource "aws_ram_principal_association" "workload_app2" {
+  principal          = var.aws_account_id_workload_app2
   resource_share_arn = aws_ram_resource_share.this.arn
 }
