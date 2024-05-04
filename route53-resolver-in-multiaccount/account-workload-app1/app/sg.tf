@@ -1,11 +1,11 @@
 # ----------------------------------------------------------------------------------------------
 # AWS EC2 Instance - DNS
 # ----------------------------------------------------------------------------------------------
-module "onpremise_sg" {
+module "sg" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name   = "${var.prefix}_onpremise_sg"
-  vpc_id = var.vpc_id_onpremise
+  name   = "${var.prefix}_sg"
+  vpc_id = var.vpc_id
   ingress_with_cidr_blocks = [
     {
       rule        = "all-icmp"
