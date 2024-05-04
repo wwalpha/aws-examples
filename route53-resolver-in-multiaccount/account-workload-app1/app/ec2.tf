@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------
 resource "aws_iam_instance_profile" "this" {
   name = "ec2_ssm"
-  role = aws_iam_role.ec2_ssm.arn
+  role = aws_iam_role.ec2_ssm.name
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ module "nginx" {
 
   name = "${var.prefix}-nginx"
 
-  ami                    = "ami-0962657fe505b0123"
+  ami                    = "ami-0ab3794db9457b60a"
   instance_type          = "t3a.medium"
   key_name               = "resolver-testing"
   monitoring             = false

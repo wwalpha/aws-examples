@@ -13,11 +13,10 @@ resource "aws_lb" "nginx" {
 # Application Load Balancer Target Group - Nginx
 # ----------------------------------------------------------------------------------------------
 resource "aws_lb_target_group" "nginx" {
-  name        = "${var.prefix}-tg-nginx"
-  port        = 80
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = var.vpc_id
+  name     = "${var.prefix}-tg-nginx"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -38,8 +37,7 @@ resource "aws_lb_listener" "nginx" {
 # Application Load Balancer Target Group Attachment - Nginx
 # ----------------------------------------------------------------------------------------------
 resource "aws_lb_target_group_attachment" "nginx" {
-  target_group_arn  = aws_lb_target_group.nginx.arn
-  target_id         = module.nginx.private_ip
-  port              = 80
-  availability_zone = "all"
+  target_group_arn = aws_lb_target_group.nginx.arn
+  target_id        = module.nginx.id
+  port             = 80
 }

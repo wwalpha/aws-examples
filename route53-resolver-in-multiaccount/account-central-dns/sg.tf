@@ -4,7 +4,7 @@
 module "inbound_endpoint_sg" {
   source = "terraform-aws-modules/security-group/aws"
   name   = "${var.prefix}_inbound_endpoint_sg"
-  vpc_id = var.vpc_id_central_dns
+  vpc_id = module.networking.vpc_id
 
   ingress_with_cidr_blocks = [
     {
@@ -30,7 +30,7 @@ module "inbound_endpoint_sg" {
 module "outbound_endpoint_sg" {
   source = "terraform-aws-modules/security-group/aws"
   name   = "${var.prefix}_outbound_endpoint_sg"
-  vpc_id = var.vpc_id_central_dns
+  vpc_id = module.networking.vpc_id
 
   ingress_with_cidr_blocks = [
     {

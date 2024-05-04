@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------------------------
 # Networking Central DNS
 # ----------------------------------------------------------------------------------------------
-module "networking_central_dns" {
+module "networking" {
   source                     = "../commons-networking"
   prefix                     = "${var.prefix}-central-dns"
   vpc_cidr_block             = var.vpc_cidr_block

@@ -5,7 +5,7 @@ resource "aws_route53_zone" "this" {
   name = "master.aws"
 
   vpc {
-    vpc_id = var.vpc_id_central_dns
+    vpc_id = module.networking.vpc_id
   }
 }
 
@@ -21,12 +21,12 @@ resource "aws_route53_resolver_endpoint" "inbound" {
   ]
 
   ip_address {
-    subnet_id = var.route53_resolver_subnets[0]
+    subnet_id = module.networking.vpc_private_subnet_ids[0]
     ip        = local.route53_resolver_inbound_endpoint_address1
   }
 
   ip_address {
-    subnet_id = var.route53_resolver_subnets[1]
+    subnet_id = module.networking.vpc_private_subnet_ids[1]
     ip        = local.route53_resolver_inbound_endpoint_address2
   }
 
@@ -45,12 +45,12 @@ resource "aws_route53_resolver_endpoint" "outbound" {
   ]
 
   ip_address {
-    subnet_id = var.route53_resolver_subnets[0]
+    subnet_id = module.networking.vpc_private_subnet_ids[0]
     ip        = local.route53_resolver_outbound_endpoint_address1
   }
 
   ip_address {
-    subnet_id = var.route53_resolver_subnets[1]
+    subnet_id = module.networking.vpc_private_subnet_ids[1]
     ip        = local.route53_resolver_outbound_endpoint_address2
   }
 
@@ -73,15 +73,41 @@ resource "aws_route53_resolver_endpoint" "outbound" {
 #   rule_type   = "SYSTEM"
 # }
 
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule(Forward) - amazonaws.com
-# # ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# AWS Route53 Resolver Rule(Forward) - master.aws
+# ----------------------------------------------------------------------------------------------
 # resource "aws_route53_resolver_rule" "foward1" {
-#   domain_name          = "centraldns.com"
-#   name                 = "centraldns"
+#   domain_name          = "master.aws"
+#   name                 = "awscloud"
 #   rule_type            = "FORWARD"
-#   resolver_endpoint_id = aws_route53_resolver_endpoint.central_dns.id
+#   resolver_endpoint_id = aws_route53_resolver_endpoint.inbound.id
+
+#   target_ip {
+#     ip = local.route53_resolver_inbound_endpoint_address1
+#   }
+
+#   target_ip {
+#     ip = local.route53_resolver_inbound_endpoint_address2
+#   }
 # }
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route53 Resolver Rule(Forward) - master.local
+# ----------------------------------------------------------------------------------------------
+resource "aws_route53_resolver_rule" "foward2" {
+  domain_name          = "master.local"
+  name                 = "onpremise"
+  rule_type            = "FORWARD"
+  resolver_endpoint_id = aws_route53_resolver_endpoint.outbound.id
+
+  target_ip {
+    ip = local.route53_resolver_outbound_endpoint_address1
+  }
+
+  target_ip {
+    ip = local.route53_resolver_outbound_endpoint_address2
+  }
+}
 
 # # ----------------------------------------------------------------------------------------------
 # # AWS Route53 Resolver Rule Association(System) - aws.amazon.com
