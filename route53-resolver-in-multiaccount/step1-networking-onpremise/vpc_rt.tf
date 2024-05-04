@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table - Central DNS
+# AWS Route Table - Onpremise
 # ----------------------------------------------------------------------------------------------
 resource "aws_route_table" "this" {
   vpc_id = aws_vpc.this.id
@@ -16,7 +16,7 @@ resource "aws_route_table" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table Association - Central DNS
+# AWS Route Table Association - Onpremise
 # ----------------------------------------------------------------------------------------------
 resource "aws_route_table_association" "this" {
   count          = length(aws_subnet.this[*].id)

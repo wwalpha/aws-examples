@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------------------
-# VPC - Central DNS
+# VPC - Onpremise
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr_block
@@ -7,12 +7,12 @@ resource "aws_vpc" "this" {
   enable_dns_support   = true
 
   tags = {
-    Name = "${var.prefix}-central-dns-vpc"
+    Name = "${var.prefix}-onpremise-vpc"
   }
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC Subnets - Central DNS Private
+# VPC Subnets - Onpremise
 # ----------------------------------------------------------------------------------------------
 resource "aws_subnet" "this" {
   count = length(var.subnets_cidr_block)
