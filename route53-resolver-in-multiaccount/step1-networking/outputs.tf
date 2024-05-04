@@ -2,19 +2,19 @@
 # AWS VPC ID - VPC
 # ----------------------------------------------------------------------------------------------
 output "vpc_id" {
-  value = aws_vpc.this.id
+  value = module.vpc.vpc_id
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS VPC Subnets - Private Subnets
 # ----------------------------------------------------------------------------------------------
 output "vpc_public_subnet_ids" {
-  value = aws_subnet.public[*].id
+  value = module.vpc.public_subnets
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS VPC Subnets - Private Subnets
 # ----------------------------------------------------------------------------------------------
 output "vpc_private_subnet_ids" {
-  value = aws_subnet.private[*].id
+  value = module.vpc.private_subnets
 }

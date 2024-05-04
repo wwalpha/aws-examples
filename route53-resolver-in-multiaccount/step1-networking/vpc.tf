@@ -63,14 +63,9 @@ resource "aws_internet_gateway" "this" {
 # ----------------------------------------------------------------------------------------------
 resource "aws_eip" "this" {
   depends_on = [aws_internet_gateway.this]
-  count      = length(var.availability_zones)
-
-  domain = "vpc"
+  domain     = "vpc"
   tags = {
-    "Name" = format(
-      "${var.prefix}-%s",
-      element(var.availability_zones, count.index),
-    )
+    "Name" = "${var.prefix}-eip"
   }
 }
 
@@ -78,16 +73,11 @@ resource "aws_eip" "this" {
 # AWS NAT Gateway
 # ----------------------------------------------------------------------------------------------
 resource "aws_nat_gateway" "this" {
-  depends_on = [aws_internet_gateway.this]
-  count      = length(var.availability_zones)
-
-  allocation_id = element(aws_eip.this.*.id, count.index)
-  subnet_id     = element(aws_subnet.public.*.id, count.index)
+  depends_on    = [aws_internet_gateway.this]
+  allocation_id = aws_eip.this.id
+  subnet_id     = aws_subnet.public[0].id
 
   tags = {
-    "Name" = format(
-      "${var.prefix}-natgw-%s",
-      element(var.availability_zones, count.index),
-    )
+    "Name" = "${var.prefix}-natgw"
   }
 }
