@@ -2,7 +2,7 @@
 # AWS Route53 Private Zone - Central DNS Private
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_zone" "central_dns" {
-  name = "centraldns.com"
+  name = "master.aws"
 
   vpc {
     vpc_id = aws_vpc.central_dns.id
@@ -13,7 +13,7 @@ resource "aws_route53_zone" "central_dns" {
 # AWS Route53 Resolver Endpoint - Central Inbound Resolver Endpoint
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_resolver_endpoint" "inbound" {
-  name      = "${var.prefix}-Endpoint"
+  name      = "${var.prefix}-inbound"
   direction = "INBOUND"
 
   security_group_ids = [
@@ -37,7 +37,7 @@ resource "aws_route53_resolver_endpoint" "inbound" {
 # AWS Route53 Resolver Endpoint - Central Outbound Resolver Endpoint
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_resolver_endpoint" "outbound" {
-  name      = "${var.prefix}-Endpoint"
+  name      = "${var.prefix}-outbound"
   direction = "OUTBOUND"
 
   security_group_ids = [
