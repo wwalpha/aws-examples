@@ -1,11 +1,11 @@
 # ----------------------------------------------------------------------------------------------
-# AWS Route53 Private Zone - Central DNS Private
+# Route53 Hosted Zone - Private
 # ----------------------------------------------------------------------------------------------
-resource "aws_route53_zone" "central_dns" {
+resource "aws_route53_zone" "this" {
   name = "master.aws"
 
   vpc {
-    vpc_id = aws_vpc.central_dns.id
+    vpc_id = var.vpc_id_central_dns
   }
 }
 
@@ -21,12 +21,12 @@ resource "aws_route53_resolver_endpoint" "inbound" {
   ]
 
   ip_address {
-    subnet_id = aws_subnet.central_dns_private[0].id
+    subnet_id = var.route53_resolver_subnets[0]
     ip        = local.route53_resolver_inbound_endpoint_address1
   }
 
   ip_address {
-    subnet_id = aws_subnet.central_dns_private[1].id
+    subnet_id = var.route53_resolver_subnets[1]
     ip        = local.route53_resolver_inbound_endpoint_address2
   }
 
@@ -45,12 +45,12 @@ resource "aws_route53_resolver_endpoint" "outbound" {
   ]
 
   ip_address {
-    subnet_id = aws_subnet.central_dns_private[0].id
+    subnet_id = var.route53_resolver_subnets[0]
     ip        = local.route53_resolver_outbound_endpoint_address1
   }
 
   ip_address {
-    subnet_id = aws_subnet.central_dns_private[1].id
+    subnet_id = var.route53_resolver_subnets[1]
     ip        = local.route53_resolver_outbound_endpoint_address2
   }
 

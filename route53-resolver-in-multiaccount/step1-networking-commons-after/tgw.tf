@@ -1,28 +1,38 @@
-# # ----------------------------------------------------------------------------------------------
-# # Transit Gateway
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_ec2_transit_gateway" "this" {
-#   default_route_table_association = "disable"
-#   default_route_table_propagation = "disable"
-#   multicast_support               = "disable"
-#   vpn_ecmp_support                = "disable"
-#   dns_support                     = "enable"
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway VPC Attachment Accept - Onpremise
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_vpc_attachment_accepter" "onpremise" {
+  transit_gateway_attachment_id                   = var.transit_gateway_attachment_id_onpremise
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
 
-#   tags = {
-#     Name = "${var.prefix}-tgw"
-#   }
-# }
+  tags = {
+    Name = format("%s-tgw-attachment", var.prefix)
+  }
+}
 
-# # ----------------------------------------------------------------------------------------------
-# # Transit Gateway VPC Attachment - Central DNS
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_ec2_transit_gateway_vpc_attachment" "central_dns" {
-#   transit_gateway_id                              = aws_ec2_transit_gateway.this.id
-#   vpc_id                                          = aws_vpc.this.id
-#   subnet_ids                                      = aws_subnet.this[*].id
-#   dns_support                                     = "enable"
-#   appliance_mode_support                          = "enable"
-#   transit_gateway_default_route_table_association = false
-#   transit_gateway_default_route_table_propagation = false
-#   tags                                            = { Name = format("%s-central-dns-tgw-attachment", var.prefix) }
-# }
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway VPC Attachment Accept - Workload App1
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_vpc_attachment_accepter" "workload_app1" {
+  transit_gateway_attachment_id                   = var.transit_gateway_attachment_id_workload_app1
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+
+  tags = {
+    Name = format("%s-tgw-attachment", var.prefix)
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# Transit Gateway VPC Attachment Accept - Workload App2
+# ----------------------------------------------------------------------------------------------
+resource "aws_ec2_transit_gateway_vpc_attachment_accepter" "workload_app2" {
+  transit_gateway_attachment_id                   = var.transit_gateway_attachment_id_workload_app2
+  transit_gateway_default_route_table_association = false
+  transit_gateway_default_route_table_propagation = false
+
+  tags = {
+    Name = format("%s-tgw-attachment", var.prefix)
+  }
+}

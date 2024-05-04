@@ -22,6 +22,6 @@ variable "transit_gateway_id" {
   description = "The ID of the Transit Gateway"
 }
 
-variable "ram_resource_share_arn" {
-  description = "The ARN of the RAM Resource Share"
-}
+# variable "ram_resource_share_arn" {
+#   description = "The ARN of the RAM Resource Share"
+# }
