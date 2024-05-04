@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table - Onpremise
+# AWS Route Table - Private
 # ----------------------------------------------------------------------------------------------
-resource "aws_route_table" "this" {
+resource "aws_route_table" "private" {
   depends_on = [aws_ram_resource_share_accepter.tis]
   vpc_id     = aws_vpc.this.id
 
@@ -17,10 +17,31 @@ resource "aws_route_table" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Route Table Association - Onpremise
+# AWS Route Table Association - Private
 # ----------------------------------------------------------------------------------------------
-resource "aws_route_table_association" "this" {
-  count          = length(aws_subnet.this[*].id)
-  subnet_id      = element(aws_subnet.this[*].id, count.index)
-  route_table_id = aws_route_table.this.id
+resource "aws_route_table_association" "private" {
+  count          = length(aws_subnet.private[*].id)
+  subnet_id      = element(aws_subnet.private[*].id, count.index)
+  route_table_id = aws_route_table.private.id
 }
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table - Public
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name = "${aws_vpc.this.tags.Name}-public-rt"
+  }
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS Route Table Association - Public
+# ----------------------------------------------------------------------------------------------
+resource "aws_route_table_association" "public" {
+  count          = length(aws_subnet.public[*].id)
+  subnet_id      = element(aws_subnet.public[*].id, count.index)
+  route_table_id = aws_route_table.public.id
+}
+

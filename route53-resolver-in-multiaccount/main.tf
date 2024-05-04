@@ -56,13 +56,15 @@ module "step1_networking_commons_before" {
     aws = aws.SharedService
   }
 
-  depends_on                   = [aws_ec2_transit_gateway.this]
-  source                       = "./step1-networking-commons-before"
-  prefix                       = local.prefix
-  aws_account_id_central_dns   = local.aws_account_id_central_dns
-  aws_account_id_onpremise     = local.aws_account_id_onpremise
-  aws_account_id_workload_app1 = local.aws_account_id_workload_app1
-  aws_account_id_workload_app2 = local.aws_account_id_workload_app2
+  source = "./step1-networking-commons-before"
+  prefix = local.prefix
+  principal_accounts = [
+    # self account can not set
+    local.aws_account_id_central_dns,
+    local.aws_account_id_onpremise,
+    local.aws_account_id_workload_app1,
+    local.aws_account_id_workload_app2
+  ]
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ module "networking_central_dns" {
 
   depends_on                 = [module.step1_networking_commons_before]
   source                     = "./step1-networking"
-  prefix                     = local.prefix
+  prefix                     = "${local.prefix}-central-dns"
   vpc_cidr_block             = local.vpc_cidr_block_central_dns
   subnets_cidr_block_public  = local.subnets_cidr_block_public_central_dns
   subnets_cidr_block_private = local.subnets_cidr_block_private_central_dns
@@ -94,7 +96,7 @@ module "networking_onpremise" {
 
   depends_on                 = [module.step1_networking_commons_before]
   source                     = "./step1-networking"
-  prefix                     = local.prefix
+  prefix                     = "${local.prefix}-onpremise"
   vpc_cidr_block             = local.vpc_cidr_block_onpremise
   subnets_cidr_block_public  = local.subnets_cidr_block_public_onpremise
   subnets_cidr_block_private = local.subnets_cidr_block_private_onpremise
@@ -113,7 +115,7 @@ module "networking_workload_app1" {
 
   depends_on                 = [module.step1_networking_commons_before]
   source                     = "./step1-networking"
-  prefix                     = local.prefix
+  prefix                     = "${local.prefix}-workload-app1"
   vpc_cidr_block             = local.vpc_cidr_block_onpremise
   subnets_cidr_block_public  = local.subnets_cidr_block_public_workload_app1
   subnets_cidr_block_private = local.subnets_cidr_block_private_workload_app1
@@ -128,7 +130,7 @@ module "networking_workload_app1" {
 module "networking_workload_app2" {
   depends_on                 = [module.step1_networking_commons_before]
   source                     = "./step1-networking"
-  prefix                     = local.prefix
+  prefix                     = "${local.prefix}-workload-app2"
   vpc_cidr_block             = local.vpc_cidr_block_onpremise
   subnets_cidr_block_public  = local.subnets_cidr_block_public_workload_app2
   subnets_cidr_block_private = local.subnets_cidr_block_private_workload_app2
