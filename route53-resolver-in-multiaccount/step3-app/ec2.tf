@@ -17,10 +17,10 @@ module "dns_server" {
 
   ami                    = "ami-0962657fe505b0123"
   instance_type          = "t3a.medium"
-  key_name               = "onecloud"
+  key_name               = "resolver-testing"
   monitoring             = false
   vpc_security_group_ids = [module.onpremise_sg.security_group_id]
-  subnet_id              = var.vpc_subnets_onpremise_private[0]
+  subnet_id              = var.vpc_subnets_onpremise[0]
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
 }
@@ -36,10 +36,10 @@ module "onpremise_client" {
 
   ami                    = "ami-0962657fe505b0123"
   instance_type          = "t3a.medium"
-  key_name               = "onecloud"
+  key_name               = "resolver-testing"
   monitoring             = false
   vpc_security_group_ids = [module.onpremise_sg.security_group_id]
-  subnet_id              = var.vpc_subnets_onpremise_private[0]
+  subnet_id              = var.vpc_subnets_onpremise[0]
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
 }

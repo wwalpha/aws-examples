@@ -22,10 +22,12 @@ resource "aws_route53_resolver_endpoint" "inbound" {
 
   ip_address {
     subnet_id = aws_subnet.central_dns_private[0].id
+    ip        = local.route53_resolver_inbound_endpoint_address1
   }
 
   ip_address {
     subnet_id = aws_subnet.central_dns_private[1].id
+    ip        = local.route53_resolver_inbound_endpoint_address2
   }
 
   protocols = ["Do53"]
@@ -44,10 +46,12 @@ resource "aws_route53_resolver_endpoint" "outbound" {
 
   ip_address {
     subnet_id = aws_subnet.central_dns_private[0].id
+    ip        = local.route53_resolver_outbound_endpoint_address1
   }
 
   ip_address {
     subnet_id = aws_subnet.central_dns_private[1].id
+    ip        = local.route53_resolver_outbound_endpoint_address2
   }
 
   protocols = ["Do53"]
