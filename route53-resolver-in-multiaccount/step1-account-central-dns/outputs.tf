@@ -1,4 +1,11 @@
 # ----------------------------------------------------------------------------------------------
+# AWS Transit Gateway Attachment ID
+# ----------------------------------------------------------------------------------------------
+output "transit_gateway_attachment_id" {
+  value = module.networking.transit_gateway_attachment_id
+}
+
+# ----------------------------------------------------------------------------------------------
 # AWS Transit Gateway ID
 # ----------------------------------------------------------------------------------------------
 output "transit_gateway_id" {
@@ -6,8 +13,15 @@ output "transit_gateway_id" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Arn
+# RAM Resource Share Arn - Transit Gateway
 # ----------------------------------------------------------------------------------------------
-output "ram_resource_share_arn" {
-  value = aws_ram_resource_share.this.arn
+output "ram_resource_share_arn_tgw" {
+  value = aws_ram_principal_association.tgw
+}
+
+# ----------------------------------------------------------------------------------------------
+# RAM Resource Share Arn - Resolver Rules
+# ----------------------------------------------------------------------------------------------
+output "ram_resource_share_arn_resolver" {
+  value = aws_ram_principal_association.resolver
 }

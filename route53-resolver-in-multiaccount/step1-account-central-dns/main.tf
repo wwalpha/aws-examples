@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------------------
-# Networking Central DNS
+# Networking
 # ----------------------------------------------------------------------------------------------
 module "networking" {
   source                     = "../commons-networking"
@@ -8,5 +8,5 @@ module "networking" {
   subnets_cidr_block_public  = var.subnets_cidr_block_public
   subnets_cidr_block_private = var.subnets_cidr_block_private
   availability_zones         = var.availability_zones
-  transit_gateway_id         = var.transit_gateway_id
+  transit_gateway_id         = aws_ec2_transit_gateway.this.id
 }
