@@ -1,7 +1,22 @@
 # ----------------------------------------------------------------------------------------------
+# RAM Resource Share Accepter - Resolver Rules
+# ----------------------------------------------------------------------------------------------
+resource "aws_ram_resource_share_accepter" "resolver" {
+  share_arn = var.ram_resource_share_arn_resolver
+}
+
+# ----------------------------------------------------------------------------------------------
+# RAM Resource Share Accepter - Transit Gateway
+# ----------------------------------------------------------------------------------------------
+resource "aws_ram_resource_share_accepter" "tgw" {
+  share_arn = var.ram_resource_share_arn_tgw
+}
+
+# ----------------------------------------------------------------------------------------------
 # Networking
 # ----------------------------------------------------------------------------------------------
 module "networking" {
+  depends_on                 = [aws_ram_resource_share_accepter.tgw]
   source                     = "../commons-networking"
   prefix                     = "${var.prefix}-workload-app2"
   vpc_cidr_block             = var.vpc_cidr_block
@@ -15,6 +30,7 @@ module "networking" {
 # Application
 # ----------------------------------------------------------------------------------------------
 module "application" {
+  depends_on             = [module.networking]
   source                 = "./app"
   prefix                 = "${var.prefix}-workload-app2"
   vpc_id                 = module.networking.vpc_id

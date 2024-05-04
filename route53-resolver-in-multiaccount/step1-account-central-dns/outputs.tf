@@ -25,3 +25,10 @@ output "ram_resource_share_arn_tgw" {
 output "ram_resource_share_arn_resolver" {
   value = aws_ram_principal_association.resolver
 }
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Hosted Zone ID
+# ----------------------------------------------------------------------------------------------
+output "route53_hosted_zone_id" {
+  value = aws_route53_zone.this.id
+}

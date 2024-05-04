@@ -21,3 +21,7 @@ variable "availability_zones" {
 variable "principal_accounts" {
   type = list(string)
 }
+
+variable "domain_name" {
+
+}

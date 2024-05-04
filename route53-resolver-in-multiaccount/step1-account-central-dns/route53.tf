@@ -2,7 +2,8 @@
 # Route53 Hosted Zone - Private
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_zone" "this" {
-  name = "master.aws"
+  name          = var.domain_name
+  force_destroy = true
 
   vpc {
     vpc_id = module.networking.vpc_id
