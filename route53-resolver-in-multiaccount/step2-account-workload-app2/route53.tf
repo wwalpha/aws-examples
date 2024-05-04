@@ -55,7 +55,7 @@ resource "aws_route53_resolver_rule_association" "resolver_foward" {
 # ----------------------------------------------------------------------------------------------
 data "aws_ram_resource_share" "resolver_system" {
   depends_on     = [aws_ram_resource_share_accepter.resolver_system]
-  name           = "${var.prefix}_resolver_rules_forward"
+  name           = "${var.prefix}_resolver_rules_system"
   resource_owner = "OTHER-ACCOUNTS"
 }
 

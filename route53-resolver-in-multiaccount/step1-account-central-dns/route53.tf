@@ -63,6 +63,7 @@ resource "aws_route53_resolver_endpoint" "outbound" {
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_resolver_rule" "system" {
   domain_name = "amazonaws.com"
+  name        = "system"
   rule_type   = "SYSTEM"
 }
 
