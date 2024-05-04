@@ -3,11 +3,15 @@
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_zone" "this" {
   depends_on    = [module.networking]
-  name          = "app2.${var.domain_name}"
+  name          = "app1.${var.domain_name}"
   force_destroy = true
 
   vpc {
     vpc_id = module.networking.vpc_id
+  }
+
+  lifecycle {
+    ignore_changes = [vpc]
   }
 }
 
@@ -34,13 +38,12 @@ resource "aws_route53_record" "alb" {
   }
 }
 
-
 # ----------------------------------------------------------------------------------------------
 # Route53 Resolver Rule Foward
 # ----------------------------------------------------------------------------------------------
 data "aws_ram_resource_share" "resolver_foward" {
   depends_on     = [aws_ram_resource_share_accepter.resolver_foward]
-  name           = "${var.prefix}_resolver_rules_forward"
+  name           = var.ram_share_name_resolver_rule_forward
   resource_owner = "OTHER-ACCOUNTS"
 }
 
@@ -55,7 +58,7 @@ resource "aws_route53_resolver_rule_association" "resolver_foward" {
 # ----------------------------------------------------------------------------------------------
 data "aws_ram_resource_share" "resolver_system" {
   depends_on     = [aws_ram_resource_share_accepter.resolver_system]
-  name           = "${var.prefix}_resolver_rules_system"
+  name           = var.ram_share_name_resolver_rule_system
   resource_owner = "OTHER-ACCOUNTS"
 }
 

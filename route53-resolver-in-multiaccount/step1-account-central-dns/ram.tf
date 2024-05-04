@@ -10,7 +10,7 @@ resource "aws_ram_resource_share" "resolver_rule_forward" {
 # AWS Resource Access Manager Resource Association - Resolver Rules Forward
 # ----------------------------------------------------------------------------------------------
 resource "aws_ram_resource_association" "resolver_rule_forward" {
-  resource_arn       = aws_route53_resolver_rule.foward.arn
+  resource_arn       = aws_route53_resolver_rule.forward.arn
   resource_share_arn = aws_ram_resource_share.resolver_rule_forward.arn
 }
 

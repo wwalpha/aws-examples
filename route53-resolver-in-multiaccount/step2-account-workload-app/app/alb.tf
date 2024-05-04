@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------
 resource "aws_lb" "nginx" {
   name               = "${var.prefix}-lb-nginx"
-  internal           = false
+  internal           = var.alb_internal
   load_balancer_type = "application"
   security_groups    = [module.sg.security_group_id]
   subnets            = var.vpc_public_subnet_ids

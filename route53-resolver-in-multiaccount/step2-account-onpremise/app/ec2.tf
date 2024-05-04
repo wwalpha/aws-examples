@@ -7,13 +7,13 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS EC2 Instance - OnPremise DNS Server
+# AWS EC2 Instance - DNS Server
 # ----------------------------------------------------------------------------------------------
 module "dns_server" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
 
-  name = "${var.prefix}-onpremise-dnsserver"
+  name = "${var.prefix}-dnsserver"
 
   ami                    = "ami-0962657fe505b0123"
   instance_type          = "t3a.medium"
@@ -26,13 +26,13 @@ module "dns_server" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS EC2 Instance - OnPremise Client
+# AWS EC2 Instance - Client
 # ----------------------------------------------------------------------------------------------
 module "onpremise_client" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
 
-  name = "${var.prefix}-onpremise-client"
+  name = "${var.prefix}-client"
 
   ami                    = "ami-0962657fe505b0123"
   instance_type          = "t3a.medium"

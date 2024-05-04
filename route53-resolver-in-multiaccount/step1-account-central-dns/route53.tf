@@ -8,6 +8,10 @@ resource "aws_route53_zone" "this" {
   vpc {
     vpc_id = module.networking.vpc_id
   }
+
+  lifecycle {
+    ignore_changes = [vpc]
+  }
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -70,7 +74,7 @@ resource "aws_route53_resolver_rule" "system" {
 # ----------------------------------------------------------------------------------------------
 # AWS Route53 Resolver Rule(Forward) - master.local
 # ----------------------------------------------------------------------------------------------
-resource "aws_route53_resolver_rule" "foward" {
+resource "aws_route53_resolver_rule" "forward" {
   domain_name          = "master.local"
   name                 = "onpremise"
   rule_type            = "FORWARD"
@@ -88,7 +92,7 @@ resource "aws_route53_resolver_rule" "foward" {
 # ----------------------------------------------------------------------------------------------
 # AWS Route53 Resolver Rule Association(Forward) - master.local
 # ----------------------------------------------------------------------------------------------
-resource "aws_route53_resolver_rule_association" "foward" {
-  resolver_rule_id = aws_route53_resolver_rule.foward.id
-  vpc_id           = module.networking.vpc_id
-}
+# resource "aws_route53_resolver_rule_association" "forward" {
+#   resolver_rule_id = aws_route53_resolver_rule.forward.id
+#   vpc_id           = module.networking.vpc_id
+# }

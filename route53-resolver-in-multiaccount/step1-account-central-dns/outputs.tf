@@ -20,24 +20,38 @@ output "transit_gateway_attachment_id" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Arn - Transit Gateway
+# RAM Invitation Arn - Transit Gateway
 # ----------------------------------------------------------------------------------------------
-output "ram_resource_share_arn_tgw" {
+output "ram_invitation_arn_transit_gateway" {
   value = aws_ram_principal_association.tgw
 }
 
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Arn - Resolver Rules Forward
+# RAM Invitation Arn - Resolver Rules Forward
 # ----------------------------------------------------------------------------------------------
-output "ram_resolver_rule_forward" {
+output "ram_invitation_arn_resolver_rule_forward" {
   value = aws_ram_principal_association.resolver_rule_forward
 }
 
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Arn - Resolver Rules System
+# RAM Invitation Arn - Resolver Rules System
 # ----------------------------------------------------------------------------------------------
-output "ram_resolver_rule_system" {
+output "ram_invitation_arn_resolver_rule_system" {
   value = aws_ram_principal_association.resolver_rule_system
+}
+
+# ----------------------------------------------------------------------------------------------
+# RAM Resource Share Name - Resolver Rules Forward
+# ----------------------------------------------------------------------------------------------
+output "ram_share_name_resolver_rule_forward" {
+  value = aws_ram_resource_share.resolver_rule_forward.name
+}
+
+# ----------------------------------------------------------------------------------------------
+# RAM Resource Share Name - Resolver Rules System
+# ----------------------------------------------------------------------------------------------
+output "ram_share_name_resolver_rule_system" {
+  value = aws_ram_resource_share.resolver_rule_system.name
 }
 
 # ----------------------------------------------------------------------------------------------

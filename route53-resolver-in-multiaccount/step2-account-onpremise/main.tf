@@ -2,11 +2,11 @@
 # RAM Resource Share Accepter - Transit Gateway
 # ----------------------------------------------------------------------------------------------
 resource "aws_ram_resource_share_accepter" "tgw" {
-  share_arn = var.ram_resource_share_arn_tgw
+  share_arn = var.ram_invitation_arn_transit_gateway
 }
 
 # ----------------------------------------------------------------------------------------------
-# Networking - Onpremise
+# Networking
 # ----------------------------------------------------------------------------------------------
 module "networking" {
   depends_on                 = [aws_ram_resource_share_accepter.tgw]
@@ -18,3 +18,15 @@ module "networking" {
   availability_zones         = var.availability_zones
   transit_gateway_id         = var.transit_gateway_id
 }
+
+# ----------------------------------------------------------------------------------------------
+# Application
+# ----------------------------------------------------------------------------------------------
+# module "application" {
+#   depends_on             = [module.networking]
+#   source                 = "./app"
+#   prefix                 = "${var.prefix}-onpremise"
+#   vpc_id                 = module.networking.vpc_id
+#   vpc_public_subnet_ids  = module.networking.vpc_public_subnet_ids
+#   vpc_private_subnet_ids = module.networking.vpc_private_subnet_ids
+# }

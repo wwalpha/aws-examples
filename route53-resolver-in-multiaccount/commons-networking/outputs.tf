@@ -25,3 +25,10 @@ output "vpc_private_subnet_ids" {
 output "transit_gateway_attachment_id" {
   value = aws_ec2_transit_gateway_vpc_attachment.this.id
 }
+
+# ----------------------------------------------------------------------------------------------
+# AWS Private Subnet Route Table Ids
+# ----------------------------------------------------------------------------------------------
+output "vpc_private_route_table_ids" {
+  value = module.vpc.private_route_table_ids
+}

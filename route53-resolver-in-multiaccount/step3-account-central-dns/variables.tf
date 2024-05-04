@@ -2,14 +2,6 @@ variable "prefix" {
   type = string
 }
 
-variable "name_servers_app1" {
-  type = list(string)
-}
-
-variable "name_servers_app2" {
-  type = list(string)
-}
-
 variable "domain_name" {}
 
 variable "vpc_id_central_dns" {}
