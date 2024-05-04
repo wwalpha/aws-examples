@@ -25,7 +25,7 @@ resource "aws_ec2_transit_gateway_route" "centraldns_to_onpremise" {
 resource "aws_ec2_transit_gateway_route" "centraldns_to_workload_app1" {
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.central_dns.id
   transit_gateway_attachment_id  = var.transit_gateway_attachment_id_workload_app1
-  destination_cidr_block         = var.vpc_cidr_block_workload_app1
+  destination_cidr_block         = var.vpc_cidr_block_app1
   blackhole                      = false
 }
 
@@ -35,7 +35,7 @@ resource "aws_ec2_transit_gateway_route" "centraldns_to_workload_app1" {
 resource "aws_ec2_transit_gateway_route" "centraldns_to_workload_app2" {
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.central_dns.id
   transit_gateway_attachment_id  = var.transit_gateway_attachment_id_workload_app2
-  destination_cidr_block         = var.vpc_cidr_block_workload_app2
+  destination_cidr_block         = var.vpc_cidr_block_app2
   blackhole                      = false
 }
 
@@ -72,6 +72,7 @@ resource "aws_ec2_transit_gateway_route" "onpremise_to_centraldns" {
 # Transit Gateway Route Table Association - Onpremise
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_route_table_association" "onpremise" {
+  depends_on                     = [aws_ec2_transit_gateway_vpc_attachment_accepter.onpremise]
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.onpremise.id
   transit_gateway_attachment_id  = var.transit_gateway_attachment_id_onpremise
 }
@@ -101,6 +102,7 @@ resource "aws_ec2_transit_gateway_route" "worload_app1_to_centraldns" {
 # Transit Gateway Route Table Association - Workload App1
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_route_table_association" "workload_app1" {
+  depends_on                     = [aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app1]
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_app1.id
   transit_gateway_attachment_id  = var.transit_gateway_attachment_id_workload_app1
 }
@@ -130,6 +132,7 @@ resource "aws_ec2_transit_gateway_route" "worload_app2_to_centraldns" {
 # Transit Gateway Route Table Association - Workload App1
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_route_table_association" "workload_app2" {
+  depends_on                     = [aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app2]
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.workload_app2.id
   transit_gateway_attachment_id  = var.transit_gateway_attachment_id_workload_app2
 }

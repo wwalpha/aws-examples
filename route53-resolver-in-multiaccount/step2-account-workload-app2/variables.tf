@@ -22,9 +22,12 @@ variable "transit_gateway_id" {
   description = "The ID of the Transit Gateway"
 }
 
-variable "ram_resource_share_arn_tgw" {
-}
-variable "ram_resource_share_arn_resolver" {
-}
-variable "domain_name" {
-}
+variable "ram_transit_gateway" {}
+
+variable "ram_resolver_system" {}
+
+variable "ram_resolver_forward" {}
+
+variable "domain_name" {}
+
+variable "vpc_id_central_dns" {}

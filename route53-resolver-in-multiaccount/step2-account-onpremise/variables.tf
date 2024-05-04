@@ -24,5 +24,4 @@ variable "transit_gateway_id" {
 
 variable "ram_resource_share_arn_tgw" {
 }
-variable "ram_resource_share_arn_resolver" {
-}
+

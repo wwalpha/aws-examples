@@ -1,11 +1,4 @@
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Accepter - Resolver Rules
-# ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_share_accepter" "resolver" {
-  share_arn = var.ram_resource_share_arn_resolver
-}
-
-# ----------------------------------------------------------------------------------------------
 # RAM Resource Share Accepter - Transit Gateway
 # ----------------------------------------------------------------------------------------------
 resource "aws_ram_resource_share_accepter" "tgw" {

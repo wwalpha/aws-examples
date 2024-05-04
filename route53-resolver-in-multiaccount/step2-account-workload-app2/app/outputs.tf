@@ -1,13 +1,13 @@
 # ----------------------------------------------------------------------------------------------
-# AWS VPC ID
+# ALB Zone ID
 # ----------------------------------------------------------------------------------------------
-output "vpc_id" {
-  value = module.networking.vpc_id
+output "alb_zone_id" {
+  value = aws_lb.nginx.zone_id
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Transit Gateway Attachment ID
+# ALB DNS Name
 # ----------------------------------------------------------------------------------------------
-output "transit_gateway_attachment_id" {
-  value = module.networking.transit_gateway_attachment_id
+output "alb_dns_name" {
+  value = aws_lb.nginx.dns_name
 }

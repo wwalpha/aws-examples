@@ -1,15 +1,22 @@
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Accepter - Resolver Rules
+# RAM Resource Share Accepter - Resolver Rules Forward
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_share_accepter" "resolver" {
-  share_arn = var.ram_resource_share_arn_resolver
+resource "aws_ram_resource_share_accepter" "resolver_foward" {
+  share_arn = var.ram_resolver_forward
+}
+
+# ----------------------------------------------------------------------------------------------
+# RAM Resource Share Accepter - Resolver Rules System
+# ----------------------------------------------------------------------------------------------
+resource "aws_ram_resource_share_accepter" "resolver_system" {
+  share_arn = var.ram_resolver_system
 }
 
 # ----------------------------------------------------------------------------------------------
 # RAM Resource Share Accepter - Transit Gateway
 # ----------------------------------------------------------------------------------------------
 resource "aws_ram_resource_share_accepter" "tgw" {
-  share_arn = var.ram_resource_share_arn_tgw
+  share_arn = var.ram_transit_gateway
 }
 
 # ----------------------------------------------------------------------------------------------

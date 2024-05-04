@@ -58,44 +58,18 @@ resource "aws_route53_resolver_endpoint" "outbound" {
   protocols = ["Do53"]
 }
 
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule(System) - aws.amazon.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule" "system1" {
-#   domain_name = "aws.amazon.com"
-#   rule_type   = "SYSTEM"
-# }
-
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule(System) - amazonaws.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule" "system2" {
-#   domain_name = "amazonaws.com"
-#   rule_type   = "SYSTEM"
-# }
-
 # ----------------------------------------------------------------------------------------------
-# AWS Route53 Resolver Rule(Forward) - master.aws
+# AWS Route53 Resolver Rule(System) - amazonaws.com
 # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule" "foward1" {
-#   domain_name          = "master.aws"
-#   name                 = "awscloud"
-#   rule_type            = "FORWARD"
-#   resolver_endpoint_id = aws_route53_resolver_endpoint.inbound.id
-
-#   target_ip {
-#     ip = local.route53_resolver_inbound_endpoint_address1
-#   }
-
-#   target_ip {
-#     ip = local.route53_resolver_inbound_endpoint_address2
-#   }
-# }
+resource "aws_route53_resolver_rule" "system" {
+  domain_name = "amazonaws.com"
+  rule_type   = "SYSTEM"
+}
 
 # ----------------------------------------------------------------------------------------------
 # AWS Route53 Resolver Rule(Forward) - master.local
 # ----------------------------------------------------------------------------------------------
-resource "aws_route53_resolver_rule" "foward2" {
+resource "aws_route53_resolver_rule" "foward" {
   domain_name          = "master.local"
   name                 = "onpremise"
   rule_type            = "FORWARD"
@@ -110,50 +84,10 @@ resource "aws_route53_resolver_rule" "foward2" {
   }
 }
 
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule Association(System) - aws.amazon.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule_association" "system1_workload1" {
-#   resolver_rule_id = aws_route53_resolver_rule.system1.id
-#   vpc_id           = aws_vpc.workload1.id
-# }
-
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule Association(System) - aws.amazon.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule_association" "system1_workload2" {
-#   resolver_rule_id = aws_route53_resolver_rule.system1.id
-#   vpc_id           = aws_vpc.workload2.id
-# }
-
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule Association(System) - amazonaws.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule_association" "system2_workload1" {
-#   resolver_rule_id = aws_route53_resolver_rule.system2.id
-#   vpc_id           = aws_vpc.workload1.id
-# }
-
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule Association(System) - amazonaws.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule_association" "system2_workload2" {
-#   resolver_rule_id = aws_route53_resolver_rule.system2.id
-#   vpc_id           = aws_vpc.workload2.id
-# }
-
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule Association(Forward) - centraldns.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule_association" "foward1_workload1" {
-#   resolver_rule_id = aws_route53_resolver_rule.foward1.id
-#   vpc_id           = aws_vpc.workload1.id
-# }
-
-# # ----------------------------------------------------------------------------------------------
-# # AWS Route53 Resolver Rule Association(Forward) - centraldns.com
-# # ----------------------------------------------------------------------------------------------
-# resource "aws_route53_resolver_rule_association" "foward1_workload2" {
-#   resolver_rule_id = aws_route53_resolver_rule.foward1.id
-#   vpc_id           = aws_vpc.workload2.id
-# }
+# ----------------------------------------------------------------------------------------------
+# AWS Route53 Resolver Rule Association(Forward) - master.local
+# ----------------------------------------------------------------------------------------------
+resource "aws_route53_resolver_rule_association" "foward" {
+  resolver_rule_id = aws_route53_resolver_rule.foward.id
+  vpc_id           = module.networking.vpc_id
+}
