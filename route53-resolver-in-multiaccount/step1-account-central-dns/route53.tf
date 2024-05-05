@@ -87,4 +87,11 @@ resource "aws_route53_resolver_rule" "forward_master_aws" {
   name                 = "awscloud"
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.outbound.id
+
+  dynamic "target_ip" {
+    for_each = var.route53_resolver_inbound_endpoint_ip_addresses
+    content {
+      ip = target_ip.value
+    }
+  }
 }

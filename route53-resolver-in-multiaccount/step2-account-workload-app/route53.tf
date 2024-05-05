@@ -42,17 +42,26 @@ resource "aws_route53_record" "alb" {
 # ----------------------------------------------------------------------------------------------
 # Route53 Resolver Rule Foward
 # ----------------------------------------------------------------------------------------------
-resource "aws_route53_resolver_rule_association" "resolver_foward" {
-  depends_on       = [aws_ram_resource_share_accepter.resolver_foward]
-  resolver_rule_id = var.route53_resolver_rule_forward_id
+resource "aws_route53_resolver_rule_association" "foward_master_local" {
+  depends_on       = [aws_ram_resource_share_accepter.resolver_foward_master_local]
+  resolver_rule_id = var.route53_resolver_rule_id_forward_master_local
+  vpc_id           = module.networking.vpc_id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule Foward
+# ----------------------------------------------------------------------------------------------
+resource "aws_route53_resolver_rule_association" "foward_master_aws" {
+  depends_on       = [aws_ram_resource_share_accepter.resolver_foward_master_aws]
+  resolver_rule_id = var.route53_resolver_rule_id_forward_master_aws
   vpc_id           = module.networking.vpc_id
 }
 
 # ----------------------------------------------------------------------------------------------
 # Route53 Resolver Rule System
 # ----------------------------------------------------------------------------------------------
-resource "aws_route53_resolver_rule_association" "resolver_system" {
+resource "aws_route53_resolver_rule_association" "system" {
   depends_on       = [aws_ram_resource_share_accepter.resolver_system]
-  resolver_rule_id = var.route53_resolver_rule_system_id
+  resolver_rule_id = var.route53_resolver_rule_id_system
   vpc_id           = module.networking.vpc_id
 }

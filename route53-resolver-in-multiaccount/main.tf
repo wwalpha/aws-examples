@@ -6,7 +6,7 @@ provider "aws" {
   alias  = "SharedService"
 
   assume_role {
-    role_arn = "arn:aws:iam::${local.aws_account_id_central_dns}:role/TestingMultiAccountRole"
+    role_arn = "arn:aws:iam::${var.aws_account_id_central_dns}:role/TestingMultiAccountRole"
   }
 }
 
@@ -18,7 +18,7 @@ provider "aws" {
   alias  = "Onpremise"
 
   assume_role {
-    role_arn = "arn:aws:iam::${local.aws_account_id_onpremise}:role/TestingMultiAccountRole"
+    role_arn = "arn:aws:iam::${var.aws_account_id_onpremise}:role/TestingMultiAccountRole"
   }
 }
 
@@ -30,7 +30,7 @@ provider "aws" {
   alias  = "WorkloadPublic"
 
   assume_role {
-    role_arn = "arn:aws:iam::${local.aws_account_id_workload_app1}:role/TestingMultiAccountRole"
+    role_arn = "arn:aws:iam::${var.aws_account_id_workload_app1}:role/TestingMultiAccountRole"
   }
 }
 
@@ -56,19 +56,22 @@ module "step1_account_central_dns" {
     aws = aws.SharedService
   }
 
-  source                     = "./step1-account-central-dns"
-  prefix                     = local.prefix
-  vpc_cidr_block             = local.vpc_cidr_block_central_dns
-  subnets_cidr_block_public  = local.subnets_cidr_block_public_central_dns
-  subnets_cidr_block_private = local.subnets_cidr_block_private_central_dns
-  availability_zones         = local.availability_zones
-  domain_name                = local.aws_domain_name
+  source                                          = "./step1-account-central-dns"
+  prefix                                          = local.prefix
+  vpc_cidr_block                                  = local.vpc_cidr_block_central_dns
+  subnets_cidr_block_public                       = local.subnets_cidr_block_public_central_dns
+  subnets_cidr_block_private                      = local.subnets_cidr_block_private_central_dns
+  availability_zones                              = local.availability_zones
+  cloud_domain_name                               = local.aws_domain_name
+  route53_resolver_inbound_endpoint_ip_addresses  = local.route53_resolver_inbound_endpoint_ip_addresses
+  route53_resolver_outbound_endpoint_ip_addresses = local.route53_resolver_outbound_endpoint_ip_addresses
+  onpremise_dns_server_ip                         = local.onpremise_dns_server_ip
   principal_accounts = [
     # cannot be shared with the owning account
-    # local.aws_account_id_central_dns,
-    local.aws_account_id_onpremise,
-    local.aws_account_id_workload_app1,
-    local.aws_account_id_workload_app2
+    # var.aws_account_id_central_dns,
+    var.aws_account_id_onpremise,
+    var.aws_account_id_workload_app1,
+    var.aws_account_id_workload_app2
   ]
 }
 
@@ -87,56 +90,60 @@ module "step2_account_onpremise" {
   subnets_cidr_block_public          = local.subnets_cidr_block_public_onpremise
   subnets_cidr_block_private         = local.subnets_cidr_block_private_onpremise
   availability_zones                 = local.availability_zones
-  ram_invitation_arn_transit_gateway = module.step1_account_central_dns.ram_invitation_arn_transit_gateway[local.aws_account_id_onpremise].resource_share_arn
+  ram_invitation_arn_transit_gateway = module.step1_account_central_dns.ram_invitation_arn_transit_gateway[var.aws_account_id_onpremise].resource_share_arn
   transit_gateway_id                 = module.step1_account_central_dns.transit_gateway_id
 }
 
 # ----------------------------------------------------------------------------------------------
 # Step2 Account Workload App1
 # ----------------------------------------------------------------------------------------------
-module "step2_networking_workload_app1" {
+module "step2_account_workload_app1" {
   providers = {
     aws = aws.WorkloadPublic
   }
 
-  depends_on                               = [module.step1_account_central_dns]
-  source                                   = "./step2-account-workload-app"
-  prefix                                   = "${local.prefix}-app1"
-  vpc_id_central_dns                       = module.step1_account_central_dns.vpc_id
-  vpc_cidr_block                           = local.vpc_cidr_block_workload_app1
-  subnets_cidr_block_public                = local.subnets_cidr_block_public_workload_app1
-  subnets_cidr_block_private               = local.subnets_cidr_block_private_workload_app1
-  alb_internal                             = false
-  availability_zones                       = local.availability_zones
-  domain_name                              = "app1.${local.aws_domain_name}"
-  ram_invitation_arn_transit_gateway       = module.step1_account_central_dns.ram_invitation_arn_transit_gateway[local.aws_account_id_workload_app1].resource_share_arn
-  ram_invitation_arn_resolver_rule_forward = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_forward[local.aws_account_id_workload_app1].resource_share_arn
-  ram_invitation_arn_resolver_rule_system  = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_system[local.aws_account_id_workload_app1].resource_share_arn
-  transit_gateway_id                       = module.step1_account_central_dns.transit_gateway_id
-  route53_resolver_rule_forward_id         = module.step1_account_central_dns.route53_resolver_rule_forward_id
-  route53_resolver_rule_system_id          = module.step1_account_central_dns.route53_resolver_rule_system_id
+  depends_on                                            = [module.step1_account_central_dns]
+  source                                                = "./step2-account-workload-app"
+  prefix                                                = "${local.prefix}-app1"
+  vpc_id_central_dns                                    = module.step1_account_central_dns.vpc_id
+  vpc_cidr_block                                        = local.vpc_cidr_block_workload_app1
+  subnets_cidr_block_public                             = local.subnets_cidr_block_public_workload_app1
+  subnets_cidr_block_private                            = local.subnets_cidr_block_private_workload_app1
+  alb_internal                                          = false
+  availability_zones                                    = local.availability_zones
+  domain_name                                           = "app1.${local.aws_domain_name}"
+  ram_invitation_arn_transit_gateway                    = module.step1_account_central_dns.ram_invitation_arn_transit_gateway[var.aws_account_id_workload_app1].resource_share_arn
+  ram_invitation_arn_resolver_rule_forward_master_local = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_forward_master_local[var.aws_account_id_workload_app1].resource_share_arn
+  ram_invitation_arn_resolver_rule_forward_master_aws   = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_forward_master_aws[var.aws_account_id_workload_app1].resource_share_arn
+  ram_invitation_arn_resolver_rule_system               = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_system[var.aws_account_id_workload_app1].resource_share_arn
+  transit_gateway_id                                    = module.step1_account_central_dns.transit_gateway_id
+  route53_resolver_rule_id_forward_master_local         = module.step1_account_central_dns.route53_resolver_rule_id_forward_master_local
+  route53_resolver_rule_id_forward_master_aws           = module.step1_account_central_dns.route53_resolver_rule_id_forward_master_aws
+  route53_resolver_rule_id_system                       = module.step1_account_central_dns.route53_resolver_rule_system_id
 }
 
 # ----------------------------------------------------------------------------------------------
 # Step2 Account Workload App2
 # ----------------------------------------------------------------------------------------------
-module "step2_networking_workload_app2" {
-  depends_on                               = [module.step1_account_central_dns]
-  source                                   = "./step2-account-workload-app"
-  prefix                                   = "${local.prefix}-app2"
-  vpc_id_central_dns                       = module.step1_account_central_dns.vpc_id
-  vpc_cidr_block                           = local.vpc_cidr_block_workload_app2
-  subnets_cidr_block_public                = local.subnets_cidr_block_public_workload_app2
-  subnets_cidr_block_private               = local.subnets_cidr_block_private_workload_app2
-  alb_internal                             = true
-  availability_zones                       = local.availability_zones
-  domain_name                              = "app2.${local.aws_domain_name}"
-  ram_invitation_arn_transit_gateway       = module.step1_account_central_dns.ram_invitation_arn_transit_gateway[local.aws_account_id_workload_app2].resource_share_arn
-  ram_invitation_arn_resolver_rule_forward = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_forward[local.aws_account_id_workload_app2].resource_share_arn
-  ram_invitation_arn_resolver_rule_system  = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_system[local.aws_account_id_workload_app2].resource_share_arn
-  transit_gateway_id                       = module.step1_account_central_dns.transit_gateway_id
-  route53_resolver_rule_forward_id         = module.step1_account_central_dns.route53_resolver_rule_forward_id
-  route53_resolver_rule_system_id          = module.step1_account_central_dns.route53_resolver_rule_system_id
+module "step2_account_workload_app2" {
+  depends_on                                            = [module.step1_account_central_dns]
+  source                                                = "./step2-account-workload-app"
+  prefix                                                = "${local.prefix}-app2"
+  vpc_id_central_dns                                    = module.step1_account_central_dns.vpc_id
+  vpc_cidr_block                                        = local.vpc_cidr_block_workload_app2
+  subnets_cidr_block_public                             = local.subnets_cidr_block_public_workload_app2
+  subnets_cidr_block_private                            = local.subnets_cidr_block_private_workload_app2
+  alb_internal                                          = true
+  availability_zones                                    = local.availability_zones
+  domain_name                                           = "app2.${local.aws_domain_name}"
+  ram_invitation_arn_transit_gateway                    = module.step1_account_central_dns.ram_invitation_arn_transit_gateway[var.aws_account_id_workload_app2].resource_share_arn
+  ram_invitation_arn_resolver_rule_forward_master_local = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_forward_master_local[var.aws_account_id_workload_app2].resource_share_arn
+  ram_invitation_arn_resolver_rule_forward_master_aws   = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_forward_master_aws[var.aws_account_id_workload_app2].resource_share_arn
+  ram_invitation_arn_resolver_rule_system               = module.step1_account_central_dns.ram_invitation_arn_resolver_rule_system[var.aws_account_id_workload_app2].resource_share_arn
+  transit_gateway_id                                    = module.step1_account_central_dns.transit_gateway_id
+  route53_resolver_rule_id_forward_master_local         = module.step1_account_central_dns.route53_resolver_rule_id_forward_master_local
+  route53_resolver_rule_id_forward_master_aws           = module.step1_account_central_dns.route53_resolver_rule_id_forward_master_aws
+  route53_resolver_rule_id_system                       = module.step1_account_central_dns.route53_resolver_rule_system_id
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -147,24 +154,24 @@ module "step3_account_central_dns" {
     aws = aws.SharedService
   }
 
-  depends_on                                  = [module.step2_account_onpremise, module.step2_networking_workload_app1, module.step2_networking_workload_app2]
+  depends_on                                  = [module.step2_account_onpremise, module.step2_account_workload_app1, module.step2_account_workload_app2]
   source                                      = "./step3-account-central-dns"
   prefix                                      = local.prefix
   transit_gateway_id                          = module.step1_account_central_dns.transit_gateway_id
   transit_gateway_attachment_id_central_dns   = module.step1_account_central_dns.transit_gateway_attachment_id
   transit_gateway_attachment_id_onpremise     = module.step2_account_onpremise.transit_gateway_attachment_id
-  transit_gateway_attachment_id_workload_app1 = module.step2_networking_workload_app1.transit_gateway_attachment_id
-  transit_gateway_attachment_id_workload_app2 = module.step2_networking_workload_app2.transit_gateway_attachment_id
+  transit_gateway_attachment_id_workload_app1 = module.step2_account_workload_app1.transit_gateway_attachment_id
+  transit_gateway_attachment_id_workload_app2 = module.step2_account_workload_app2.transit_gateway_attachment_id
   vpc_id_central_dns                          = module.step1_account_central_dns.vpc_id
   vpc_id_onpremise                            = module.step2_account_onpremise.vpc_id
-  vpc_id_app1                                 = module.step2_networking_workload_app1.vpc_id
-  vpc_id_app2                                 = module.step2_networking_workload_app2.vpc_id
+  vpc_id_app1                                 = module.step2_account_workload_app1.vpc_id
+  vpc_id_app2                                 = module.step2_account_workload_app2.vpc_id
   vpc_cidr_block_central_dns                  = local.vpc_cidr_block_central_dns
   vpc_cidr_block_onpremise                    = local.vpc_cidr_block_onpremise
   vpc_cidr_block_app1                         = local.vpc_cidr_block_workload_app1
   vpc_cidr_block_app2                         = local.vpc_cidr_block_workload_app2
-  hosted_zone_id_app1                         = module.step2_networking_workload_app1.hosted_zone_id
-  hosted_zone_id_app2                         = module.step2_networking_workload_app2.hosted_zone_id
+  hosted_zone_id_app1                         = module.step2_account_workload_app1.hosted_zone_id
+  hosted_zone_id_app2                         = module.step2_account_workload_app2.hosted_zone_id
   domain_name                                 = local.aws_domain_name
 }
 

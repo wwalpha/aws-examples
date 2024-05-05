@@ -32,12 +32,16 @@ variable "ram_invitation_arn_transit_gateway" {}
 
 variable "ram_invitation_arn_resolver_rule_system" {}
 
-variable "ram_invitation_arn_resolver_rule_forward" {}
+variable "ram_invitation_arn_resolver_rule_forward_master_local" {}
+
+variable "ram_invitation_arn_resolver_rule_forward_master_aws" {}
 
 variable "transit_gateway_id" {
   description = "The ID of the Transit Gateway"
 }
 
-variable "route53_resolver_rule_forward_id" {}
+variable "route53_resolver_rule_id_forward_master_local" {}
 
-variable "route53_resolver_rule_system_id" {}
+variable "route53_resolver_rule_id_forward_master_aws" {}
+
+variable "route53_resolver_rule_id_system" {}

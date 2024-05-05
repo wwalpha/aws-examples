@@ -1,5 +1,5 @@
 locals {
-  prefix             = "resolver"
+  prefix             = "centraldns"
   availability_zones = ["ap-northeast-1a", "ap-northeast-1c"]
 
   vpc_cidr_block_central_dns   = "10.1.0.0/16"
@@ -16,11 +16,13 @@ locals {
   subnets_cidr_block_public_workload_app2  = ["10.4.0.0/24", "10.4.1.0/24"]
   subnets_cidr_block_private_workload_app2 = ["10.4.2.0/24", "10.4.3.0/24"]
 
-  aws_account_id_central_dns   = "999999999999"
-  aws_account_id_onpremise     = "999999999999"
-  aws_account_id_workload_app1 = "999999999999"
-  aws_account_id_workload_app2 = "999999999999"
+  aws_domain_name         = "master.aws"
+  onpremise_domain_name   = "master.local"
+  onpremise_dns_server_ip = "10.2.2.100"
 
-  aws_domain_name       = "master.aws"
-  onpremise_domain_name = "master.local"
+  # ----------------------------------------------------------------------------------------------
+  # AWS Route53 Resolver
+  # ----------------------------------------------------------------------------------------------
+  route53_resolver_inbound_endpoint_ip_addresses  = ["10.1.2.10", "10.1.3.10"]
+  route53_resolver_outbound_endpoint_ip_addresses = ["10.1.2.20", "10.1.3.20"]
 }
