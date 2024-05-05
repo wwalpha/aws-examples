@@ -175,6 +175,59 @@ module "step3_account_central_dns" {
   domain_name                                 = local.aws_domain_name
 }
 
+# ----------------------------------------------------------------------------------------------
+# Step4 Account Central DNS - Transit Gateway Routing
+# ----------------------------------------------------------------------------------------------
+module "step4_account_central_dns" {
+  providers = {
+    aws = aws.SharedService
+  }
+
+  depends_on         = [module.step3_account_central_dns]
+  source             = "./commons-addroute"
+  route_table_ids    = module.step1_account_central_dns.vpc_private_route_table_ids
+  transit_gateway_id = module.step1_account_central_dns.transit_gateway_id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Step4 Account Onpremise - Transit Gateway Routing
+# ----------------------------------------------------------------------------------------------
+module "step4_account_onpremise" {
+  providers = {
+    aws = aws.Onpremise
+  }
+
+  depends_on         = [module.step3_account_central_dns]
+  source             = "./commons-addroute"
+  route_table_ids    = module.step2_account_onpremise.vpc_private_route_table_ids
+  transit_gateway_id = module.step1_account_central_dns.transit_gateway_id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Step4 Account Workload App1 - Transit Gateway Routing
+# ----------------------------------------------------------------------------------------------
+module "step4_account_app1" {
+  providers = {
+    aws = aws.WorkloadPublic
+  }
+
+  depends_on         = [module.step3_account_central_dns]
+  source             = "./commons-addroute"
+  route_table_ids    = module.step2_account_workload_app1.vpc_private_route_table_ids
+  transit_gateway_id = module.step1_account_central_dns.transit_gateway_id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Step4 Account Workload App2 - Transit Gateway Routing
+# ----------------------------------------------------------------------------------------------
+module "step4_account_app2" {
+  depends_on         = [module.step3_account_central_dns]
+  source             = "./commons-addroute"
+  route_table_ids    = module.step2_account_workload_app2.vpc_private_route_table_ids
+  transit_gateway_id = module.step1_account_central_dns.transit_gateway_id
+}
+
+
 # data "aws_ram_resource_share" "example" {
 #   provider       = aws.Onpremise
 #   name           = "resolver_resolver_rules"

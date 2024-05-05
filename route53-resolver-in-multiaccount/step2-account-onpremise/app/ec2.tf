@@ -23,6 +23,7 @@ module "dns_server" {
   subnet_id              = var.vpc_private_subnet_ids[0]
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
+  user_data              = local.user_data_dns_server
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -42,4 +43,5 @@ module "onpremise_client" {
   subnet_id              = var.vpc_private_subnet_ids[0]
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
+  user_data              = local.user_data_dns_client
 }

@@ -88,3 +88,10 @@ output "resolver_rule_id_forward_cloud" {
 output "resolver_rule_id_system" {
   value = aws_route53_resolver_rule.system.id
 }
+
+# ----------------------------------------------------------------------------------------------
+# VPC Private Route Table IDs
+# ----------------------------------------------------------------------------------------------
+output "vpc_private_route_table_ids" {
+  value = module.networking.vpc_private_route_table_ids
+}

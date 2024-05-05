@@ -19,6 +19,9 @@ output "hosted_zone_id" {
   value = aws_route53_zone.this.id
 }
 
-output "route_table_ids" {
+# ----------------------------------------------------------------------------------------------
+# VPC Private Route Table IDs
+# ----------------------------------------------------------------------------------------------
+output "vpc_private_route_table_ids" {
   value = module.networking.vpc_private_route_table_ids
 }

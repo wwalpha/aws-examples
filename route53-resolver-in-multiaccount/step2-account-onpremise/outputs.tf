@@ -11,3 +11,10 @@ output "vpc_id" {
 output "transit_gateway_attachment_id" {
   value = module.networking.transit_gateway_attachment_id
 }
+
+# ----------------------------------------------------------------------------------------------
+# VPC Private Route Table IDs
+# ----------------------------------------------------------------------------------------------
+output "vpc_private_route_table_ids" {
+  value = module.networking.vpc_private_route_table_ids
+}
