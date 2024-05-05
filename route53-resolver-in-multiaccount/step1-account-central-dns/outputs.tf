@@ -41,20 +41,6 @@ output "ram_invitation_arn_resolver_rule_system" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Name - Resolver Rules Forward
-# ----------------------------------------------------------------------------------------------
-output "ram_share_name_resolver_rule_forward" {
-  value = aws_ram_resource_share.resolver_rule_forward.name
-}
-
-# ----------------------------------------------------------------------------------------------
-# RAM Resource Share Name - Resolver Rules System
-# ----------------------------------------------------------------------------------------------
-output "ram_share_name_resolver_rule_system" {
-  value = aws_ram_resource_share.resolver_rule_system.name
-}
-
-# ----------------------------------------------------------------------------------------------
 # Route53 Hosted Zone ID
 # ----------------------------------------------------------------------------------------------
 output "hosted_zone_id" {
@@ -73,4 +59,18 @@ output "route53_resolver_inbound_endpoints" {
 # ----------------------------------------------------------------------------------------------
 output "route53_resolver_outbound_endpoints" {
   value = aws_route53_resolver_endpoint.outbound.ip_address
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule ID - Forward
+# ----------------------------------------------------------------------------------------------
+output "route53_resolver_rule_forward_id" {
+  value = aws_route53_resolver_rule.forward.id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule ID - System
+# ----------------------------------------------------------------------------------------------
+output "route53_resolver_rule_system_id" {
+  value = aws_route53_resolver_rule.system.id
 }

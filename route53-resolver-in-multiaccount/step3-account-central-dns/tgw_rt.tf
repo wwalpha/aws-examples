@@ -2,6 +2,12 @@
 # Transit Gateway Route Table - Central DNS
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_route_table" "central_dns" {
+  depends_on = [
+    aws_ec2_transit_gateway_vpc_attachment_accepter.onpremise,
+    aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app1,
+    aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app2
+  ]
+
   transit_gateway_id = var.transit_gateway_id
 
   tags = {
@@ -51,6 +57,12 @@ resource "aws_ec2_transit_gateway_route_table_association" "central_dns" {
 # Transit Gateway Route Table - Onpremise
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_route_table" "onpremise" {
+  depends_on = [
+    aws_ec2_transit_gateway_vpc_attachment_accepter.onpremise,
+    aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app1,
+    aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app2
+  ]
+
   transit_gateway_id = var.transit_gateway_id
 
   tags = {
@@ -81,6 +93,12 @@ resource "aws_ec2_transit_gateway_route_table_association" "onpremise" {
 # Transit Gateway Route Table - Workload App1
 # ----------------------------------------------------------------------------------------------
 resource "aws_ec2_transit_gateway_route_table" "workload_app1" {
+  depends_on = [
+    aws_ec2_transit_gateway_vpc_attachment_accepter.onpremise,
+    aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app1,
+    aws_ec2_transit_gateway_vpc_attachment_accepter.workload_app2
+  ]
+
   transit_gateway_id = var.transit_gateway_id
 
   tags = {

@@ -22,6 +22,6 @@ variable "transit_gateway_id" {
   description = "The ID of the Transit Gateway"
 }
 
-variable "ram_invitation_arn_transit_gateway" {
-}
+variable "ram_invitation_arn_transit_gateway" {}
+
 

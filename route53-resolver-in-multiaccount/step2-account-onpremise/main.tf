@@ -22,11 +22,11 @@ module "networking" {
 # ----------------------------------------------------------------------------------------------
 # Application
 # ----------------------------------------------------------------------------------------------
-# module "application" {
-#   depends_on             = [module.networking]
-#   source                 = "./app"
-#   prefix                 = "${var.prefix}-onpremise"
-#   vpc_id                 = module.networking.vpc_id
-#   vpc_public_subnet_ids  = module.networking.vpc_public_subnet_ids
-#   vpc_private_subnet_ids = module.networking.vpc_private_subnet_ids
-# }
+module "application" {
+  depends_on             = [module.networking]
+  source                 = "./app"
+  prefix                 = "${var.prefix}-onpremise"
+  vpc_id                 = module.networking.vpc_id
+  vpc_public_subnet_ids  = module.networking.vpc_public_subnet_ids
+  vpc_private_subnet_ids = module.networking.vpc_private_subnet_ids
+}
