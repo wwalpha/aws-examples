@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Share - Resolver Rules Forward master.local
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_share" "resolver_rule_forward_master_local" {
+resource "aws_ram_resource_share" "resolver_forward_onpremise" {
   name                      = "${var.prefix}_resolver_rules_forward_master_local"
   allow_external_principals = true
 }
@@ -9,24 +9,24 @@ resource "aws_ram_resource_share" "resolver_rule_forward_master_local" {
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Resource Association - Resolver Rules Forward
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_association" "resolver_rule_forward_master_local" {
+resource "aws_ram_resource_association" "resolver_forward_onpremise" {
   resource_arn       = aws_route53_resolver_rule.forward_master_local.arn
-  resource_share_arn = aws_ram_resource_share.resolver_rule_forward_master_local.arn
+  resource_share_arn = aws_ram_resource_share.resolver_forward_onpremise.arn
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Principal Association - Resolver Rules Forward
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_principal_association" "resolver_rule_forward_master_local" {
+resource "aws_ram_principal_association" "resolver_forward_onpremise" {
   for_each           = toset(var.principal_accounts)
   principal          = each.value
-  resource_share_arn = aws_ram_resource_share.resolver_rule_forward_master_local.arn
+  resource_share_arn = aws_ram_resource_share.resolver_forward_onpremise.arn
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Share - Resolver Rules Forward master.aws
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_share" "resolver_rule_forward_master_aws" {
+resource "aws_ram_resource_share" "resolver_forward_cloud" {
   name                      = "${var.prefix}_resolver_rules_forward_master_aws"
   allow_external_principals = true
 }
@@ -34,24 +34,24 @@ resource "aws_ram_resource_share" "resolver_rule_forward_master_aws" {
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Resource Association - Resolver Rules Forward master.aws
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_association" "resolver_rule_forward_master_aws" {
+resource "aws_ram_resource_association" "resolver_forward_cloud" {
   resource_arn       = aws_route53_resolver_rule.forward_master_aws.arn
-  resource_share_arn = aws_ram_resource_share.resolver_rule_forward_master_aws.arn
+  resource_share_arn = aws_ram_resource_share.resolver_forward_cloud.arn
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Principal Association - Resolver Rules Forward master.aws
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_principal_association" "resolver_rule_forward_master_aws" {
+resource "aws_ram_principal_association" "resolver_forward_cloud" {
   for_each           = toset(var.principal_accounts)
   principal          = each.value
-  resource_share_arn = aws_ram_resource_share.resolver_rule_forward_master_aws.arn
+  resource_share_arn = aws_ram_resource_share.resolver_forward_cloud.arn
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Share - Resolver Rules System
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_share" "resolver_rule_system" {
+resource "aws_ram_resource_share" "resolver_system" {
   name                      = "${var.prefix}_resolver_rules_system"
   allow_external_principals = true
 }
@@ -59,18 +59,18 @@ resource "aws_ram_resource_share" "resolver_rule_system" {
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Resource Association - Resolver Rules System
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_association" "resolver_rule_system" {
+resource "aws_ram_resource_association" "resolver_system" {
   resource_arn       = aws_route53_resolver_rule.system.arn
-  resource_share_arn = aws_ram_resource_share.resolver_rule_system.arn
+  resource_share_arn = aws_ram_resource_share.resolver_system.arn
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS Resource Access Manager Principal Association
 # ----------------------------------------------------------------------------------------------
-resource "aws_ram_principal_association" "resolver_rule_system" {
+resource "aws_ram_principal_association" "resolver_system" {
   for_each           = toset(var.principal_accounts)
   principal          = each.value
-  resource_share_arn = aws_ram_resource_share.resolver_rule_system.arn
+  resource_share_arn = aws_ram_resource_share.resolver_system.arn
 }
 
 # ----------------------------------------------------------------------------------------------

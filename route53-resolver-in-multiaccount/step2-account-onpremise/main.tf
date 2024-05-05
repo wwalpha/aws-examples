@@ -2,7 +2,7 @@
 # RAM Resource Share Accepter - Transit Gateway
 # ----------------------------------------------------------------------------------------------
 resource "aws_ram_resource_share_accepter" "tgw" {
-  share_arn = var.ram_invitation_arn_transit_gateway
+  share_arn = var.ram_share_arn_transit_gateway
 }
 
 # ----------------------------------------------------------------------------------------------

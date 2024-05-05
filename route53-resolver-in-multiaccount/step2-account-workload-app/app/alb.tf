@@ -7,6 +7,10 @@ resource "aws_lb" "nginx" {
   load_balancer_type = "application"
   security_groups    = [module.sg.security_group_id]
   subnets            = var.vpc_public_subnet_ids
+
+  lifecycle {
+    ignore_changes = [access_logs]
+  }
 }
 
 # ----------------------------------------------------------------------------------------------

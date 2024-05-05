@@ -2,6 +2,14 @@ locals {
   prefix             = "centraldns"
   availability_zones = ["ap-northeast-1a", "ap-northeast-1c"]
 
+  # ----------------------------------------------------------------------------------------------
+  # AWS Account ID
+  # ----------------------------------------------------------------------------------------------
+  account_central_dns = var.aws_account_id_central_dns
+  account_onpremise   = var.aws_account_id_onpremise
+  account_app1        = var.aws_account_id_workload_app1
+  account_app2        = var.aws_account_id_workload_app2
+
   vpc_cidr_block_central_dns   = "10.1.0.0/16"
   vpc_cidr_block_onpremise     = "10.2.0.0/16"
   vpc_cidr_block_workload_app1 = "10.3.0.0/16"
