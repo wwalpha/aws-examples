@@ -22,6 +22,18 @@ variable "principal_accounts" {
   type = list(string)
 }
 
-variable "domain_name" {
+variable "cloud_domain_name" {
+  type = string
+}
 
+variable "onpremise_dns_server_ip" {
+  type = string
+}
+
+
+variable "route53_resolver_inbound_endpoint_ip_addresses" {
+  type = list(string)
+}
+variable "route53_resolver_outbound_endpoint_ip_addresses" {
+  type = list(string)
 }

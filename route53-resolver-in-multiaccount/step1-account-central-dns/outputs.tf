@@ -27,10 +27,17 @@ output "ram_invitation_arn_transit_gateway" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# RAM Invitation Arn - Resolver Rules Forward
+# RAM Invitation Arn - Resolver Rules Forward master.local
 # ----------------------------------------------------------------------------------------------
-output "ram_invitation_arn_resolver_rule_forward" {
-  value = aws_ram_principal_association.resolver_rule_forward
+output "ram_invitation_arn_resolver_rule_forward_master_local" {
+  value = aws_ram_principal_association.resolver_rule_forward_master_local
+}
+
+# ----------------------------------------------------------------------------------------------
+# RAM Invitation Arn - Resolver Rules Forward master.aws
+# ----------------------------------------------------------------------------------------------
+output "ram_invitation_arn_resolver_rule_forward_master_aws" {
+  value = aws_ram_principal_association.resolver_rule_forward_master_aws
 }
 
 # ----------------------------------------------------------------------------------------------
@@ -62,10 +69,17 @@ output "route53_resolver_outbound_endpoints" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# Route53 Resolver Rule ID - Forward
+# Route53 Resolver Rule ID - Forward master.local
 # ----------------------------------------------------------------------------------------------
-output "route53_resolver_rule_forward_id" {
-  value = aws_route53_resolver_rule.forward.id
+output "route53_resolver_rule_id_forward_master_local" {
+  value = aws_route53_resolver_rule.forward_master_local.id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule ID - Forward master.aws
+# ----------------------------------------------------------------------------------------------
+output "route53_resolver_rule_id_forward_master_aws" {
+  value = aws_route53_resolver_rule.forward_master_aws.id
 }
 
 # ----------------------------------------------------------------------------------------------

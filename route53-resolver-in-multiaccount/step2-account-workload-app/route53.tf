@@ -27,9 +27,10 @@ resource "aws_route53_vpc_association_authorization" "this" {
 # Route53 Record - ALB
 # ----------------------------------------------------------------------------------------------
 resource "aws_route53_record" "alb" {
-  zone_id = aws_route53_zone.this.zone_id
-  name    = aws_route53_zone.this.name
-  type    = "A"
+  allow_overwrite = true
+  zone_id         = aws_route53_zone.this.zone_id
+  name            = "alb.${aws_route53_zone.this.name}"
+  type            = "A"
 
   alias {
     name                   = module.application.alb_dns_name
