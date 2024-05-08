@@ -24,4 +24,4 @@ variable "transit_gateway_id" {
 
 variable "ram_share_arn_transit_gateway" {}
 
-
+variable "dns_server_ip" {}

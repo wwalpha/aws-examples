@@ -92,6 +92,7 @@ module "step2_account_onpremise" {
   availability_zones            = local.availability_zones
   ram_share_arn_transit_gateway = module.step1_account_central_dns.ram_share_arn_transit_gateway[local.account_onpremise].resource_share_arn
   transit_gateway_id            = module.step1_account_central_dns.transit_gateway_id
+  dns_server_ip                 = local.onpremise_dns_server_ip
 }
 
 # ----------------------------------------------------------------------------------------------

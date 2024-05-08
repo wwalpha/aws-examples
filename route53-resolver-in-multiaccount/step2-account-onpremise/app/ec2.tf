@@ -24,6 +24,7 @@ module "dns_server" {
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
   user_data              = local.user_data_dns_server
+  private_ip             = var.dns_server_ip
 }
 
 # ----------------------------------------------------------------------------------------------

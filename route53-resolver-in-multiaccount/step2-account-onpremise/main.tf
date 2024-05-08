@@ -29,4 +29,5 @@ module "application" {
   vpc_id                 = module.networking.vpc_id
   vpc_public_subnet_ids  = module.networking.vpc_public_subnet_ids
   vpc_private_subnet_ids = module.networking.vpc_private_subnet_ids
+  dns_server_ip          = var.dns_server_ip
 }
