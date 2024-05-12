@@ -7,24 +7,108 @@ resource "aws_sfn_state_machine" "this" {
 
   definition = <<EOF
 {
-  "Comment": "A Hello World example of the Amazon States Language using an AWS Lambda Function",
-  "StartAt": "CodeBuild StartBuild",
+  "Comment": "CloudWatch Agent config auto convert and validation process",
+  "StartAt": "Validation Start",
   "States": {
-    "CodeBuild StartBuild": {
+    "Validation Start": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:sns:publish",
+      "Parameters": {
+        "TopicArn": "${aws_sns_topic.nofity.arn}",
+        "Subject": "CloudWatch Agent Config Validation Start",
+        "Message": "test\n12123123"
+      },
+      "Next": "StartBuild",
+      "ResultPath": null
+    },
+    "StartBuild": {
       "Type": "Task",
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
       "Parameters": {
-        "ProjectName": "$.ProjectName"
+        "ProjectName": "monitoringBuildProject",
+        "EnvironmentVariablesOverride": [
+          {
+            "Name": "BUCKET_NAME",
+            "Type": "PLAINTEXT",
+            "Value.$": "$.bucket"
+          },
+          {
+            "Name": "OBJECT_KEY",
+            "Type": "PLAINTEXT",
+            "Value.$": "$.key"
+          }
+        ]
       },
-      "Next": "CodeBuild BatchGetReports"
+      "Next": "BuildStatus",
+      "ResultSelector": {
+        "buildId.$": "$.Build.Id",
+        "buildStatus.$": "$.Build.BuildStatus"
+      }
     },
-    "CodeBuild BatchGetReports": {
+    "BuildStatus": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.buildStatus",
+          "StringEquals": "SUCCEEDED",
+          "Comment": "SUCCEEDED",
+          "Next": "RequestUserApprove"
+        }
+      ],
+      "Default": "Validation Failed"
+    },
+    "RequestUserApprove": {
       "Type": "Task",
-      "Resource": "arn:aws:states:::codebuild:batchGetReports",
       "Parameters": {
-        "ReportArns.$": "$.Build.ReportArns"
+        "DocumentName": "monitoring-UserApprove",
+        "Parameters": {
+          "taskToken.$": "States.Array($$.Task.Token)"
+        }
       },
-      "End": true
+      "Resource": "arn:aws:states:::aws-sdk:ssm:startAutomationExecution.waitForTaskToken",
+      "Next": "GetObject",
+      "ResultPath": null
+    },
+    "GetObject": {
+      "Type": "Task",
+      "Parameters": {
+        "Bucket.$": "$.bucket",
+        "Key.$": "$.key"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:s3:getObject",
+      "Next": "StartAutomationExecution"
+    },
+    "StartAutomationExecution": {
+      "Type": "Task",
+      "Next": "Validation Completed",
+      "Parameters": {
+        "DocumentName": "MyData"
+      },
+      "Resource": "arn:aws:states:::aws-sdk:ssm:startAutomationExecution.waitForTaskToken"
+    },
+    "Validation Completed": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
+      },
+      "Next": "Success"
+    },
+    "Validation Failed": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
+      },
+      "Next": "Fail"
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Fail": {
+      "Type": "Fail"
     }
   }
 }

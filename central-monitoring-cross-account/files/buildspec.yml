@@ -10,3 +10,4 @@ phases:
     commands:
       - npm --version
       - ls
+      - printenv

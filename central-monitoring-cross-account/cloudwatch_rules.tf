@@ -38,11 +38,13 @@ resource "aws_cloudwatch_event_target" "this" {
 
   input_transformer {
     input_paths = {
-      "ObjectKey" = "$.detail.object.key"
+      "key"    = "$.detail.object.key"
+      "bucket" = "$.detail.bucket.name"
     }
     input_template = <<EOT
 {
-  "ObjectKey": <ObjectKey>
+  "key": <key>,
+  "bucket": <bucket>
 }
 EOT
   }

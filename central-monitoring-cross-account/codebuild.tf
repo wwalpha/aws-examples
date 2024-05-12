@@ -18,10 +18,10 @@ resource "aws_codebuild_project" "this" {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
-    environment_variable {
-      name  = "BUCKET_NAME"
-      value = aws_s3_bucket.this.bucket
-    }
+    # environment_variable {
+    #   name  = "BUCKET_NAME"
+    #   value = aws_s3_bucket.this.bucket
+    # }
 
     # environment_variable {
     #   name  = "SOME_KEY2"

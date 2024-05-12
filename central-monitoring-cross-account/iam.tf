@@ -87,6 +87,23 @@ resource "aws_iam_role_policy" "sfn" {
           "codebuild:BatchGetReports"
         ]
         Resource = "${aws_codebuild_project.this.arn}"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sns:Publish",
+          "ssm:StartAutomationExecution",
+          "s3:GetObject"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "states:SendTaskSuccess",
+          "states:SendTaskFailure"
+        ]
+        Resource = "*"
       }
     ]
   })
