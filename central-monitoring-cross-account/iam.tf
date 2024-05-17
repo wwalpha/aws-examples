@@ -93,7 +93,9 @@ resource "aws_iam_role_policy" "sfn" {
         Action = [
           "sns:Publish",
           "ssm:StartAutomationExecution",
-          "s3:GetObject"
+          "s3:GetObject",
+          "ec2:DescribeInstances",
+          "states:StartExecution"
         ]
         Resource = "*"
       },
