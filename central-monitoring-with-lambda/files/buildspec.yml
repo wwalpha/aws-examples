@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - sudo yum install -y amazon-cloudwatch-agent
+  build:
+    commands:
+      - npm --version
+      - ls
+      - printenv
