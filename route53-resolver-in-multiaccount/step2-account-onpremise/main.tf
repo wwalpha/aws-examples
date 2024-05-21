@@ -1,15 +1,7 @@
 # ----------------------------------------------------------------------------------------------
-# RAM Resource Share Accepter - Transit Gateway
-# ----------------------------------------------------------------------------------------------
-resource "aws_ram_resource_share_accepter" "tgw" {
-  share_arn = var.ram_share_arn_transit_gateway
-}
-
-# ----------------------------------------------------------------------------------------------
 # Networking
 # ----------------------------------------------------------------------------------------------
 module "networking" {
-  depends_on                 = [aws_ram_resource_share_accepter.tgw]
   source                     = "../commons-networking"
   prefix                     = "${var.prefix}-onpremise"
   vpc_cidr_block             = var.vpc_cidr_block

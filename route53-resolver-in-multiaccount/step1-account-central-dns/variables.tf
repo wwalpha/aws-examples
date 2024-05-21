@@ -37,3 +37,5 @@ variable "route53_resolver_inbound_endpoint_ip_addresses" {
 variable "route53_resolver_outbound_endpoint_ip_addresses" {
   type = list(string)
 }
+
+variable "route53_profile_arn" {}
