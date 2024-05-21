@@ -1,4 +1,4 @@
-# DNS management in multi-account environment with Route53 Profile and Route53 Resolver
+# DNS management in multi-account environment with Route53 Profile and Resolver
 
 ## Architecture
 ![image](./docs/architecture.png)
