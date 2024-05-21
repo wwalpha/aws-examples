@@ -1,3 +1,7 @@
+# DNS management in multi-account environment with Route53 Profile and Route53 Resolver
+
+## Architecture
+![image](./docs/architecture.png)
 
 ## Steps
 - Create shared_service, workload_app1, workload_app2, onpremise vpc
