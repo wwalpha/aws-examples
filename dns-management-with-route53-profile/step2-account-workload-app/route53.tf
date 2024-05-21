@@ -2,6 +2,7 @@
 # AWS Route53 Profile Associcate
 # ----------------------------------------------------------------------------------------------
 resource "null_resource" "route53_profile_associate" {
+  depends_on = [module.networking]
   triggers = {
     RESOURCE_ID = module.networking.vpc_id
   }
