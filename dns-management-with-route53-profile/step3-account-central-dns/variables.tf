@@ -38,3 +38,6 @@ variable "transit_gateway_attachment_id_workload_app1" {}
 
 variable "transit_gateway_attachment_id_workload_app2" {}
 
+variable "resolver_rule_domain_name_forward_onpremise" {}
+
+variable "resolver_rule_domain_name_forward_ssm_endpoint" {}

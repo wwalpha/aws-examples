@@ -46,3 +46,31 @@ output "route53_resolver_outbound_endpoints" {
 output "vpc_private_route_table_ids" {
   value = module.networking.vpc_private_route_table_ids
 }
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule ID - Forward Onpremise(master.local)
+# ----------------------------------------------------------------------------------------------
+output "resolver_rule_id_forward_onpremise" {
+  value = aws_route53_resolver_rule.forward_master_local.id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule ID - Forward SSM VPC Endpoint
+# ----------------------------------------------------------------------------------------------
+output "resolver_rule_id_forward_ssm_endpoint" {
+  value = aws_route53_resolver_rule.forward_ssm_endpoint.id
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule Domain Name - Forward Onpremise(master.local)
+# ----------------------------------------------------------------------------------------------
+output "resolver_rule_domain_name_forward_onpremise" {
+  value = aws_route53_resolver_rule.forward_master_local.domain_name
+}
+
+# ----------------------------------------------------------------------------------------------
+# Route53 Resolver Rule Domain Name - Forward SSM VPC Endpoint
+# ----------------------------------------------------------------------------------------------
+output "resolver_rule_domain_name_forward_ssm_endpoint" {
+  value = aws_route53_resolver_rule.forward_ssm_endpoint.domain_name
+}

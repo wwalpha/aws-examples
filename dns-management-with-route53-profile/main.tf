@@ -83,27 +83,29 @@ module "step2_account_workload_app2" {
 # Step3 Account Central DNS
 # ----------------------------------------------------------------------------------------------
 module "step3_account_central_dns" {
-  depends_on                                  = [module.step2_account_onpremise, module.step2_account_workload_app1, module.step2_account_workload_app2]
-  source                                      = "./step3-account-central-dns"
-  prefix                                      = local.prefix
-  transit_gateway_id                          = module.step1_account_central_dns.transit_gateway_id
-  transit_gateway_attachment_id_central_dns   = module.step1_account_central_dns.transit_gateway_attachment_id
-  transit_gateway_attachment_id_onpremise     = module.step2_account_onpremise.transit_gateway_attachment_id
-  transit_gateway_attachment_id_workload_app1 = module.step2_account_workload_app1.transit_gateway_attachment_id
-  transit_gateway_attachment_id_workload_app2 = module.step2_account_workload_app2.transit_gateway_attachment_id
-  vpc_id_central_dns                          = module.step1_account_central_dns.vpc_id
-  vpc_id_onpremise                            = module.step2_account_onpremise.vpc_id
-  vpc_id_app1                                 = module.step2_account_workload_app1.vpc_id
-  vpc_id_app2                                 = module.step2_account_workload_app2.vpc_id
-  vpc_cidr_block_central_dns                  = local.vpc_cidr_block_central_dns
-  vpc_cidr_block_onpremise                    = local.vpc_cidr_block_onpremise
-  vpc_cidr_block_app1                         = local.vpc_cidr_block_workload_app1
-  vpc_cidr_block_app2                         = local.vpc_cidr_block_workload_app2
-  alb_dns_name_app1                           = module.step2_account_workload_app1.alb_dns_name
-  alb_dns_name_app2                           = module.step2_account_workload_app2.alb_dns_name
-  alb_zone_id_app1                            = module.step2_account_workload_app1.alb_zone_id
-  alb_zone_id_app2                            = module.step2_account_workload_app2.alb_zone_id
-  aws_domain_name                             = var.aws_domain_name
+  depends_on                                     = [module.step2_account_onpremise, module.step2_account_workload_app1, module.step2_account_workload_app2]
+  source                                         = "./step3-account-central-dns"
+  prefix                                         = local.prefix
+  transit_gateway_id                             = module.step1_account_central_dns.transit_gateway_id
+  transit_gateway_attachment_id_central_dns      = module.step1_account_central_dns.transit_gateway_attachment_id
+  transit_gateway_attachment_id_onpremise        = module.step2_account_onpremise.transit_gateway_attachment_id
+  transit_gateway_attachment_id_workload_app1    = module.step2_account_workload_app1.transit_gateway_attachment_id
+  transit_gateway_attachment_id_workload_app2    = module.step2_account_workload_app2.transit_gateway_attachment_id
+  vpc_id_central_dns                             = module.step1_account_central_dns.vpc_id
+  vpc_id_onpremise                               = module.step2_account_onpremise.vpc_id
+  vpc_id_app1                                    = module.step2_account_workload_app1.vpc_id
+  vpc_id_app2                                    = module.step2_account_workload_app2.vpc_id
+  vpc_cidr_block_central_dns                     = local.vpc_cidr_block_central_dns
+  vpc_cidr_block_onpremise                       = local.vpc_cidr_block_onpremise
+  vpc_cidr_block_app1                            = local.vpc_cidr_block_workload_app1
+  vpc_cidr_block_app2                            = local.vpc_cidr_block_workload_app2
+  alb_dns_name_app1                              = module.step2_account_workload_app1.alb_dns_name
+  alb_dns_name_app2                              = module.step2_account_workload_app2.alb_dns_name
+  alb_zone_id_app1                               = module.step2_account_workload_app1.alb_zone_id
+  alb_zone_id_app2                               = module.step2_account_workload_app2.alb_zone_id
+  aws_domain_name                                = var.aws_domain_name
+  resolver_rule_domain_name_forward_onpremise    = module.step1_account_central_dns.resolver_rule_domain_name_forward_onpremise
+  resolver_rule_domain_name_forward_ssm_endpoint = module.step1_account_central_dns.resolver_rule_domain_name_forward_ssm_endpoint
 }
 
 # ----------------------------------------------------------------------------------------------
