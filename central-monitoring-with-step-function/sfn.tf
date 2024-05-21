@@ -2,26 +2,26 @@
 # AWS Step Function State Machine - Config PreCheck
 # ----------------------------------------------------------------------------------------------
 resource "aws_sfn_state_machine" "precheck" {
-  name     = "${local.prefix}-agent-config-precheck"
-  role_arn = aws_iam_role.sfn.arn
+  name     = "${local.prefix}-cwconfig-precheck"
+  role_arn = aws_iam_role.sfn_precheck.arn
 
   definition = <<EOF
 {
-  "Comment": "A Hello World example of the Amazon States Language using an AWS Lambda Function",
+  "Comment": "CloudWatch config validation process",
   "StartAt": "Pass",
   "States": {
     "Pass": {
       "Type": "Pass",
-      "Next": "ParameterNullChecks",
+      "Next": "CheckParameterNull",
       "Parameters": {
-        "accountId.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 1)",
-        "os.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 2)",
+        "accountId.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 2)",
+        "os.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 1)",
         "instanceId.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 3)",
         "bucket.$": "$.bucket",
         "key.$": "$.key"
       }
     },
-    "ParameterNullChecks": {
+    "CheckParameterNull": {
       "Type": "Choice",
       "Choices": [
         {
@@ -39,12 +39,12 @@ resource "aws_sfn_state_machine" "precheck" {
               "IsPresent": true
             }
           ],
-          "Next": "ParameterOSCheck"
+          "Next": "CheckOSType"
         }
       ],
-      "Default": "ParameterNullCheckFailed"
+      "Default": "ParameterHasNull"
     },
-    "ParameterOSCheck": {
+    "CheckOSType": {
       "Type": "Choice",
       "Choices": [
         {
@@ -56,42 +56,52 @@ resource "aws_sfn_state_machine" "precheck" {
             {
               "Variable": "$.os",
               "StringEquals": "windows"
+            },
+            {
+              "Variable": "$.os",
+              "StringEquals": "windows-legacy"
             }
           ],
           "Next": "DescribeInstances"
         }
       ],
-      "Default": "OSCheckFailed"
+      "Default": "OSTypeCheckFailed"
     },
     "DescribeInstances": {
       "Type": "Task",
-      "Next": "InstanceExistCheck",
+      "Next": "CheckInstanceExist",
       "Parameters": {
         "InstanceIds.$": "States.Array($.instanceId)"
       },
       "Resource": "arn:aws:states:::aws-sdk:ec2:describeInstances",
-      "ResultPath": "$.results"
+      "ResultPath": "$.results",
+      "ResultSelector": {
+        "StatusCode.$": "$.Reservations[0].Instances[0].State.Code"
+      }
     },
-    "InstanceExistCheck": {
+    "CheckInstanceExist": {
       "Type": "Choice",
       "Choices": [
         {
-          "And": [
-            {
-              "Variable": "$.results.Reservations[0]",
-              "IsPresent": true
-            },
-            {
-              "Variable": "$.results.Reservations[0].Instances[0]",
-              "IsPresent": true
-            }
-          ],
+          "Variable": "$.results.StatusCode",
+          "IsPresent": true,
+          "Next": "CheckInstanceRunning"
+        }
+      ],
+      "Default": "InstanceNotExist"
+    },
+    "CheckInstanceRunning": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.results.StatusCode",
+          "NumericEquals": 16,
           "Next": "Validation Start"
         }
       ],
-      "Default": "InstanceExistCheckFailed"
+      "Default": "InstanceNotRunning"
     },
-    "InstanceExistCheckFailed": {
+    "InstanceNotExist": {
       "Type": "Task",
       "Resource": "arn:aws:states:::sns:publish",
       "Parameters": {
@@ -100,7 +110,7 @@ resource "aws_sfn_state_machine" "precheck" {
       },
       "Next": "PrecheckFail"
     },
-    "OSCheckFailed": {
+    "OSTypeCheckFailed": {
       "Type": "Task",
       "Resource": "arn:aws:states:::sns:publish",
       "Parameters": {
@@ -118,15 +128,26 @@ resource "aws_sfn_state_machine" "precheck" {
         "Message.$": "States.Format('Workflow Details: https://ap-northeast-1.console.aws.amazon.com/states/home?#/v2/executions/details/{}\nTarget AWS AccountId: {}\nTarget EC2 InstanceId: {}', $$.Execution.Id, $.accountId, $.instanceId)"
       },
       "ResultPath": null,
-      "Next": "StartValidation"
+      "Next": "TransformPayload"
+    },
+    "TransformPayload": {
+      "Type": "Pass",
+      "Next": "StartValidation",
+      "Parameters": {
+        "accountId.$": "$.accountId",
+        "os.$": "$.os",
+        "instanceId.$": "$.instanceId",
+        "bucket.$": "$.bucket",
+        "key.$": "$.key"
+      }
     },
     "StartValidation": {
       "Type": "Task",
       "Resource": "arn:aws:states:::states:startExecution",
       "Parameters": {
-        "StateMachineArn": "arn:aws:states:ap-northeast-1:334678299258:stateMachine:monitoring-agent-config-distrubute",
+        "StateMachineArn": "arn:aws:states:ap-northeast-1:334678299258:stateMachine:monitoring-cwconfig-validate",
         "Input": {
-          "StatePayload": "Hello from Step Functions!",
+          "StatePayload.$": "$",
           "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
         }
       },
@@ -135,7 +156,7 @@ resource "aws_sfn_state_machine" "precheck" {
     "PrecheckSuccess": {
       "Type": "Succeed"
     },
-    "ParameterNullCheckFailed": {
+    "ParameterHasNull": {
       "Type": "Task",
       "Resource": "arn:aws:states:::sns:publish",
       "Parameters": {
@@ -146,17 +167,26 @@ resource "aws_sfn_state_machine" "precheck" {
     },
     "PrecheckFail": {
       "Type": "Fail"
+    },
+    "InstanceNotRunning": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
+      },
+      "Next": "PrecheckFail"
     }
   },
   "TimeoutSeconds": 3600
 }
 EOF
 
-  logging_configuration {
-    log_destination        = "${aws_cloudwatch_log_group.sfn.arn}:*"
-    include_execution_data = true
-    level                  = "ALL"
-  }
+  # logging_configuration {
+  #   log_destination        = "${aws_cloudwatch_log_group.sfn.arn}:*"
+  #   include_execution_data = true
+  #   level                  = "ALL"
+  # }
 
   lifecycle {
     ignore_changes = [definition]
@@ -167,268 +197,20 @@ EOF
 # ----------------------------------------------------------------------------------------------
 # AWS Step Function State Machine
 # ----------------------------------------------------------------------------------------------
-resource "aws_sfn_state_machine" "this" {
-  name     = "${local.prefix}-agent-config-distrubute"
-  role_arn = aws_iam_role.sfn.arn
+resource "aws_sfn_state_machine" "validate" {
+  name     = "${local.prefix}-cwconfig-validate"
+  role_arn = aws_iam_role.sfn_validate.arn
 
   definition = <<EOF
 {
-  "Comment": "CloudWatch Agent config auto convert and validation process",
+  "Comment": "A description of my state machine",
   "StartAt": "Pass",
   "States": {
     "Pass": {
       "Type": "Pass",
-      "Next": "ParameterNullChecks",
-      "Parameters": {
-        "accountId.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 1)",
-        "os.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 2)",
-        "instanceId.$": "States.ArrayGetItem(States.StringSplit($.key, '/'), 3)",
-        "bucket.$": "$.bucket",
-        "key.$": "$.key"
-      }
-    },
-    "ParameterNullChecks": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "And": [
-            {
-              "Variable": "$.os",
-              "IsPresent": true
-            },
-            {
-              "Variable": "$.accountId",
-              "IsPresent": true
-            },
-            {
-              "Variable": "$.instanceId",
-              "IsPresent": true
-            }
-          ],
-          "Next": "ParameterOSCheck"
-        }
-      ],
-      "Default": "ParameterNullCheckFailed"
-    },
-    "ParameterOSCheck": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Or": [
-            {
-              "Variable": "$.os",
-              "StringEquals": "linux"
-            },
-            {
-              "Variable": "$.os",
-              "StringEquals": "windows"
-            }
-          ],
-          "Next": "DescribeInstances"
-        }
-      ],
-      "Default": "OSCheckFailed"
-    },
-    "DescribeInstances": {
-      "Type": "Task",
-      "Next": "InstanceExistCheck",
-      "Parameters": {
-        "InstanceIds.$": "States.Array($.instanceId)"
-      },
-      "Resource": "arn:aws:states:::aws-sdk:ec2:describeInstances",
-      "ResultPath": "$.results"
-    },
-    "InstanceExistCheck": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "And": [
-            {
-              "Variable": "$.results.Reservations[0]",
-              "IsPresent": true
-            },
-            {
-              "Variable": "$.results.Reservations[0].Instances[0]",
-              "IsPresent": true
-            }
-          ],
-          "Next": "Validation Start"
-        }
-      ],
-      "Default": "InstanceExistCheckFailed"
-    },
-    "InstanceExistCheckFailed": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
-      },
-      "Next": "ParameterChecksFailed"
-    },
-    "OSCheckFailed": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
-      },
-      "Next": "ParameterChecksFailed"
-    },
-    "Validation Start": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::aws-sdk:sns:publish",
-      "Parameters": {
-        "TopicArn": "${aws_sns_topic.nofity.arn}",
-        "Subject": "CloudWatch Agent Config Validation Start",
-        "Message.$": "States.Format('Workflow Details: https://ap-northeast-1.console.aws.amazon.com/states/home?#/v2/executions/details/{}\nTarget AWS AccountId: {}\nTarget EC2 InstanceId: {}', $$.Execution.Id, $.accountId, $.instanceId)"
-      },
-      "ResultPath": null,
-      "Next": "CloudWatchConfiguationBuild"
-    },
-    "CloudWatchConfiguationBuild": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::codebuild:startBuild.sync",
-      "Parameters": {
-        "ProjectName": "monitoringBuildProject",
-        "EnvironmentVariablesOverride": [
-          {
-            "Name": "BUCKET_NAME",
-            "Type": "PLAINTEXT",
-            "Value.$": "$.bucket"
-          },
-          {
-            "Name": "OBJECT_KEY",
-            "Type": "PLAINTEXT",
-            "Value.$": "$.key"
-          }
-        ]
-      },
-      "ResultSelector": {
-        "buildId.$": "$.Build.Id",
-        "buildStatus.$": "$.Build.BuildStatus"
-      },
-      "ResultPath": "$.codeBuild",
-      "Next": "CheckBuildStatus",
-      "TimeoutSeconds": 600
-    },
-    "ParameterNullCheckFailed": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
-      },
-      "Next": "ParameterChecksFailed"
-    },
-    "ParameterChecksFailed": {
-      "Type": "Fail"
-    },
-    "CheckBuildStatus": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.codeBuild.buildStatus",
-          "StringEquals": "SUCCEEDED",
-          "Comment": "SUCCEEDED",
-          "Next": "CloudWatchConfigurationTest"
-        }
-      ],
-      "Default": "CodeBuildFailed"
-    },
-    "CloudWatchConfigurationTestFailed": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "${aws_sns_topic.nofity.arn}",
-      },
-      "Next": "ExecutionFailed"
-    },
-    "CloudWatchConfigurationTest": {
-      "Type": "Task",
-      "Parameters": {
-        "DocumentName": "MyData",
-        "Parameters": {
-          "taskToken.$": "States.Array($$.Task.Token)"
-        }
-      },
-      "Resource": "arn:aws:states:::aws-sdk:ssm:startAutomationExecution",
-      "Next": "CheckTestStatus",
-      "TimeoutSeconds": 600
-    },
-    "CheckTestStatus": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.status",
-          "StringEquals": "SUCCESSED",
-          "Next": "RequestUserApprove"
-        }
-      ],
-      "Default": "CloudWatchConfigurationTestFailed"
-    },
-    "RequestUserApprove": {
-      "Type": "Task",
-      "Parameters": {
-        "DocumentName": "monitoring-UserApprove",
-        "Parameters": {
-          "taskToken.$": "States.Array($$.Task.Token)",
-          "buildId.$": "$.buildId"
-        }
-      },
-      "Resource": "arn:aws:states:::aws-sdk:ssm:startAutomationExecution.waitForTaskToken",
-      "ResultPath": null,
-      "Next": "GetCloudWatchConfigContext",
-      "TimeoutSeconds": 1800
-    },
-    "GetCloudWatchConfigContext": {
-      "Type": "Task",
-      "Parameters": {
-        "Bucket.$": "$.bucket",
-        "Key.$": "$.key"
-      },
-      "Resource": "arn:aws:states:::aws-sdk:s3:getObject",
-      "Next": "ConfigureTargetInstance"
-    },
-    "ConfigureTargetInstance": {
-      "Type": "Task",
-      "Next": "CloudWatchConfigurationCompleted",
-      "Parameters": {
-        "DocumentName": "MyData",
-        "Parameters": {
-          "taskToken.$": "States.Array($$.Task.Token)"
-        }
-      },
-      "Resource": "arn:aws:states:::aws-sdk:ssm:startAutomationExecution",
-      "TimeoutSeconds": 600
-    },
-    "CloudWatchConfigurationCompleted": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
-      },
-      "Next": "Success"
-    },
-    "Success": {
-      "Type": "Succeed"
-    },
-    "CodeBuildFailed": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "arn:aws:sns:ap-northeast-1:334678299258:monitoring-topic"
-      },
-      "Next": "ExecutionFailed"
-    },
-    "ExecutionFailed": {
-      "Type": "Fail"
+      "End": true
     }
-  },
-  "TimeoutSeconds": 3600
+  }
 }
 EOF
 
@@ -442,3 +224,23 @@ EOF
     ignore_changes = [definition]
   }
 }
+
+
+resource "aws_sfn_state_machine" "delivery" {
+  name     = "${local.prefix}-cwconfig-delivery"
+  role_arn = aws_iam_role.sfn_delivery.arn
+
+  definition = <<EOF
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "Pass",
+  "States": {
+    "Pass": {
+      "Type": "Pass",
+      "End": true
+    }
+  }
+}
+EOF
+}
+

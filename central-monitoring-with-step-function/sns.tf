@@ -11,5 +11,5 @@ resource "aws_sns_topic" "nofity" {
 resource "aws_sns_topic_subscription" "nofity" {
   topic_arn = aws_sns_topic.nofity.arn
   protocol  = "email"
-  endpoint  = var.email
+  endpoint  = var.requester
 }

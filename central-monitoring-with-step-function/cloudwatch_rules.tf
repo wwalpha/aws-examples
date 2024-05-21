@@ -33,7 +33,7 @@ resource "aws_cloudwatch_event_rule" "this" {
 # ----------------------------------------------------------------------------------------------
 resource "aws_cloudwatch_event_target" "this" {
   rule     = aws_cloudwatch_event_rule.this.name
-  arn      = aws_sfn_state_machine.this.arn
+  arn      = aws_sfn_state_machine.precheck.arn
   role_arn = aws_iam_role.events.arn
 
   input_transformer {

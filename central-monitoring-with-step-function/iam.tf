@@ -39,16 +39,16 @@ resource "aws_iam_role_policy" "codebuild" {
 # ----------------------------------------------------------------------------------------------
 # AWS IAM Role - Step Function
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "sfn" {
-  name               = "${local.prefix}-StepFunctionRole"
+resource "aws_iam_role" "sfn_precheck" {
+  name               = "${local.prefix}-SFN-PrecheckRole"
   assume_role_policy = data.aws_iam_policy_document.sfn.json
 }
 
 # ----------------------------------------------------------------------------------------------
 # AWS IAM Role Policy - Step Function
 # ----------------------------------------------------------------------------------------------
-resource "aws_iam_role_policy" "sfn" {
-  role = aws_iam_role.sfn.name
+resource "aws_iam_role_policy" "sfn_precheck" {
+  role = aws_iam_role.sfn_precheck.name
   policy = jsonencode({
     Version = "2012-10-17"
 
@@ -72,30 +72,91 @@ resource "aws_iam_role_policy" "sfn" {
       {
         Effect = "Allow"
         Action = [
-          "events:PutTargets",
-          "events:PutRule",
-          "events:DescribeRule",
+          "sns:Publish",
+        ]
+        Resource = [
+          "${aws_sns_topic.nofity.arn}"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "states:StartExecution",
+        ]
+        Resource = [
+          "${aws_sfn_state_machine.validate.arn}"
+        ]
+      }
+    ]
+  })
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS IAM Role - Step Function
+# ----------------------------------------------------------------------------------------------
+resource "aws_iam_role" "sfn_validate" {
+  name               = "${local.prefix}-SFN-ValidateRole"
+  assume_role_policy = data.aws_iam_policy_document.sfn.json
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS IAM Role Policy - Step Function
+# ----------------------------------------------------------------------------------------------
+resource "aws_iam_role_policy" "sfn_validate" {
+  role = aws_iam_role.sfn_validate.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogDelivery",
+          "logs:CreateLogStream",
+          "logs:GetLogDelivery",
+          "logs:UpdateLogDelivery",
+          "logs:DeleteLogDelivery",
+          "logs:ListLogDeliveries",
+          "logs:PutLogEvents",
+          "logs:PutResourcePolicy",
+          "logs:DescribeResourcePolicies",
+          "logs:DescribeLogGroups"
         ]
         Resource = "*"
       },
       {
         Effect = "Allow"
         Action = [
-          "codebuild:StartBuild",
-          "codebuild:StopBuild",
-          "codebuild:BatchGetBuilds",
-          "codebuild:BatchGetReports"
+          "sns:Publish",
         ]
-        Resource = "${aws_codebuild_project.this.arn}"
+        Resource = [
+          "${aws_sns_topic.nofity.arn}"
+        ]
       },
       {
         Effect = "Allow"
         Action = [
-          "sns:Publish",
+          "states:StartExecution",
+        ]
+        Resource = [
+          "${aws_sfn_state_machine.validate.arn}"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:PutParameter",
+          "ssm:SendCommand"
+        ]
+        Resource = [
+          "*"
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
           "ssm:StartAutomationExecution",
           "s3:GetObject",
-          "ec2:DescribeInstances",
-          "states:StartExecution"
         ]
         Resource = "*"
       },
@@ -142,7 +203,73 @@ resource "aws_iam_role_policy" "events" {
         Action = [
           "states:StartExecution",
         ]
-        Resource = "${aws_sfn_state_machine.this.arn}"
+        Resource = "${aws_sfn_state_machine.precheck.arn}"
+      }
+    ]
+  })
+}
+
+
+# ----------------------------------------------------------------------------------------------
+# AWS IAM Role - Step Function Delivery
+# ----------------------------------------------------------------------------------------------
+resource "aws_iam_role" "sfn_delivery" {
+  name               = "${local.prefix}-SFNDeliveryRole"
+  assume_role_policy = data.aws_iam_policy_document.sfn.json
+}
+
+# ----------------------------------------------------------------------------------------------
+# AWS IAM Role Policy - Step Function Delivery
+# ----------------------------------------------------------------------------------------------
+resource "aws_iam_role_policy" "sfn_delivery" {
+  role = aws_iam_role.sfn_delivery.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogDelivery",
+          "logs:CreateLogStream",
+          "logs:GetLogDelivery",
+          "logs:UpdateLogDelivery",
+          "logs:DeleteLogDelivery",
+          "logs:ListLogDeliveries",
+          "logs:PutLogEvents",
+          "logs:PutResourcePolicy",
+          "logs:DescribeResourcePolicies",
+          "logs:DescribeLogGroups"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "events:PutTargets",
+          "events:PutRule",
+          "events:DescribeRule",
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sns:Publish",
+          "ssm:StartAutomationExecution",
+          "s3:GetObject",
+          "ec2:DescribeInstances",
+          "states:StartExecution"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "states:SendTaskSuccess",
+          "states:SendTaskFailure"
+        ]
+        Resource = "*"
       }
     ]
   })
