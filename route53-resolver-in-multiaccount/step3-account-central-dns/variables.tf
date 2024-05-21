@@ -20,9 +20,13 @@ variable "vpc_cidr_block_app1" {}
 
 variable "vpc_cidr_block_app2" {}
 
-variable "hosted_zone_id_app1" {}
+variable "alb_dns_name_app1" {}
 
-variable "hosted_zone_id_app2" {}
+variable "alb_dns_name_app2" {}
+
+variable "alb_zone_id_app1" {}
+
+variable "alb_zone_id_app2" {}
 
 variable "transit_gateway_id" {}
 

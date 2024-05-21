@@ -2,7 +2,6 @@
 # Networking
 # ----------------------------------------------------------------------------------------------
 module "networking" {
-  depends_on                 = [aws_ram_resource_share_accepter.tgw]
   source                     = "../commons-networking"
   prefix                     = var.prefix
   vpc_cidr_block             = var.vpc_cidr_block

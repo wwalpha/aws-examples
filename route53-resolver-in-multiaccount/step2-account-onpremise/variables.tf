@@ -22,6 +22,4 @@ variable "transit_gateway_id" {
   description = "The ID of the Transit Gateway"
 }
 
-variable "ram_share_arn_transit_gateway" {}
-
 variable "dns_server_ip" {}

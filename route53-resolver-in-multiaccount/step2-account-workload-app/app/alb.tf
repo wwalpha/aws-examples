@@ -13,35 +13,35 @@ resource "aws_lb" "nginx" {
   }
 }
 
-# ----------------------------------------------------------------------------------------------
-# Application Load Balancer Target Group - Nginx
-# ----------------------------------------------------------------------------------------------
-resource "aws_lb_target_group" "nginx" {
-  name     = "${var.prefix}-tg-nginx"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
-}
+# # ----------------------------------------------------------------------------------------------
+# # Application Load Balancer Target Group - Nginx
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_lb_target_group" "nginx" {
+#   name     = "${var.prefix}-tg-nginx"
+#   port     = 80
+#   protocol = "HTTP"
+#   vpc_id   = var.vpc_id
+# }
 
-# ----------------------------------------------------------------------------------------------
-# Application Load Balancer Listener - Nginx
-# ----------------------------------------------------------------------------------------------
-resource "aws_lb_listener" "nginx" {
-  load_balancer_arn = aws_lb.nginx.arn
-  port              = "80"
-  protocol          = "HTTP"
+# # ----------------------------------------------------------------------------------------------
+# # Application Load Balancer Listener - Nginx
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_lb_listener" "nginx" {
+#   load_balancer_arn = aws_lb.nginx.arn
+#   port              = "80"
+#   protocol          = "HTTP"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.nginx.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.nginx.arn
+#   }
+# }
 
-# ----------------------------------------------------------------------------------------------
-# Application Load Balancer Target Group Attachment - Nginx
-# ----------------------------------------------------------------------------------------------
-resource "aws_lb_target_group_attachment" "nginx" {
-  target_group_arn = aws_lb_target_group.nginx.arn
-  target_id        = module.nginx.id
-  port             = 80
-}
+# # ----------------------------------------------------------------------------------------------
+# # Application Load Balancer Target Group Attachment - Nginx
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_lb_target_group_attachment" "nginx" {
+#   target_group_arn = aws_lb_target_group.nginx.arn
+#   target_id        = module.nginx.id
+#   port             = 80
+# }

@@ -13,29 +13,15 @@ output "route53_resolver_outbound_endpoints" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Route53 Resolver ID - Forward Onpremise (master.local)
+# Workload App1 - ALB DNS Name
 # ----------------------------------------------------------------------------------------------
-output "route53_resolver_id_forward_onpremise" {
-  value = module.step1_account_central_dns.resolver_rule_id_forward_onpremise
+output "workload_app1_alb_dns_name" {
+  value = module.step2_account_workload_app1.alb_dns_name
 }
 
 # ----------------------------------------------------------------------------------------------
-# AWS Route53 Resolver ID - Forward Cloud (master.aws)
+# Workload App2 - ALB DNS Name
 # ----------------------------------------------------------------------------------------------
-output "route53_resolver_id_forward_cloud" {
-  value = module.step1_account_central_dns.resolver_rule_id_forward_cloud
+output "workload_app2_alb_dns_name" {
+  value = module.step2_account_workload_app2.alb_dns_name
 }
-
-# ----------------------------------------------------------------------------------------------
-# AWS Route53 Resolver ID - System
-# ----------------------------------------------------------------------------------------------
-output "route53_resolver_id_system" {
-  value = module.step1_account_central_dns.resolver_rule_id_system
-}
-
-# ----------------------------------------------------------------------------------------------
-# Workload App1 - ALB Private IPs
-# ----------------------------------------------------------------------------------------------
-# output "workload_app1_alb_private_ips" {
-#   value = module.step1_account_central_dns.resolver_rule_id_system
-# }

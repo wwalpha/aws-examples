@@ -24,4 +24,8 @@ module "nginx" {
   iam_instance_profile   = aws_iam_instance_profile.this.name
   source_dest_check      = false
   user_data              = local.user_data_nginx
+
+  metadata_options = {
+    http_tokens = "required"
+  }
 }

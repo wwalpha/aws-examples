@@ -28,20 +28,14 @@ variable "availability_zones" {
 
 variable "domain_name" {}
 
-variable "ram_share_arn_transit_gateway" {}
-
-variable "ram_share_arn_resolver_system" {}
-
-variable "ram_share_arn_resolver_forward_onpremise" {}
-
-variable "ram_share_arn_resolver_forward_cloud" {}
-
 variable "transit_gateway_id" {
   description = "The ID of the Transit Gateway"
 }
 
-variable "resolver_rule_id_forward_onpremise" {}
+# variable "resolver_rule_id_forward_onpremise" {}
 
-variable "resolver_rule_id_forward_cloud" {}
+# variable "resolver_rule_id_forward_cloud" {}
 
-variable "resolver_rule_id_system" {}
+# variable "resolver_rule_id_forward_ssm_endpoint" {}
+
+# variable "resolver_rule_id_system" {}
