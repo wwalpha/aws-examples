@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" scale="1" border="60">
     <diagram id="S-b7Yi5fMgmGWbkXTeDW" name="Page-1">
-        <mxGraphModel dx="1169" dy="2929" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+        <mxGraphModel dx="2598" dy="3820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -88,10 +88,10 @@
                 <mxCell id="213" style="edgeStyle=none;rounded=1;html=1;strokeColor=#009900;strokeWidth=8;fontSize=32;startSize=12;endSize=12;targetPerimeterSpacing=20;sourcePerimeterSpacing=20;" parent="8" source="13" target="209" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="Resolver Inbound" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#4D27AA;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=32;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.elastic_network_interface;shadow=0;strokeWidth=5;" parent="8" vertex="1">
+                <mxCell id="13" value="Route53 Resolver&lt;br&gt;Inbound Endpoint" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#4D27AA;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=32;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.elastic_network_interface;shadow=0;strokeWidth=5;" parent="8" vertex="1">
                     <mxGeometry x="491" y="92" width="128" height="128" as="geometry"/>
                 </mxCell>
-                <mxCell id="14" value="Resolver Outbound" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#4D27AA;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=32;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.elastic_network_interface;shadow=0;strokeWidth=5;" parent="8" vertex="1">
+                <mxCell id="14" value="Route53 Resolver&lt;br&gt;Outbound Endpoint" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#4D27AA;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=32;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.elastic_network_interface;shadow=0;strokeWidth=5;" parent="8" vertex="1">
                     <mxGeometry x="491" y="348" width="128" height="128" as="geometry"/>
                 </mxCell>
                 <mxCell id="19" value="CentralDNS" style="text;strokeColor=none;align=left;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=0;sketch=0;strokeWidth=5;fontSize=32;fontColor=default;fontStyle=1" parent="8" vertex="1">
