@@ -1,0 +1,1 @@
+# CloudFormation Template Validation with Checkov
