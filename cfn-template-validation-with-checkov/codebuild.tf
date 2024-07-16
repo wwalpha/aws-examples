@@ -17,10 +17,12 @@ phases:
       python: 3.12
     commands:
       - pip3 install checkov --quiet
+      - pip3 install cfn-lint --quiet
   build:
     commands:
-      - aws s3 cp s3://$BUCKET_NAME/$OBJECT_KEY .
+      - aws s3 cp s3://$BUCKET_NAME/$OBJECT_KEY $OBJECT_KEY
       - checkov -f $OBJECT_KEY
+      - cfn-lint $OBJECT_KEY
 EOT
   }
 

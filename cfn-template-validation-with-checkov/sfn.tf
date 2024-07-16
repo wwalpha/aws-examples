@@ -28,30 +28,17 @@ resource "aws_sfn_state_machine" "this" {
           }
         ]
       },
-      "Next": "GetBuildResult"
-    },
-    "GetBuildResult": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::aws-sdk:codebuild:batchGetBuilds",
-      "Parameters": {
-        "Ids.$": "States.Array($.Build.Id)"
-      },
-      "Next": "CheckResults"
-    },
-    "CheckResults": {
-      "Type": "Choice",
-      "Choices": [
+      "Next": "Notify Success",
+      "Catch": [
         {
-          "And": [
-            {
-              "Variable": "$.Builds[0].BuildStatus",
-              "StringEquals": "SUCCEEDED"
-            }
+          "ErrorEquals": [
+            "States.TaskFailed"
           ],
-          "Next": "Notify Success"
+          "Next": "Notify Failure",
+          "ResultPath": "$.errors"
         }
       ],
-      "Default": "Notify Failure"
+      "ResultPath": null
     },
     "Notify Success": {
       "Type": "Task",
