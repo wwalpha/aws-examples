@@ -40,7 +40,7 @@ resource "aws_sfn_state_machine" "this" {
             ]
           }
         ],
-        "Namespace": "ISZ/RDS"
+        "Namespace": "DEMO/RDS"
       },
       "Resource": "arn:aws:states:::aws-sdk:cloudwatch:putMetricData",
       "End": true
