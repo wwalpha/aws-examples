@@ -3,6 +3,8 @@
 ## Prerequisites
 - Terraform
 - AWS CLI
+- kubectl
+- eksctl
 
 ## Install kubernetes tools
 ```sh
@@ -19,22 +21,23 @@ $ tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
 $ sudo mv /tmp/eksctl /usr/local/bin
 ```
 
-## Create AWS Environment
+## Create EKS Cluster
 ```sh
 $ terraform init
 $ terraform apply -auto-approve
 Outputs:
 
 AWSLoadBalancerControllerIAMPolicyArn = "arn:aws:iam::999999999999:policy/eks-on-fargate-AWSLoadBalancerControllerIAMPolicy"
+aws_account_id = "999999999999"
 aws_region = "ap-northeast-1"
-aws_vpc_id = "vpc-07cc9ebf94709d04e"
-eks_cluster_endpoint = "https://88B9F025A235D8A7FB6275CDC9FACB20.gr7.ap-northeast-1.eks.amazonaws.com"
 eks_cluster_name = "eks-on-fargate-cluster"
 
 # terraform output mapping to environment variables
 $ AWS_REGION=$(terraform output -raw aws_region)
-$ AWS_VPC_ID=$(terraform output -raw aws_vpc_id)
+$ AWS_ACCOUNT_ID=$(terraform output -raw aws_account_id)
 $ EKS_CLUSTER=$(terraform output -raw eks_cluster_name)
+$ AWSLoadBalancerControllerIAMPolicyArn=$(terraform output -raw AWSLoadBalancerControllerIAMPolicyArn)
+
 ```
 
 ## Configure EKS
@@ -49,71 +52,71 @@ kubectl apply -f https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-
 eksctl create iamidentitymapping \
     --cluster $EKS_CLUSTER \
     --region=$AWS_REGION \
-    --arn arn:aws:iam::999999999999:user/test@test.com \
+    --arn arn:aws:iam::$AWS_ACCOUNT_ID:user/test@test.com \
     --group eks-console-dashboard-full-access-group \
     --no-duplicate-arns
 
-# Confirm settings
+# Check auth mapping settings
 eksctl get iamidentitymapping --cluster $EKS_CLUSTER --region=$AWS_REGION
 
+# remove the eks.amazonaws.com/compute-type : ec2 annotation from the CoreDNS Pods.
+kubectl patch deployment coredns -n kube-system --type json \
+    -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
 
-# eksctl create iamidentitymapping \
-#     --cluster my-cluster \
-#     --region=region-code \
-#     --arn arn:aws:iam::111122223333:user/my-user \
-#     --group eks-console-dashboard-restricted-access-group \
-#     --no-duplicate-arns
+# restart coredns
+kubectl rollout restart -n kube-system deployment coredns
 
+# wait coredns status changes to running
+kubectl get pods --all-namespaces
+
+--------------------------------------------------------------------------
+NAMESPACE     NAME                       READY   STATUS    RESTARTS   AGE
+kube-system   coredns-5654d57f78-qpj7v   1/1     Running   0          12m
+kube-system   coredns-5654d57f78-sxhrk   1/1     Running   0          12m
 ```
 
 ## Install kubernetes add-ons
 ```sh
 # create iam service account
 eksctl create iamserviceaccount \
-  --cluster=eks-on-fargate-cluster \
-  --namespace=kube-system \
-  --name=aws-load-balancer-controller \
-  --role-name AmazonEKSLoadBalancerControllerRole \
-  --attach-policy-arn=[AWSLoadBalancerControllerIAMPolicyArn] \
-  --override-existing-serviceaccounts \
-  --approve
-
-eksctl create iamserviceaccount \
   --cluster=$EKS_CLUSTER \
   --namespace=kube-system \
   --name=aws-load-balancer-controller \
   --role-name AmazonEKSLoadBalancerControllerRole \
-  --attach-policy-arn=arn:aws:iam::334678299258:policy/eks-on-fargate-AWSLoadBalancerControllerIAMPolicy \
-  --override-existing-serviceaccounts \
+  --attach-policy-arn=AWSLoadBalancerControllerIAMPolicyArn \
   --approve
 
+# Install cert manager (https://github.com/jetstack/cert-manager/releases/download/v1.13.5/cert-manager.yaml)
+kubectl apply -f ./add-ons/cert-manager-v1.13.5.yaml
 
+# wait cert-manager status changes to running
+kubectl get pods --namespace cert-manager
 
-# install cert manager
-kubectl apply \
-    --validate=false \
-    -f https://github.com/jetstack/cert-manager/releases/download/v1.13.5/cert-manager.yaml
+# Install AWS Load Balancer Controller (https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/download/v2.7.2/v2_7_2_full.yaml)
+# sed -i.bak -e '612,620d' ./v2_7_2_full.yaml
+# sed -i.bak -e 's|your-cluster-name|$EKS_CLUSTER|' ./v2_7_2_full.yaml
+kubectl apply -f ./add-ons/aws-load-balancer-controller-v2_7_2_full.yaml
 
-# Install AWS Load Balancer Controller
-curl -Lo v2_7_2_full.yaml https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/download/v2.7.2/v2_7_2_full.yaml
-sed -i.bak -e '612,620d' ./v2_7_2_full.yaml
-sed -i.bak -e 's|your-cluster-name|eks-on-fargate-cluster|' ./v2_7_2_full.yaml
-kubectl apply -f v2_7_2_full.yaml
-
-curl -Lo v2_7_2_ingclass.yaml https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/download/v2.7.2/v2_7_2_ingclass.yaml
-kubectl apply -f v2_7_2_ingclass.yaml
-
+# Install AWS Load Balancer Controller Ingclass https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/download/v2.7.2/v2_7_2_ingclass.yaml
+kubectl apply -f ./add-ons/aws-load-balancer-controller-v2_7_2_ingclass.yaml
 
 ```
 
-eksctl create iamidentitymapping --cluster $EKS_CLUSTER \
-    --region $AWS_REGION \
-    --arn "arn:aws:iam::334678299258:user/ktou@dxc.com" \
-    --username ktou@dxc.com \
-    --group <kubernetes-group-name> \
-    --no-duplicate-arns \
+aws eks describe-addon --cluster-name eks-on-fargate-cluster --addon-name kube-proxy --query addon.addonVersion --output text
 
-CLUSTER_NAME=test-cluster
-AWS_REGION=ap-northeast-1
-eksctl create cluster --name $CLUSTER_NAME --region $AWS_REGION --fargate
-eksctl utils associate-iam-oidc-provider --cluster $CLUSTER_NAME --approve
+kubectl set image daemonset.apps/kube-proxy -n kube-system kube-proxy=602401143452.dkr.ecr.ap-northeast-1.amazonaws.com/eks/kube-proxy:v1.30.0-minimal-eksbuild.3
+
+kubectl rollout restart -n cert-manager deployment cert-manager
+kubectl rollout restart -n kube-system deployment coredns
+
+kubectl rollout restart -n cert-manager deployment cert-manager-cainjector
+kubectl rollout restart -n cert-manager deployment cert-manager-webhook
+
+kubectl rollout restart -n kube-system deployment aws-load-balancer-controller
+
+eksctl create iamidentitymapping \
+    --cluster $EKS_CLUSTER \
+    --region=$AWS_REGION \
+    --arn arn:aws:iam::$AWS_ACCOUNT_ID:user/ktou@dxc.com \
+    --group eks-console-dashboard-full-access-group \
+    --no-duplicate-arns
