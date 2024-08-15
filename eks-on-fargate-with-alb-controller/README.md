@@ -46,22 +46,23 @@ aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 kubectl apply -f https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml
 
 # Map the IAM principal to the Kubernetes user or group in the aws-auth ConfigMap
-eksctl get iamidentitymapping --cluster $EKS_CLUSTER --region=$AWS_REGION
-
 eksctl create iamidentitymapping \
     --cluster $EKS_CLUSTER \
     --region=$AWS_REGION \
-    --arn arn:aws:iam::334678299258:user/ktou@dxc.com \
+    --arn arn:aws:iam::999999999999:user/test@test.com \
     --group eks-console-dashboard-full-access-group \
     --no-duplicate-arns
 
+# Confirm settings
+eksctl get iamidentitymapping --cluster $EKS_CLUSTER --region=$AWS_REGION
 
-eksctl create iamidentitymapping \
-    --cluster my-cluster \
-    --region=region-code \
-    --arn arn:aws:iam::111122223333:user/my-user \
-    --group eks-console-dashboard-restricted-access-group \
-    --no-duplicate-arns
+
+# eksctl create iamidentitymapping \
+#     --cluster my-cluster \
+#     --region=region-code \
+#     --arn arn:aws:iam::111122223333:user/my-user \
+#     --group eks-console-dashboard-restricted-access-group \
+#     --no-duplicate-arns
 
 ```
 
