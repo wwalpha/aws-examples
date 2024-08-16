@@ -41,15 +41,14 @@ module "eks" {
       iam_role_arn = aws_iam_role.fargate_profile.arn
       selectors = [
         {
-          namespace = "cert-manager"
+          namespace = "kube-system"
         },
         {
-          namespace = "kube-system"
+          namespace = "game-2048"
         }
       ]
     }
   }
-
 }
 
 # ----------------------------------------------------------------------------------------------

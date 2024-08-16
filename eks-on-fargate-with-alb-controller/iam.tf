@@ -86,7 +86,7 @@ data "aws_iam_policy_document" "eks_service_account" {
     condition {
       test     = "StringEquals"
       variable = "${module.eks.oidc_provider}:sub"
-      values   = ["system:serviceaccount:kube-system:aws-node"]
+      values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
     }
 
     condition {
