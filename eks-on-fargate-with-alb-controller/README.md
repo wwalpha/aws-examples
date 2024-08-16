@@ -44,12 +44,11 @@ $ AWSLoadBalancerControllerIAMPolicyArn=$(terraform output -raw AWSLoadBalancerC
 ## Configure EKS
 ```sh
 # update kube config
-aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
+$ aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 
 # wait status changes to running
-kubectl get pods --all-namespaces
+$ kubectl get pods --all-namespaces
 
---------------------------------------------------------------------------
 NAMESPACE     NAME                       READY   STATUS    RESTARTS   AGE
 kube-system   coredns-5654d57f78-qpj7v   1/1     Running   0          12m
 kube-system   coredns-5654d57f78-sxhrk   1/1     Running   0          12m
@@ -58,12 +57,12 @@ kube-system   coredns-5654d57f78-sxhrk   1/1     Running   0          12m
 ## Configure EKS without Terraform
 ```sh
 # update kube config
-aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
+$ aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 
 # give aws console full access
-kubectl apply -f https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml
+$ kubectl apply -f https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml
 # Map the IAM principal to the Kubernetes user or group in the aws-auth ConfigMap
-eksctl create iamidentitymapping \
+$ eksctl create iamidentitymapping \
     --cluster $EKS_CLUSTER \
     --region=$AWS_REGION \
     --arn arn:aws:iam::$AWS_ACCOUNT_ID:user/test@test.com \
@@ -71,11 +70,11 @@ eksctl create iamidentitymapping \
     --no-duplicate-arns
 
 # remove the eks.amazonaws.com/compute-type : ec2 annotation from the CoreDNS Pods.
-kubectl patch deployment coredns -n kube-system --type json \
+$ kubectl patch deployment coredns -n kube-system --type json \
     -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
 
 # restart coredns
-kubectl rollout restart -n kube-system deployment coredns
+$ kubectl rollout restart -n kube-system deployment coredns
 ```
 
 ## Install the AWS Load Balancer Controller using Helm
@@ -94,7 +93,7 @@ $ eksctl create iamserviceaccount \
 2024-08-16 02:18:02 [ℹ]  1 task: { create serviceaccount "kube-system/aws-load-balancer-controller" }
 2024-08-16 02:18:02 [ℹ]  created serviceaccount "kube-system/aws-load-balancer-controller"
 
-# install addon
+# install controller
 $ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
   --set clusterName=$EKS_CLUSTER \
@@ -161,8 +160,5 @@ $ kubectl logs -f -n kube-system -l app.kubernetes.io/instance=aws-load-balancer
 
 # confirm aws-load-balancer-controller service account
 $ kubectl describe deploy aws-load-balancer-controller -n kube-system | grep -i "Service Account"
-
-
-
 
 ```
