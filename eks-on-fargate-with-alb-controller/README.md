@@ -46,27 +46,6 @@ $ AWSLoadBalancerControllerIAMPolicyArn=$(terraform output -raw AWSLoadBalancerC
 # update kube config
 aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 
-# give aws console full access
-# kubectl apply -f https://s3.us-west-2.amazonaws.com/amazon-eks/docs/eks-console-full-access.yaml
-
-# Map the IAM principal to the Kubernetes user or group in the aws-auth ConfigMap
-# eksctl create iamidentitymapping \
-#     --cluster $EKS_CLUSTER \
-#     --region=$AWS_REGION \
-#     --arn arn:aws:iam::$AWS_ACCOUNT_ID:user/ktou@dxc.com \
-#     --group eks-console-dashboard-full-access-group \
-#     --no-duplicate-arns
-
-# Check auth mapping settings
-# eksctl get iamidentitymapping --cluster $EKS_CLUSTER --region=$AWS_REGION
-
-# remove the eks.amazonaws.com/compute-type : ec2 annotation from the CoreDNS Pods.
-# kubectl patch deployment coredns -n kube-system --type json \
-#     -p='[{"op": "remove", "path": "/spec/template/metadata/annotations/eks.amazonaws.com~1compute-type"}]'
-
-# restart coredns
-# kubectl rollout restart -n kube-system deployment coredns
-
 # wait status changes to running
 kubectl get pods --all-namespaces
 
