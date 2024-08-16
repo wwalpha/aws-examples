@@ -14,29 +14,37 @@ data "aws_iam_policy_document" "eks" {
   }
 }
 
-# ----------------------------------------------------------------------------------------------
-# IAM Role - EKS 
-# ----------------------------------------------------------------------------------------------
-resource "aws_iam_role" "eks" {
-  name               = "${var.prefix}-eks-role"
-  assume_role_policy = data.aws_iam_policy_document.eks.json
-}
+# # ----------------------------------------------------------------------------------------------
+# # IAM Role - EKS 
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_iam_role" "eks" {
+#   name               = "${var.prefix}-eks-role"
+#   assume_role_policy = data.aws_iam_policy_document.eks.json
+# }
 
-# ----------------------------------------------------------------------------------------------
-# IAM Role Policy Attachment - AmazonEKSClusterPolicy 
-# ----------------------------------------------------------------------------------------------
-resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks.name
-}
+# # ----------------------------------------------------------------------------------------------
+# # IAM Role Policy Attachment - AmazonEKSClusterPolicy 
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+#   role       = aws_iam_role.eks.name
+# }
 
-# ----------------------------------------------------------------------------------------------
-# IAM Role Policy Attachment - AmazonEKSVPCResourceController 
-# ----------------------------------------------------------------------------------------------
-resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.eks.name
-}
+# # ----------------------------------------------------------------------------------------------
+# # IAM Role Policy Attachment - AmazonEKSVPCResourceController 
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+#   role       = aws_iam_role.eks.name
+# }
+
+# # ----------------------------------------------------------------------------------------------
+# # IAM Role Policy Attachment - CloudWatchLogsFullAccess 
+# # ----------------------------------------------------------------------------------------------
+# resource "aws_iam_role_policy_attachment" "CloudWatchLogsFullAccess" {
+#   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+#   role       = aws_iam_role.eks.name
+# }
 
 # ----------------------------------------------------------------------------------------------
 # IAM Policy Document
@@ -58,7 +66,7 @@ data "aws_iam_policy_document" "fargate_profile" {
 # IAM Role - Fargate Profile 
 # ----------------------------------------------------------------------------------------------
 resource "aws_iam_role" "fargate_profile" {
-  name               = "${var.prefix}-fargate-profile-role"
+  name               = "${var.prefix}-profile-role"
   assume_role_policy = data.aws_iam_policy_document.fargate_profile.json
 }
 
@@ -70,8 +78,40 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSFargatePodExecutionRolePolic
   role       = aws_iam_role.fargate_profile.name
 }
 
+data "aws_iam_policy_document" "eks_service_account" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    effect  = "Allow"
+
+    condition {
+      test     = "StringEquals"
+      variable = "${module.eks.oidc_provider}:sub"
+      values   = ["system:serviceaccount:kube-system:aws-node"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${module.eks.oidc_provider}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    principals {
+      identifiers = [module.eks.oidc_provider_arn]
+      type        = "Federated"
+    }
+  }
+}
+
 # ----------------------------------------------------------------------------------------------
-# IAM Policy - aws-load-balancer-controller
+# IAM Role - EKS Service Account 
+# ----------------------------------------------------------------------------------------------
+resource "aws_iam_role" "eks_service_account" {
+  assume_role_policy = data.aws_iam_policy_document.eks_service_account.json
+  name               = "AmazonEKSLoadBalancerControllerRole"
+}
+
+# ----------------------------------------------------------------------------------------------
+# IAM Role Policy - aws-load-balancer-controller
 #
 # https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
 # ----------------------------------------------------------------------------------------------
@@ -320,4 +360,12 @@ resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
       }
     ]
   })
+}
+
+# ----------------------------------------------------------------------------------------------
+# IAM Role Policy Attachment - AmazonEKSVPCResourceController 
+# ----------------------------------------------------------------------------------------------
+resource "aws_iam_role_policy_attachment" "AWSLoadBalancerControllerIAMPolicy" {
+  policy_arn = aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn
+  role       = aws_iam_role.eks_service_account.name
 }
