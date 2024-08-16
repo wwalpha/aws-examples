@@ -153,7 +153,7 @@ NAME           CLASS   HOSTS   ADDRESS                                          
 ingress-2048   alb     *       k8s-game2048-ingress2-7091e59c20-2128500031.ap-northeast-1.elb.amazonaws.com   80      14m
 ```
 
-## Trouble Shooting
+## Troubleshooting
 ```sh
 # show aws-load-balancer-controller logs
 $ kubectl logs -f -n kube-system -l app.kubernetes.io/instance=aws-load-balancer-controller
