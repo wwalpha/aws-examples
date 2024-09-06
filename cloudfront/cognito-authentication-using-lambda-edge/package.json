@@ -1,0 +1,12 @@
+{
+  "name": "cognito-authentication-using-lambda-edge",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "init": "terraform init",
+    "start": "npm run init && terraform apply -auto-approve",
+    "plan": "npm run init && terraform plan",
+    "generate": "terraform plan -generate-config-out=generated.tf",
+    "destroy": "terraform apply -destroy -auto-approve"
+  }
+}
