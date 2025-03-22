@@ -4,3 +4,4 @@ secrets.auto.tfvars
 node_modules
 *.tfstate*
 yarn.lock
+cloudfront/*

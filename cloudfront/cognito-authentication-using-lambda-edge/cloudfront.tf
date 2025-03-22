@@ -14,11 +14,6 @@ resource "aws_cloudfront_origin_access_control" "this" {
 resource "aws_cloudfront_distribution" "this" {
   default_root_object = "index.html"
   enabled             = true
-  http_version        = "http1.1"
-  is_ipv6_enabled     = true
-  price_class         = "PriceClass_All"
-  retain_on_delete    = false
-  staging             = false
 
   custom_error_response {
     error_caching_min_ttl = 300
@@ -28,22 +23,20 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   default_cache_behavior {
-    allowed_methods           = ["GET", "HEAD"]
-    cached_methods            = ["GET", "HEAD"]
-    compress                  = true
-    default_ttl               = 86400
-    field_level_encryption_id = null
-    max_ttl                   = 31536000
-    min_ttl                   = 0
-    smooth_streaming          = false
-    target_origin_id          = "protected-origin"
-    viewer_protocol_policy    = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "protected-origin"
+    viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
       query_string = true
       cookies {
-        forward           = "none"
-        whitelisted_names = []
+        forward = "none"
       }
     }
 
@@ -62,7 +55,6 @@ resource "aws_cloudfront_distribution" "this" {
 
   ordered_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
-    cache_policy_id        = null
     cached_methods         = ["GET", "HEAD"]
     compress               = true
     default_ttl            = 86400
@@ -76,8 +68,7 @@ resource "aws_cloudfront_distribution" "this" {
     forwarded_values {
       query_string = true
       cookies {
-        forward           = "none"
-        whitelisted_names = []
+        forward = "none"
       }
     }
 
@@ -156,13 +147,11 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   origin {
-    connection_attempts = 3
-    connection_timeout  = 10
-    domain_name         = "serverlessrepo-cloudfront-authorization-a-s3bucket-wjqeg1xuepbo.s3.us-east-1.amazonaws.com"
-    origin_id           = "protected-origin"
-    s3_origin_config {
-      origin_access_identity = "origin-access-identity/cloudfront/E2YA1N291TKC3S"
-    }
+    connection_attempts      = 3
+    connection_timeout       = 10
+    domain_name              = aws_s3_bucket.this.bucket_regional_domain_name
+    origin_id                = "protected-origin"
+    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
   }
 
   restrictions {

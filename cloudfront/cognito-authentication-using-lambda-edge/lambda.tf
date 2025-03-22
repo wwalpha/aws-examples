@@ -7,6 +7,7 @@ resource "aws_lambda_function" "check_auth" {
   memory_size       = 128
   role              = aws_iam_role.lambda.arn
   runtime           = "nodejs20.x"
+  publish           = true
   s3_bucket         = aws_s3_object.lambda_default.bucket
   s3_key            = aws_s3_object.lambda_default.key
   s3_object_version = aws_s3_object.lambda_default.version_id
@@ -22,6 +23,7 @@ resource "aws_lambda_function" "refresh_auth" {
   memory_size       = 128
   role              = aws_iam_role.lambda.arn
   runtime           = "nodejs20.x"
+  publish           = true
   s3_bucket         = aws_s3_object.lambda_default.bucket
   s3_key            = aws_s3_object.lambda_default.key
   s3_object_version = aws_s3_object.lambda_default.version_id
@@ -37,6 +39,7 @@ resource "aws_lambda_function" "sign_out" {
   memory_size       = 128
   role              = aws_iam_role.lambda.arn
   runtime           = "nodejs20.x"
+  publish           = true
   s3_bucket         = aws_s3_object.lambda_default.bucket
   s3_key            = aws_s3_object.lambda_default.key
   s3_object_version = aws_s3_object.lambda_default.version_id
@@ -52,6 +55,7 @@ resource "aws_lambda_function" "http_headers" {
   memory_size       = 128
   role              = aws_iam_role.lambda.arn
   runtime           = "nodejs20.x"
+  publish           = true
   s3_bucket         = aws_s3_object.lambda_default.bucket
   s3_key            = aws_s3_object.lambda_default.key
   s3_object_version = aws_s3_object.lambda_default.version_id
@@ -63,12 +67,13 @@ resource "aws_lambda_function" "http_headers" {
 # ----------------------------------------------------------------------------------------------
 resource "aws_lambda_function" "parse_auth" {
   function_name     = "${local.prefix}-ParseAuth"
-  handler           = "bundle.handler"
-  memory_size       = 128
-  role              = aws_iam_role.lambda.arn
-  runtime           = "nodejs20.x"
   s3_bucket         = aws_s3_object.lambda_default.bucket
   s3_key            = aws_s3_object.lambda_default.key
   s3_object_version = aws_s3_object.lambda_default.version_id
+  handler           = "bundle.handler"
+  runtime           = "nodejs20.x"
+  memory_size       = 128
+  role              = aws_iam_role.lambda.arn
+  publish           = true
   timeout           = 5
 }
