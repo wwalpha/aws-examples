@@ -1,36 +1,47 @@
-# Terraform Coding Conventions
+# Terraform コーディング規約
 
-When writing Terraform code in this repository, please adhere to the following conventions:
+このリポジトリで Terraform コードを記述する際は、以下の規約に従ってください。
 
-## File Structure
-- **Split by Resource/Service**: Avoid a monolithic `main.tf`. Instead, split configurations into logical files based on the service or resource type.
-  - Examples: `vpc.tf`, `iam.tf`, `ec2.tf`, `s3.tf`, `security_groups.tf`.
-- **Standard Files**:
-  - `versions.tf`: Define Terraform version and provider requirements.
-  - `variables.tf`: Define all input variables.
-  - `outputs.tf`: Define all output values.
-  - `locals.tf`: Define local values for complex logic or shared constants.
-  - `data.tf`: (Optional) Define data sources if they are numerous, otherwise keep them near the relevant resources.
+## ファイル構成
+- **リソース/サービスごとに分割**: 巨大な `main.tf` は避けてください。代わりに、サービスやリソースの種類に基づいて論理的なファイルに分割してください。
+  - 例: `vpc.tf`, `iam.tf`, `ec2.tf`, `s3.tf`, `security_groups.tf`
+- **標準ファイル**:
+  - `versions.tf`: Terraform のバージョンとプロバイダーの要件を定義します。
+  - `variables.tf`: すべての入力変数を定義します。
+  - `outputs.tf`: すべての出力値を定義します。
+  - `locals.tf`: 複雑なロジックや共有定数のためのローカル値を定義します。
+  - `data.tf`: (任意) データソースが多数ある場合に定義します。そうでない場合は関連するリソースの近くに記述します。
 
-## Naming Conventions
-- **Resources & Variables**: Use `snake_case` for all resource names, variable names, and output names.
-- **Resource Names**: Do not repeat the resource type in the name (e.g., use `aws_s3_bucket "logs"` instead of `aws_s3_bucket "logs_bucket"`), unless necessary for clarity.
-- **Tags**: Ensure resources are tagged with at least a `Name` tag where supported.
+## 命名規則
+- **リソースと変数**: すべてのリソース名、変数名、出力名には `snake_case` を使用してください。
+- **リソース名**: 名前の中でリソースタイプを繰り返さないでください（例: `aws_s3_bucket "logs_bucket"` ではなく `aws_s3_bucket "logs"` を使用）。ただし、明確さのために必要な場合は除きます。
+- **タグ**: サポートされているリソースには、少なくとも `Name` タグが付与されていることを確認してください。
 
-## Variables & Outputs
-- **Type Constraints**: Always specify the `type` for variables.
-- **Descriptions**: Always provide a `description` for variables and outputs to explain their purpose.
-- **Defaults**: Provide `default` values where sensible, but avoid defaults for required configuration (like project names or specific IDs).
+## 変数と出力
+- **型制約**: 変数には常に `type` を指定してください。
+- **説明**: 変数と出力には、その目的を説明する `description` を常に記述してください。
+- **デフォルト値**: 適切な場合は `default` 値を提供しますが、必須の設定（プロジェクト名や特定のIDなど）にはデフォルト値を避けてください。
 
-## Formatting & Style
-- **Indentation**: Follow standard `terraform fmt` style (2 spaces indentation).
-- **Alignment**: Align equals signs `=` in blocks for better readability where appropriate.
-- **Comments**: Use `#` for single-line comments.
+## フォーマットとスタイル
+- **インデント**: 標準的な `terraform fmt` スタイル（2スペースインデント）に従ってください。
+- **整列**: 読みやすさを向上させるため、ブロック内の等号 `=` を適切に整列させてください。
+- **コメント**: 1行コメントには `#` を使用してください。
 
-## Security & Best Practices
-- **Secrets**: Never commit secrets (access keys, passwords) to git. Use variables or secrets management.
-- **Security Groups**: Be specific with `cidr_blocks`. Avoid `0.0.0.0/0` for ingress unless intended (e.g., public web server).
-- **IAM**: Follow the principle of least privilege. Avoid attaching `AdministratorAccess` or broad wildcards `*` in policies.
+## セキュリティとベストプラクティス
+- **シークレット**: シークレット（アクセスキー、パスワード）を git にコミットしないでください。変数やシークレット管理ツールを使用してください。
+- **セキュリティグループ**: `cidr_blocks` は具体的に指定してください。意図的でない限り（例: 公開Webサーバー）、インバウンド通信に `0.0.0.0/0` を使用しないでください。
+- **IAM**: 最小権限の原則に従ってください。ポリシーで `AdministratorAccess` や広範なワイルドカード `*` を付与することは避けてください。
 
-## Versions
-- **Pinning**: Pin the `required_version` for Terraform and `version` for providers in `versions.tf` to ensure reproducibility.
+## リソースドキュメント
+- **セクションヘッダー**: 論理的なセクションや主要なリソースを区切るために、以下のフォーマットを使用してください:
+  ```hcl
+  # ----------------------------------------------------------------------------------------------
+  # AWS Service - Resource Description
+  # ----------------------------------------------------------------------------------------------
+  ```
+
+## 制御フロー
+- **ループ処理**: マップや文字列リストに基づいて複数のリソースを作成する場合は、`count` よりも `for_each` を優先してください。これにより、項目の追加や削除が行われた際のプランがより安定的になります。
+
+## バージョン
+- **バージョン固定**: 再現性を確保するため、`versions.tf` 内で Terraform の `required_version` とプロバイダーの `version` を固定してください。
