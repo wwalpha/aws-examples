@@ -49,7 +49,7 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 # ----------------------------------------------------------------------------------------------
-# VPC Endpoints - Transfer Family
+# VPC Endpoints - Transfer Family Web App
 # ----------------------------------------------------------------------------------------------
 resource "aws_vpc_endpoint" "transfer" {
   vpc_id              = aws_vpc.this.id
@@ -58,5 +58,5 @@ resource "aws_vpc_endpoint" "transfer" {
   subnet_ids          = [aws_subnet.private.id]
   security_group_ids  = [aws_security_group.vpce.id]
   private_dns_enabled = true
-  tags                = merge(local.tags, { Name = "${local.name_prefix}-transfer-vpce" })
+  tags                = merge(local.tags, { Name = "${local.name_prefix}-transfer-webapp-vpce" })
 }
