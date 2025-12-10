@@ -30,3 +30,40 @@ variable "key_name" {
   type        = string
   default     = null
 }
+
+variable "user_name" {
+  description = "Identity Center User Name"
+  type        = string
+  default     = "test_user"
+}
+
+variable "group_name" {
+  description = "Identity Center Group Name"
+  type        = string
+  default     = "test_group"
+}
+
+variable "user_email" {
+  description = "Identity Center User Email"
+  type        = string
+  default     = "test_user@example.com"
+}
+
+variable "user_given_name" {
+  description = "Identity Center User Given Name"
+  type        = string
+  default     = "Test"
+}
+
+variable "user_family_name" {
+  description = "Identity Center User Family Name"
+  type        = string
+  default     = "User"
+}
+
+variable "windows_admin_password" {
+  description = "Password for Windows Administrator"
+  type        = string
+  default     = "Password123!"
+  sensitive   = true
+}
