@@ -6,14 +6,14 @@ output "ec2_instance_id" {
   value       = aws_instance.windows.id
 }
 
-output "ec2_public_ip" {
-  description = "Windows EC2 Public IP"
-  value       = aws_instance.windows.public_ip
-}
-
 output "s3_bucket_name" {
   description = "S3 Bucket Name"
   value       = aws_s3_bucket.transfer.id
+}
+
+output "s3_bucket_name_2" {
+  description = "S3 Bucket Name"
+  value       = aws_s3_bucket.transfer_2.id
 }
 
 output "webapp_id" {
