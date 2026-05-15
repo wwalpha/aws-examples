@@ -9,6 +9,8 @@
 
 ## 構成概要
 
+![Architecture](./architeture.png)
+
 Inbound:
 
 Internet -> IGW ingress route table -> Workload NFW endpoint -> Public ALB -> Private EC2 -> NGINX
